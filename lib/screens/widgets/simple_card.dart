@@ -12,6 +12,9 @@ class SimpleCard extends StatelessWidget {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         margin: EdgeInsets.only(left: 5.0, right: 20.0, top: 5.0),
         child: Container(
           height: 70.0,

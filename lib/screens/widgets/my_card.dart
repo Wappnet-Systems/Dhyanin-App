@@ -1,3 +1,4 @@
+import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -18,11 +19,14 @@ class MyCard extends StatelessWidget {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         child: Container(
           height: 150,
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: background_color,
               borderRadius: BorderRadius.circular(15.0),
               image: DecorationImage(
                   fit: BoxFit.cover, image: AssetImage(image_path))),

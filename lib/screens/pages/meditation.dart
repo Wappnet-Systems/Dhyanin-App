@@ -93,9 +93,11 @@ class _MeditationState extends State<Meditation> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.04,
               ),
-              const SimpleCard(
+              SimpleCard(
                 name: 'Breathe',
-                next_page: AudioPage(),
+                next_page: AudioPage(
+                  indexOfAudio: value,
+                ),
               ),
             ],
           ),

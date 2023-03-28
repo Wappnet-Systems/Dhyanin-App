@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class AudioPage extends StatefulWidget {
-  const AudioPage({super.key});
+  final int? indexOfAudio;
+  const AudioPage({super.key, required this.indexOfAudio});
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -19,7 +20,17 @@ class _AudioPageState extends State<AudioPage> {
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
-    await audioPlayer.setSource(AssetSource("3min_breath.mp3"));
+    if (widget.indexOfAudio == 0) {
+      await audioPlayer.setSource(AssetSource("audio/breath_5min.mp3"));
+    } else if (widget.indexOfAudio == 1) {
+      await audioPlayer.setSource(AssetSource("audio/breath_10min.mp3"));
+    } else if (widget.indexOfAudio == 2) {
+      await audioPlayer.setSource(AssetSource("audio/breath_15min.mp3"));
+    } else if (widget.indexOfAudio == 3) {
+      await audioPlayer.setSource(AssetSource("audio/breath_20min.mp3"));
+    } else {
+      await audioPlayer.setSource(AssetSource("audio/breath_30min.mp3"));
+    }
     duration = (await audioPlayer.getDuration())!;
   }
 
@@ -44,7 +55,7 @@ class _AudioPageState extends State<AudioPage> {
     //Listen to audio position
     audioPlayer.onPositionChanged.listen((newPosition) {
       setState(() {
-        duration = newPosition;
+        position = newPosition;
       });
     });
   }
@@ -75,7 +86,7 @@ class _AudioPageState extends State<AudioPage> {
                 ),
               ),
             ),
-            Text(
+            const Text(
               "The song",
               style: textStyle_body,
             ),
