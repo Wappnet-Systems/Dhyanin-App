@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 class MobileNumberInput extends StatefulWidget {
   const MobileNumberInput({super.key});
 
+  static String verify = "";
+
   @override
   State<MobileNumberInput> createState() => _MobileNumberInputState();
 }
@@ -124,7 +126,10 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                             (PhoneAuthCredential credential) {},
                         verificationFailed: (FirebaseAuthException e) {},
                         codeSent: (String verificationId, int? resendToken) {
-                          Navigator.push(
+                          setState(() {
+                            MobileNumberInput.verify = verificationId;
+                          });
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OtpPage()));

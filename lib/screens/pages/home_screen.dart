@@ -4,8 +4,6 @@ import 'package:dhyanin_app/screens/widgets/my_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import 'meditation.dart';
 
@@ -46,12 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: MediaQuery.of(context).size.height * .04,
                 ),
                 const MyCard(
-                  image_path: MEDITATION,
-                  name: 'Guided Meditation',
+                  image_path: 'assets/images/meditation_image.png',
+                  name: 'Meditation',
                   next_page: Meditation(),
                 ),
                 const MyCard(
-                  image_path: FASTING,
+                  image_path: 'assets/images/fasting.jpg',
                   name: 'Track Fasting',
                   next_page: TrackFasting(),
                 )

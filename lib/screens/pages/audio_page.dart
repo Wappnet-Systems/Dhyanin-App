@@ -87,7 +87,7 @@ class _AudioPageState extends State<AudioPage> {
               ),
             ),
             const Text(
-              "The song",
+              "Meditation Audio",
               style: textStyle_body,
             ),
             Slider(
@@ -95,10 +95,7 @@ class _AudioPageState extends State<AudioPage> {
                 min: 0,
                 max: duration.inSeconds.toDouble(),
                 value: position.inSeconds.toDouble(),
-                onChanged: (value) async {
-                  final position = Duration(seconds: value.toInt());
-                  await audioPlayer.seek(position);
-                }),
+                onChanged: (value) {}),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(

@@ -1,7 +1,7 @@
+import 'package:dhyanin_app/screens/pages/home_screen.dart';
+import 'package:dhyanin_app/screens/pages/mobile_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../utils/colors.dart';
@@ -16,8 +16,32 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  var code = ""; //to store code entered by user
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: const TextStyle(
+          fontSize: 20,
+          color: Color.fromRGBO(30, 60, 87, 1),
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        border: Border.all(color: color_2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      borderRadius: BorderRadius.circular(8),
+    );
+
+    final submittedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration?.copyWith(
+        color: Color.fromARGB(255, 234, 134, 181),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -67,7 +91,7 @@ class _OtpPageState extends State<OtpPage> {
                   padding: const EdgeInsets.only(top: 20.0),
                   width: double.infinity,
                   child: const Text(
-                    'We will send a code (via SMS text message) to your phone number',
+                    'Enter OTP which we have sent (via SMS text message) to your phone number',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                   ),
@@ -76,8 +100,14 @@ class _OtpPageState extends State<OtpPage> {
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Pinput(
+                  defaultPinTheme: defaultPinTheme,
+                  focusedPinTheme: focusedPinTheme,
+                  submittedPinTheme: submittedPinTheme,
                   length: 6,
                   showCursor: true,
+                  onChanged: (value) {
+                    code = value;
+                  },
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -87,14 +117,21 @@ class _OtpPageState extends State<OtpPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      PhoneAuthCredential credential =
-                          PhoneAuthProvider.credential(
-                              verificationId: verificationId, smsCode: smsCode);
+                      try {
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: MobileNumberInput.verify,
+                                smsCode: code);
 
-                      // Sign the user in (or link) with the credential
-                      await auth.signInWithCredential(credential);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => OtpPage()));
+                        // Sign the user in (or link) with the credential
+                        await auth.signInWithCredential(credential);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      } catch (e) {
+                        print("Wrong OTP");
+                      }
                     },
                     child: Text('Verify phone number'),
                     style: ElevatedButton.styleFrom(
