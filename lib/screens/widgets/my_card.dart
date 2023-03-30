@@ -19,6 +19,8 @@ class MyCard extends StatelessWidget {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),
       child: Card(
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -34,7 +36,7 @@ class MyCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Text(
               name,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ),
         ),

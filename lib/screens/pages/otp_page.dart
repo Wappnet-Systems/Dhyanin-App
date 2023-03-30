@@ -75,7 +75,7 @@ class _OtpPageState extends State<OtpPage> {
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Image.asset(
-                  'assets/images/authimage2.png',
+                  'assets/images/registration.png',
                   height: MediaQuery.of(context).size.height * 0.25,
                 ),
                 Container(

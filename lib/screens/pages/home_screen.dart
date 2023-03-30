@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: MediaQuery.of(context).size.height * .04,
                 ),
                 const MyCard(
-                  image_path: 'assets/images/meditation_image.png',
+                  image_path: 'assets/images/meditation.png',
                   name: 'Meditation',
                   next_page: Meditation(),
                 ),
