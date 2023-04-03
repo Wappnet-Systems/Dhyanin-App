@@ -24,10 +24,11 @@ class _TrackFastingState extends State<TrackFasting> {
   int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
   double value = 0;
-  bool isStarted = false;
+  bool isStarted = true;
   int focusedMins = 0;
   String startedHours = "7";
   DateTime startedTime = DateTime.now();
+  double timeDifference = 0;
 
   List<History> listHistory = [];
 
@@ -57,8 +58,7 @@ class _TrackFastingState extends State<TrackFasting> {
         print('Document data: ${doc['hours']} and ${doc['startTime']}');
         try {
           startedHours = doc['hours'];
-          startedTime = doc['startTime'];
-          // startTimer(startedHours);
+          startedTime = DateTime.parse(doc['startTime']);
         } catch (e) {
           print(e);
         }
@@ -81,7 +81,7 @@ class _TrackFastingState extends State<TrackFasting> {
       HistoryController.init();
       if (isStarted) {
         getUser();
-        startTimer(double.parse((startedHours)).toString());
+        startTimer((double.parse(startedHours) * 3600) - timeDifference);
       }
     } catch (e) {
       print(e);
@@ -96,13 +96,14 @@ class _TrackFastingState extends State<TrackFasting> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  int getTimeDifference(String timeStarted) {
-    Duration diff = DateTime.now().difference(DateTime.parse(timeStarted));
+  int getTimeDifference(DateTime timeStarted) {
+    Duration diff = DateTime.now().difference(timeStarted);
     return diff.inSeconds;
   }
 
-  void startTimer(String hours) {
-    value = double.parse(hours) * 3600;
+  void startTimer(double seconds) {
+    value = seconds;
+    // value = double.parse(hours) * 3600;
     // focusedMins = focusedMinutes;
     // value = fastingHours.toDouble() * 3600;
     focusedMins = value.toInt();
@@ -123,7 +124,6 @@ class _TrackFastingState extends State<TrackFasting> {
         } else {
           setState(() {
             value--;
-            print(value);
           });
         }
       },
@@ -223,8 +223,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                 : SleekCircularSlider(
                                     initialValue:
                                         (double.parse(startedHours) * 3600) -
-                                            getTimeDifference(
-                                                startedTime.toString()),
+                                            getTimeDifference(startedTime),
                                     min: 0,
                                     // max: 100, //for testing slider movement
                                     max: double.parse(startedHours) * 3600,
@@ -249,8 +248,12 @@ class _TrackFastingState extends State<TrackFasting> {
                                     innerWidget: (double newValue) {
                                       return Center(
                                         child: Text(
-                                          _getDuration(
-                                              Duration(seconds: value.toInt())),
+                                          _getDuration(Duration(
+                                              seconds:
+                                                  (int.parse(startedHours) *
+                                                          3600) -
+                                                      getTimeDifference(
+                                                          startedTime))),
                                           style: TextStyle(
                                             color: primary_color,
                                             fontSize: 46,
@@ -306,13 +309,12 @@ class _TrackFastingState extends State<TrackFasting> {
                         setState(() {
                           if (!isStarted) {
                             isStarted = true;
-                            startTimer(fastingHours.toString());
+                            startTimer(fastingHours.toDouble() * 3600);
                             addUser(DateTime.now().toString(),
                                 fastingHours.toString());
                           } else {
                             //todo: functionality to save or delete the fast
                             _timer.cancel();
-                            // value = defaultValue;
                             isStarted = false;
                           }
                         });
@@ -345,12 +347,7 @@ class _TrackFastingState extends State<TrackFasting> {
                     ),
                   ],
                 ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    startTimer(double.parse((startedHours)).toString());
-                  },
-                  child: Text('hello')),
+              )
             ],
           ),
         ),
