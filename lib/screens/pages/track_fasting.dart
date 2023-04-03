@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/models/history_model.dart';
 import 'package:dhyanin_app/models/user_model.dart';
+import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/history_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/screens/widgets/get_time.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +26,6 @@ class _TrackFastingState extends State<TrackFasting> {
   int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
   double value = 0;
-  bool isStarted = true;
   int focusedMins = 0;
   String startedHours = "7";
   DateTime startedTime = DateTime.now();
@@ -41,7 +42,12 @@ class _TrackFastingState extends State<TrackFasting> {
   Future<void> addUser(String time, String hours) {
     // Call the user's CollectionReference to add a new user
     return receivedData
-        .set({'startTime': time, 'hours': hours, 'id': receivedData.id})
+        .set({
+          'id': receivedData.id,
+          'fasting': true,
+          'startTime': time,
+          'hours': hours
+        })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
@@ -55,14 +61,12 @@ class _TrackFastingState extends State<TrackFasting> {
         .get()
         .then((DocumentSnapshot doc) {
       if (doc.exists) {
-        print('Document data: ${doc['hours']} and ${doc['startTime']}');
         try {
           startedHours = doc['hours'];
           startedTime = DateTime.parse(doc['startTime']);
         } catch (e) {
           print(e);
         }
-        print('data is $startedHours and $startedTime');
       } else {
         print('Document does not exist on the database');
       }
@@ -77,10 +81,12 @@ class _TrackFastingState extends State<TrackFasting> {
   @override
   void initState() {
     super.initState();
+    final model = Provider.of<FastingStatusProvider>(context, listen: false);
+    model.getUser();
     try {
       HistoryController.init();
-      if (isStarted) {
-        getUser();
+      getUser();
+      if (model.isStarted) {
         startTimer((double.parse(startedHours) * 3600) - timeDifference);
       }
     } catch (e) {
@@ -102,6 +108,7 @@ class _TrackFastingState extends State<TrackFasting> {
   }
 
   void startTimer(double seconds) {
+    final model = Provider.of<FastingStatusProvider>(context, listen: false);
     value = seconds;
     // value = double.parse(hours) * 3600;
     // focusedMins = focusedMinutes;
@@ -115,7 +122,7 @@ class _TrackFastingState extends State<TrackFasting> {
           setState(() {
             timer.cancel();
             value = defaultValue;
-            isStarted = false;
+            model.isStarted = false;
             // listHistory = historyController.read("history");
             // listHistory.add(
             //     History(dateTime: DateTime.now(), focusedSecs: focusedMins));
@@ -141,214 +148,222 @@ class _TrackFastingState extends State<TrackFasting> {
     return Scaffold(
       backgroundColor: background_color,
       appBar: CustomAppBar(title: 'Track My Fast'),
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   mainAxisSize: MainAxisSize.max,
-              //   children: <Widget>[
-              //     IconButton(
-              //       icon: Icon(
-              //         Icons.history,
-              //         color: primary_color,
-              //         size: 35,
-              //       ),
-              //       onPressed: () {
-              //         Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (BuildContext context) =>
-              //                     const HistoryScreen()));
-              //       },
-              //     ),
-              //   ],
-              // ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Consumer<FastingStatusProvider>(
+        builder: (context, fastingStatusModel, child) => SafeArea(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Center(
-                      child: SizedBox(
-                        width: 250,
-                        height: 250,
-                        child: Stack(
-                          children: [
-                            !isStarted
-                                ? SleekCircularSlider(
-                                    initialValue: 0,
-                                    min: 0,
-                                    // max: 100, //for testing slider movement
-                                    max: fastingHours.toDouble() * 3600,
-                                    appearance: CircularSliderAppearance(
-                                      customWidths: CustomSliderWidths(
-                                        trackWidth: 15,
-                                        handlerSize: 18,
-                                        progressBarWidth: 15,
-                                        shadowWidth: 0,
-                                      ),
-                                      customColors: CustomSliderColors(
-                                        trackColor: color_1,
-                                        progressBarColor: primary_color,
-                                        hideShadow: true,
-                                        dotColor: primary_color,
-                                      ),
-                                      size: 250,
-                                      angleRange: 360,
-                                      startAngle: 270,
-                                    ),
-                                    onChange: null,
-                                    innerWidget: (double newValue) {
-                                      return Center(
-                                        child: Text(
-                                          _getDuration(
-                                              Duration(seconds: value.toInt())),
-                                          style: TextStyle(
-                                            color: primary_color,
-                                            fontSize: 46,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : SleekCircularSlider(
-                                    initialValue:
-                                        (double.parse(startedHours) * 3600) -
-                                            getTimeDifference(startedTime),
-                                    min: 0,
-                                    // max: 100, //for testing slider movement
-                                    max: double.parse(startedHours) * 3600,
-                                    appearance: CircularSliderAppearance(
-                                      customWidths: CustomSliderWidths(
-                                        trackWidth: 15,
-                                        handlerSize: 18,
-                                        progressBarWidth: 15,
-                                        shadowWidth: 0,
-                                      ),
-                                      customColors: CustomSliderColors(
-                                        trackColor: color_1,
-                                        progressBarColor: primary_color,
-                                        hideShadow: true,
-                                        dotColor: primary_color,
-                                      ),
-                                      size: 250,
-                                      angleRange: 360,
-                                      startAngle: 270,
-                                    ),
-                                    onChange: null,
-                                    innerWidget: (double newValue) {
-                                      return Center(
-                                        child: Text(
-                                          _getDuration(Duration(
-                                              seconds:
-                                                  (int.parse(startedHours) *
-                                                          3600) -
-                                                      getTimeDifference(
-                                                          startedTime))),
-                                          style: TextStyle(
-                                            color: primary_color,
-                                            fontSize: 46,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  )
-                          ],
-                        ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.history,
+                        color: primary_color,
+                        size: 35,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove_circle_outlined),
-                          iconSize: 40,
-                          color: primary_color,
-                          onPressed: () {
-                            setState(() {
-                              if (fastingHours >= 8 && !isStarted) {
-                                fastingHours--;
-                              }
-                            });
-                          },
-                        ),
-                        Text(
-                          "${fastingHours.toString()} hr",
-                          style: const TextStyle(fontSize: 25),
-                        ),
-                        IconButton(
-                            icon: const Icon(Icons.add_circle_outlined),
-                            color: primary_color,
-                            iconSize: 40,
-                            onPressed: () {
-                              setState(() {
-                                if (!isStarted) {
-                                  fastingHours++;
-                                }
-                              });
-                            }),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (!isStarted) {
-                            isStarted = true;
-                            startTimer(fastingHours.toDouble() * 3600);
-                            addUser(DateTime.now().toString(),
-                                fastingHours.toString());
-                          } else {
-                            //todo: functionality to save or delete the fast
-                            _timer.cancel();
-                            isStarted = false;
-                          }
-                        });
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const HistoryScreen()));
                       },
-                      child: Container(
-                        width: 200,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: primary_color,
-                          borderRadius: BorderRadius.circular(14),
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 3,
-                              blurRadius: 3,
-                              offset: const Offset(0, 3),
-                              color: Colors.black.withOpacity(0.1),
-                            )
-                          ],
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          isStarted ? "End Fast" : "Start Fast",
-                          style: const TextStyle(
-                            color: background_color,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 ),
-              )
-            ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                          width: 250,
+                          height: 250,
+                          child: Stack(
+                            children: [
+                              !fastingStatusModel.isStarted
+                                  ? SleekCircularSlider(
+                                      initialValue: 0,
+                                      min: 0,
+                                      // max: 100, //for testing slider movement
+                                      max: fastingHours.toDouble() * 3600,
+                                      appearance: CircularSliderAppearance(
+                                        customWidths: CustomSliderWidths(
+                                          trackWidth: 15,
+                                          handlerSize: 18,
+                                          progressBarWidth: 15,
+                                          shadowWidth: 0,
+                                        ),
+                                        customColors: CustomSliderColors(
+                                          trackColor: color_1,
+                                          progressBarColor: primary_color,
+                                          hideShadow: true,
+                                          dotColor: primary_color,
+                                        ),
+                                        size: 250,
+                                        angleRange: 360,
+                                        startAngle: 270,
+                                      ),
+                                      onChange: null,
+                                      innerWidget: (double newValue) {
+                                        return Center(
+                                          child: Text(
+                                            _getDuration(Duration(
+                                                seconds: value.toInt())),
+                                            style: TextStyle(
+                                              color: primary_color,
+                                              fontSize: 46,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : SleekCircularSlider(
+                                      initialValue:
+                                          (double.parse(startedHours) * 3600) -
+                                              getTimeDifference(startedTime),
+                                      min: 0,
+                                      // max: 100, //for testing slider movement
+                                      max: double.parse(startedHours) * 3600,
+                                      appearance: CircularSliderAppearance(
+                                        customWidths: CustomSliderWidths(
+                                          trackWidth: 15,
+                                          handlerSize: 18,
+                                          progressBarWidth: 15,
+                                          shadowWidth: 0,
+                                        ),
+                                        customColors: CustomSliderColors(
+                                          trackColor: color_1,
+                                          progressBarColor: primary_color,
+                                          hideShadow: true,
+                                          dotColor: primary_color,
+                                        ),
+                                        size: 250,
+                                        angleRange: 360,
+                                        startAngle: 270,
+                                      ),
+                                      onChange: null,
+                                      innerWidget: (double newValue) {
+                                        return Center(
+                                          child: Text(
+                                            _getDuration(Duration(
+                                                seconds:
+                                                    (int.parse(startedHours) *
+                                                            3600) -
+                                                        getTimeDifference(
+                                                            startedTime))),
+                                            style: TextStyle(
+                                              color: primary_color,
+                                              fontSize: 46,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outlined),
+                            iconSize: 40,
+                            color: primary_color,
+                            onPressed: () {
+                              setState(() {
+                                if (fastingHours >= 8 &&
+                                    !fastingStatusModel.isStarted) {
+                                  fastingHours--;
+                                }
+                              });
+                            },
+                          ),
+                          Text(
+                            "${fastingHours.toString()} hr",
+                            style: const TextStyle(fontSize: 25),
+                          ),
+                          IconButton(
+                              icon: const Icon(Icons.add_circle_outlined),
+                              color: primary_color,
+                              iconSize: 40,
+                              onPressed: () {
+                                setState(() {
+                                  if (!fastingStatusModel.isStarted) {
+                                    fastingHours++;
+                                  }
+                                });
+                              }),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 100,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            if (!fastingStatusModel.isStarted) {
+                              fastingStatusModel.isStarted = true;
+                              startTimer(fastingHours.toDouble() * 3600);
+                              addUser(DateTime.now().toString(),
+                                  fastingHours.toString());
+                            } else {
+                              //todo: functionality to save or delete the fast
+                              receivedData.update({
+                                'fasting': false,
+                              });
+                              _timer.cancel();
+                              fastingStatusModel.isStarted = false;
+                            }
+                          });
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: primary_color,
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 3,
+                                blurRadius: 3,
+                                offset: const Offset(0, 3),
+                                color: Colors.black.withOpacity(0.1),
+                              )
+                            ],
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            fastingStatusModel.isStarted
+                                ? "End Fast"
+                                : "Start Fast",
+                            style: const TextStyle(
+                              color: background_color,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

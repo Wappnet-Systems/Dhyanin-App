@@ -1,7 +1,9 @@
+import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/splash_screen.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,22 +18,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final Future<FirebaseApp> initialization = Firebase.initializeApp();
 
-    return FutureBuilder(
-        future: initialization,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print("object");
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MaterialApp(
-                title: PROJECT_TITLE,
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                home: const SplashScreen());
-          }
-          return CircularProgressIndicator();
-        });
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => FastingStatusProvider())
+      ],
+      child: FutureBuilder(
+          future: initialization,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print("object");
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MaterialApp(
+                  title: PROJECT_TITLE,
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                  ),
+                  home: const SplashScreen());
+            }
+            return CircularProgressIndicator();
+          }),
+    );
   }
 }
