@@ -1,11 +1,17 @@
 import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/models/history_model.dart';
+import 'package:dhyanin_app/models/user_model.dart';
 import 'package:dhyanin_app/screens/pages/history_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/screens/widgets/get_time.dart';
 import 'package:dhyanin_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:intl/intl.dart';
 
 class TrackFasting extends StatefulWidget {
   const TrackFasting({super.key});
@@ -17,13 +23,52 @@ class TrackFasting extends StatefulWidget {
 class _TrackFastingState extends State<TrackFasting> {
   int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
-  double value = 100;
+  double value = 0;
   bool isStarted = false;
   int focusedMins = 0;
+  String startedHours = "7";
+  DateTime startedTime = DateTime.now();
 
   List<History> listHistory = [];
 
-  // late Timer _timer;
+  var receivedData = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .collection("trackdata")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+
+  Future<void> addUser(String time, String hours) {
+    // Call the user's CollectionReference to add a new user
+    return receivedData
+        .set({'startTime': time, 'hours': hours, 'id': receivedData.id})
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  Future<void> getUser() {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("trackdata")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((DocumentSnapshot doc) {
+      if (doc.exists) {
+        print('Document data: ${doc['hours']} and ${doc['startTime']}');
+        try {
+          startedHours = doc['hours'];
+          startedTime = doc['startTime'];
+          // startTimer(startedHours);
+        } catch (e) {
+          print(e);
+        }
+        print('data is $startedHours and $startedTime');
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
+
   Timer _timer =
       Timer(const Duration(minutes: 2), () => print('Timer finished'));
 
@@ -32,7 +77,15 @@ class _TrackFastingState extends State<TrackFasting> {
   @override
   void initState() {
     super.initState();
-    HistoryController.init();
+    try {
+      HistoryController.init();
+      if (isStarted) {
+        getUser();
+        startTimer(double.parse((startedHours)).toString());
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   //get duration from value(seconds)
@@ -43,8 +96,15 @@ class _TrackFastingState extends State<TrackFasting> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  void startTimer() {
-    value = fastingHours.toDouble() * 3600;
+  int getTimeDifference(String timeStarted) {
+    Duration diff = DateTime.now().difference(DateTime.parse(timeStarted));
+    return diff.inSeconds;
+  }
+
+  void startTimer(String hours) {
+    value = double.parse(hours) * 3600;
+    // focusedMins = focusedMinutes;
+    // value = fastingHours.toDouble() * 3600;
     focusedMins = value.toInt();
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
@@ -63,6 +123,7 @@ class _TrackFastingState extends State<TrackFasting> {
         } else {
           setState(() {
             value--;
+            print(value);
           });
         }
       },
@@ -122,42 +183,82 @@ class _TrackFastingState extends State<TrackFasting> {
                         height: 250,
                         child: Stack(
                           children: [
-                            SleekCircularSlider(
-                              initialValue: value,
-                              min: 0,
-                              // max: 100, //for testing slider movement
-                              max: fastingHours.toDouble() * 3600,
-                              appearance: CircularSliderAppearance(
-                                customWidths: CustomSliderWidths(
-                                  trackWidth: 15,
-                                  handlerSize: 18,
-                                  progressBarWidth: 15,
-                                  shadowWidth: 0,
-                                ),
-                                customColors: CustomSliderColors(
-                                  trackColor: color_1,
-                                  progressBarColor: primary_color,
-                                  hideShadow: true,
-                                  dotColor: primary_color,
-                                ),
-                                size: 250,
-                                angleRange: 360,
-                                startAngle: 270,
-                              ),
-                              onChange: null,
-                              innerWidget: (double newValue) {
-                                return Center(
-                                  child: Text(
-                                    _getDuration(
-                                        Duration(seconds: value.toInt())),
-                                    style: TextStyle(
-                                      color: primary_color,
-                                      fontSize: 46,
+                            !isStarted
+                                ? SleekCircularSlider(
+                                    initialValue: 0,
+                                    min: 0,
+                                    // max: 100, //for testing slider movement
+                                    max: fastingHours.toDouble() * 3600,
+                                    appearance: CircularSliderAppearance(
+                                      customWidths: CustomSliderWidths(
+                                        trackWidth: 15,
+                                        handlerSize: 18,
+                                        progressBarWidth: 15,
+                                        shadowWidth: 0,
+                                      ),
+                                      customColors: CustomSliderColors(
+                                        trackColor: color_1,
+                                        progressBarColor: primary_color,
+                                        hideShadow: true,
+                                        dotColor: primary_color,
+                                      ),
+                                      size: 250,
+                                      angleRange: 360,
+                                      startAngle: 270,
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
+                                    onChange: null,
+                                    innerWidget: (double newValue) {
+                                      return Center(
+                                        child: Text(
+                                          _getDuration(
+                                              Duration(seconds: value.toInt())),
+                                          style: TextStyle(
+                                            color: primary_color,
+                                            fontSize: 46,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : SleekCircularSlider(
+                                    initialValue:
+                                        (double.parse(startedHours) * 3600) -
+                                            getTimeDifference(
+                                                startedTime.toString()),
+                                    min: 0,
+                                    // max: 100, //for testing slider movement
+                                    max: double.parse(startedHours) * 3600,
+                                    appearance: CircularSliderAppearance(
+                                      customWidths: CustomSliderWidths(
+                                        trackWidth: 15,
+                                        handlerSize: 18,
+                                        progressBarWidth: 15,
+                                        shadowWidth: 0,
+                                      ),
+                                      customColors: CustomSliderColors(
+                                        trackColor: color_1,
+                                        progressBarColor: primary_color,
+                                        hideShadow: true,
+                                        dotColor: primary_color,
+                                      ),
+                                      size: 250,
+                                      angleRange: 360,
+                                      startAngle: 270,
+                                    ),
+                                    onChange: null,
+                                    innerWidget: (double newValue) {
+                                      return Center(
+                                        child: Text(
+                                          _getDuration(
+                                              Duration(seconds: value.toInt())),
+                                          style: TextStyle(
+                                            color: primary_color,
+                                            fontSize: 46,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
                           ],
                         ),
                       ),
@@ -174,7 +275,7 @@ class _TrackFastingState extends State<TrackFasting> {
                           color: primary_color,
                           onPressed: () {
                             setState(() {
-                              if (fastingHours >= 8) {
+                              if (fastingHours >= 8 && !isStarted) {
                                 fastingHours--;
                               }
                             });
@@ -188,7 +289,13 @@ class _TrackFastingState extends State<TrackFasting> {
                             icon: const Icon(Icons.add_circle_outlined),
                             color: primary_color,
                             iconSize: 40,
-                            onPressed: () => setState(() => fastingHours++)),
+                            onPressed: () {
+                              setState(() {
+                                if (!isStarted) {
+                                  fastingHours++;
+                                }
+                              });
+                            }),
                       ],
                     ),
                     const SizedBox(
@@ -199,7 +306,9 @@ class _TrackFastingState extends State<TrackFasting> {
                         setState(() {
                           if (!isStarted) {
                             isStarted = true;
-                            startTimer();
+                            startTimer(fastingHours.toString());
+                            addUser(DateTime.now().toString(),
+                                fastingHours.toString());
                           } else {
                             //todo: functionality to save or delete the fast
                             _timer.cancel();
@@ -237,6 +346,11 @@ class _TrackFastingState extends State<TrackFasting> {
                   ],
                 ),
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    startTimer(double.parse((startedHours)).toString());
+                  },
+                  child: Text('hello')),
             ],
           ),
         ),

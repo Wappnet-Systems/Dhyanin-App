@@ -1,6 +1,4 @@
-import 'package:dhyanin_app/screens/pages/meditation.dart';
 import 'package:dhyanin_app/screens/pages/splash_screen.dart';
-import 'package:dhyanin_app/screens/pages/track_fasting.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +29,7 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
-                home:
-                    // TrackFasting()
-                    const SplashScreen());
+                home: const SplashScreen());
           }
           return CircularProgressIndicator();
         });
