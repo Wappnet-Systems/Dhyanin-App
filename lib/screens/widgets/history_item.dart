@@ -68,14 +68,14 @@ class _HistoryItemState extends State<HistoryItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "You have focused for",
+                      "You have completed fasting for",
                       style: TextStyle(
                         color: primary_color,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      "${widget.history.focusedSecs <= 60 ? widget.history.focusedSecs.toInt() : (widget.history.focusedSecs ~/ 60).toInt()} ${widget.history.focusedSecs.toInt() <= 60 ? "Secs" : "Mins"}",
+                      "${widget.history.fastingHours} Hours",
                       style: TextStyle(
                         color: primary_color,
                         fontSize: 23,

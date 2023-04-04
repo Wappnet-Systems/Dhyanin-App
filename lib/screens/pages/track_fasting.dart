@@ -26,9 +26,7 @@ class _TrackFastingState extends State<TrackFasting> {
   int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
   double value = 0;
-  int focusedMins = 0;
-  String startedHours = "7";
-  DateTime startedTime = DateTime.now();
+  double fastedHours = 0;
   double timeDifference = 0;
 
   List<History> listHistory = [];
@@ -52,29 +50,9 @@ class _TrackFastingState extends State<TrackFasting> {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  Future<void> getUser() {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection("trackdata")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get()
-        .then((DocumentSnapshot doc) {
-      if (doc.exists) {
-        try {
-          startedHours = doc['hours'];
-          startedTime = DateTime.parse(doc['startTime']);
-        } catch (e) {
-          print(e);
-        }
-      } else {
-        print('Document does not exist on the database');
-      }
-    });
-  }
+  Timer _timer = Timer(const Duration(days: 30), () => print('Timer finished'));
 
-  Timer _timer =
-      Timer(const Duration(minutes: 2), () => print('Timer finished'));
+  // late Timer _timer;
 
   HistoryController historyController = HistoryController();
 
@@ -85,9 +63,16 @@ class _TrackFastingState extends State<TrackFasting> {
     model.getUser();
     try {
       HistoryController.init();
-      getUser();
       if (model.isStarted) {
-        startTimer((double.parse(startedHours) * 3600) - timeDifference);
+        // print('Started time is ${model.startedTime}');
+        // print('started hours is ${model.startedHours}');
+        // print('Time difference is ${getTimeDifference(model.startedTime)}');
+        Future.delayed(Duration.zero, () {
+          startTimer(
+              context,
+              (double.parse(model.startedHours) * 3600) -
+                  getTimeDifference(model.startedTime));
+        });
       }
     } catch (e) {
       print(e);
@@ -107,31 +92,34 @@ class _TrackFastingState extends State<TrackFasting> {
     return diff.inSeconds;
   }
 
-  void startTimer(double seconds) {
+  void startTimer(BuildContext context, double seconds) {
     final model = Provider.of<FastingStatusProvider>(context, listen: false);
     value = seconds;
-    // value = double.parse(hours) * 3600;
-    // focusedMins = focusedMinutes;
-    // value = fastingHours.toDouble() * 3600;
-    focusedMins = value.toInt();
+    var focusedMins = value.toInt();
+    fastedHours = (seconds / 3600);
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
-        if (value <= 1) {
+        if (value < 1) {
+          model.isStarted = false;
           setState(() {
             timer.cancel();
             value = defaultValue;
-            model.isStarted = false;
-            // listHistory = historyController.read("history");
-            // listHistory.add(
-            //     History(dateTime: DateTime.now(), focusedSecs: focusedMins));
-            // historyController.save("history", listHistory.cast<History>());
+            listHistory = historyController.read("history");
+            listHistory.add(History(
+                dateTime: DateTime.now(),
+                fastingHours: int.parse(model.startedHours)));
+            historyController.save("history", listHistory.cast<History>());
+            print('history is saved: $listHistory');
           });
         } else {
-          setState(() {
-            value--;
-          });
+          if (mounted) {
+            setState(() {
+              value--;
+              print(value);
+            });
+          }
         }
       },
     );
@@ -191,85 +179,62 @@ class _TrackFastingState extends State<TrackFasting> {
                           height: 250,
                           child: Stack(
                             children: [
-                              !fastingStatusModel.isStarted
-                                  ? SleekCircularSlider(
-                                      initialValue: 0,
-                                      min: 0,
-                                      // max: 100, //for testing slider movement
-                                      max: fastingHours.toDouble() * 3600,
-                                      appearance: CircularSliderAppearance(
-                                        customWidths: CustomSliderWidths(
-                                          trackWidth: 15,
-                                          handlerSize: 18,
-                                          progressBarWidth: 15,
-                                          shadowWidth: 0,
-                                        ),
-                                        customColors: CustomSliderColors(
-                                          trackColor: color_1,
-                                          progressBarColor: primary_color,
-                                          hideShadow: true,
-                                          dotColor: primary_color,
-                                        ),
-                                        size: 250,
-                                        angleRange: 360,
-                                        startAngle: 270,
+                              SleekCircularSlider(
+                                initialValue: !fastingStatusModel.isStarted
+                                    ? 0.0
+                                    : (double.parse(fastingStatusModel
+                                                .startedHours) *
+                                            3600) -
+                                        double.parse(getTimeDifference(
+                                                fastingStatusModel.startedTime)
+                                            .toString()),
+                                min: 0.0,
+                                // max: 100, //for testing slider movement
+                                max: !fastingStatusModel.isStarted
+                                    ? fastingHours.toDouble() * 3600
+                                    : (double.parse(
+                                            fastingStatusModel.startedHours) *
+                                        3600),
+                                appearance: CircularSliderAppearance(
+                                  customWidths: CustomSliderWidths(
+                                    trackWidth: 15,
+                                    handlerSize: 18,
+                                    progressBarWidth: 15,
+                                    shadowWidth: 0,
+                                  ),
+                                  customColors: CustomSliderColors(
+                                    trackColor: color_1,
+                                    progressBarColor: primary_color,
+                                    hideShadow: true,
+                                    dotColor: primary_color,
+                                  ),
+                                  size: 250,
+                                  angleRange: 360,
+                                  startAngle: 270,
+                                ),
+                                onChange: null,
+                                innerWidget: (double newValue) {
+                                  return Center(
+                                    child: Text(
+                                      !fastingStatusModel.isStarted
+                                          ? _getDuration(
+                                              Duration(seconds: value.toInt()))
+                                          : _getDuration(Duration(
+                                              seconds: (int.parse(
+                                                          fastingStatusModel
+                                                              .startedHours) *
+                                                      3600) -
+                                                  getTimeDifference(
+                                                      fastingStatusModel
+                                                          .startedTime))),
+                                      style: TextStyle(
+                                        color: primary_color,
+                                        fontSize: 46,
                                       ),
-                                      onChange: null,
-                                      innerWidget: (double newValue) {
-                                        return Center(
-                                          child: Text(
-                                            _getDuration(Duration(
-                                                seconds: value.toInt())),
-                                            style: TextStyle(
-                                              color: primary_color,
-                                              fontSize: 46,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : SleekCircularSlider(
-                                      initialValue:
-                                          (double.parse(startedHours) * 3600) -
-                                              getTimeDifference(startedTime),
-                                      min: 0,
-                                      // max: 100, //for testing slider movement
-                                      max: double.parse(startedHours) * 3600,
-                                      appearance: CircularSliderAppearance(
-                                        customWidths: CustomSliderWidths(
-                                          trackWidth: 15,
-                                          handlerSize: 18,
-                                          progressBarWidth: 15,
-                                          shadowWidth: 0,
-                                        ),
-                                        customColors: CustomSliderColors(
-                                          trackColor: color_1,
-                                          progressBarColor: primary_color,
-                                          hideShadow: true,
-                                          dotColor: primary_color,
-                                        ),
-                                        size: 250,
-                                        angleRange: 360,
-                                        startAngle: 270,
-                                      ),
-                                      onChange: null,
-                                      innerWidget: (double newValue) {
-                                        return Center(
-                                          child: Text(
-                                            _getDuration(Duration(
-                                                seconds:
-                                                    (int.parse(startedHours) *
-                                                            3600) -
-                                                        getTimeDifference(
-                                                            startedTime))),
-                                            style: TextStyle(
-                                              color: primary_color,
-                                              fontSize: 46,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
+                                    ),
+                                  );
+                                },
+                              )
                             ],
                           ),
                         ),
@@ -293,10 +258,15 @@ class _TrackFastingState extends State<TrackFasting> {
                               });
                             },
                           ),
-                          Text(
-                            "${fastingHours.toString()} hr",
-                            style: const TextStyle(fontSize: 25),
-                          ),
+                          !fastingStatusModel.isStarted
+                              ? Text(
+                                  "${fastingHours.toString()} hr",
+                                  style: const TextStyle(fontSize: 25),
+                                )
+                              : Text(
+                                  "${fastingStatusModel.startedHours.toString()} hr",
+                                  style: const TextStyle(fontSize: 25),
+                                ),
                           IconButton(
                               icon: const Icon(Icons.add_circle_outlined),
                               color: primary_color,
@@ -316,18 +286,23 @@ class _TrackFastingState extends State<TrackFasting> {
                       GestureDetector(
                         onTap: () async {
                           setState(() {
-                            if (!fastingStatusModel.isStarted) {
-                              fastingStatusModel.isStarted = true;
-                              startTimer(fastingHours.toDouble() * 3600);
-                              addUser(DateTime.now().toString(),
-                                  fastingHours.toString());
-                            } else {
-                              //todo: functionality to save or delete the fast
-                              receivedData.update({
-                                'fasting': false,
-                              });
-                              _timer.cancel();
-                              fastingStatusModel.isStarted = false;
+                            try {
+                              if (!fastingStatusModel.isStarted) {
+                                fastingStatusModel.isStarted = true;
+                                startTimer(
+                                    context, fastingHours.toDouble() * 3600);
+                                addUser(DateTime.now().toString(),
+                                    fastingHours.toString());
+                              } else {
+                                //todo: functionality to save or delete the fast
+                                _timer.cancel();
+                                receivedData.update({
+                                  'fasting': false,
+                                });
+                                fastingStatusModel.isStarted = false;
+                              }
+                            } catch (e) {
+                              print(e);
                             }
                           });
                         },

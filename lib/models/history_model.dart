@@ -1,28 +1,28 @@
 class History {
   DateTime dateTime;
-  int focusedSecs;
+  int fastingHours;
 
   History({
     required this.dateTime,
-    required this.focusedSecs,
+    required this.fastingHours,
   });
 
   Map<String, dynamic> toJson() => {
         "dateTime": dateTime.millisecondsSinceEpoch,
-        "focusedSecs": focusedSecs,
+        "fastingHours": fastingHours,
       };
 
   History.fromJson(Map<String, dynamic> json)
       : dateTime = DateTime.fromMillisecondsSinceEpoch(json['dateTime']),
-        focusedSecs = json['focusedSecs'];
+        fastingHours = json['fastingHours'];
 
   @override
   String toString() {
     return "\n{\n    dateTime: " +
         dateTime.toIso8601String() +
         ",\n    " +
-        "focusedSecs: " +
-        focusedSecs.toString() +
+        "fastingHours: " +
+        fastingHours.toString() +
         "\n},\n";
   }
 }

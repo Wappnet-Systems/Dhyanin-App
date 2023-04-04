@@ -1,5 +1,6 @@
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/models/history_model.dart';
+import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/screens/widgets/history_item.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -32,20 +33,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background_color,
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: primary_color),
-        title: Text(
-          "History",
-          style: TextStyle(
-            color: primary_color,
-            fontWeight: FontWeight.w500,
-            fontSize: 24,
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: 'History'),
       body: ListView.separated(
         itemBuilder: (context, index) {
           final item = listHistory.elementAt(index);
