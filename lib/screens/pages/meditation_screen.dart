@@ -1,4 +1,4 @@
-import 'package:dhyanin_app/screens/pages/audio_page.dart';
+import 'package:dhyanin_app/screens/pages/audio_page_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/screens/widgets/simple_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';

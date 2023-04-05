@@ -37,8 +37,8 @@ class _HistoryItemState extends State<HistoryItem> {
                       : DateFormat('MM/dd/yyyy')
                           .format(widget.history.dateTime),
               style: TextStyle(
-                color: color_2,
-                fontSize: 14,
+                color: primary_color,
+                fontSize: 16,
               ),
             ),
           if (widget.isNewDay)
@@ -50,7 +50,7 @@ class _HistoryItemState extends State<HistoryItem> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             decoration: BoxDecoration(
-              color: color_1,
+              color: history_card_color,
               borderRadius: BorderRadius.circular(7),
               boxShadow: [
                 BoxShadow(
@@ -70,14 +70,14 @@ class _HistoryItemState extends State<HistoryItem> {
                     Text(
                       "You have completed fasting for",
                       style: TextStyle(
-                        color: primary_color,
+                        color: background_color,
                         fontSize: 16,
                       ),
                     ),
                     Text(
                       "${widget.history.fastingHours} Hours",
                       style: TextStyle(
-                        color: primary_color,
+                        color: background_color,
                         fontSize: 23,
                         fontWeight: FontWeight.w500,
                       ),
@@ -90,7 +90,7 @@ class _HistoryItemState extends State<HistoryItem> {
                   child: Text(
                     DateFormat('hh:mm a').format(widget.history.dateTime),
                     style: TextStyle(
-                      color: primary_color,
+                      color: background_color,
                       fontSize: 13,
                     ),
                   ),

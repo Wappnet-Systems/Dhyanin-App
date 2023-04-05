@@ -10,6 +10,13 @@ class FastingStatusProvider extends ChangeNotifier {
   bool isStarted = false;
   String startedHours = "";
   DateTime startedTime = DateTime.now();
+  double value = 0;
+  double fastedHours = 7;
+
+  Timer timer = Timer(const Duration(days: 30), () => print('Timer finished'));
+  HistoryController historyController = HistoryController();
+
+  List<History> listHistory = [];
 
   Future<void> getUser() {
     return FirebaseFirestore.instance
@@ -30,5 +37,36 @@ class FastingStatusProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  void startTimer(double seconds) {
+    value = seconds;
+    fastedHours = (seconds / 3600);
+    const oneSec = Duration(seconds: 1);
+    timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (value < 1) {
+          FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .collection("trackdata")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({'fasting': false, 'hours': '7'});
+          timer.cancel();
+          value = 0;
+          // listHistory = historyController.read("history");
+          // listHistory.add(History(
+          //     dateTime: DateTime.now(), fastingHours: int.parse(startedHours)));
+          // historyController.save("history", listHistory.cast<History>());
+          // print('history is saved: $listHistory');
+          notifyListeners();
+        } else {
+          value--;
+          notifyListeners();
+          print(value);
+        }
+      },
+    );
   }
 }

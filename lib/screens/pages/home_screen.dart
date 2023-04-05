@@ -1,11 +1,11 @@
-import 'package:dhyanin_app/screens/pages/track_fasting.dart';
+import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
 import 'package:dhyanin_app/screens/widgets/my_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
 
-import 'meditation.dart';
+import 'meditation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

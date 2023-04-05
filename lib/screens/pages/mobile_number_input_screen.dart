@@ -1,4 +1,4 @@
-import 'package:dhyanin_app/screens/pages/otp_page.dart';
+import 'package:dhyanin_app/screens/pages/otp_page_screen.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';

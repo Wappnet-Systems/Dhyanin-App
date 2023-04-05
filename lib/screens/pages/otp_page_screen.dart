@@ -1,5 +1,5 @@
 import 'package:dhyanin_app/screens/pages/home_screen.dart';
-import 'package:dhyanin_app/screens/pages/mobile_number_input.dart';
+import 'package:dhyanin_app/screens/pages/mobile_number_input_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';

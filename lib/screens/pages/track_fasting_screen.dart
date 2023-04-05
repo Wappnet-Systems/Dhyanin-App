@@ -2,18 +2,14 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
-import 'package:dhyanin_app/models/history_model.dart';
-import 'package:dhyanin_app/models/user_model.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/history_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/screens/widgets/get_time.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-import 'package:intl/intl.dart';
 
 class TrackFasting extends StatefulWidget {
   const TrackFasting({super.key});
@@ -25,11 +21,12 @@ class TrackFasting extends StatefulWidget {
 class _TrackFastingState extends State<TrackFasting> {
   int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
-  double value = 0;
-  double fastedHours = 0;
+  // double value = 0;
+  // double fastedHours = 0;
   double timeDifference = 0;
+  late FastingStatusProvider model;
 
-  List<History> listHistory = [];
+  // List<History> listHistory = [];
 
   var receivedData = FirebaseFirestore.instance
       .collection("users")
@@ -44,35 +41,28 @@ class _TrackFastingState extends State<TrackFasting> {
           'id': receivedData.id,
           'fasting': true,
           'startTime': time,
-          'hours': hours
+          'hours': hours,
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  Timer _timer = Timer(const Duration(days: 30), () => print('Timer finished'));
+  // Timer _timer = Timer(const Duration(days: 30), () => print('Timer finished'));
 
   // late Timer _timer;
 
-  HistoryController historyController = HistoryController();
+  // HistoryController historyController = HistoryController();
 
   @override
   void initState() {
     super.initState();
-    final model = Provider.of<FastingStatusProvider>(context, listen: false);
+    model = Provider.of<FastingStatusProvider>(context, listen: false);
     model.getUser();
     try {
       HistoryController.init();
       if (model.isStarted) {
-        // print('Started time is ${model.startedTime}');
-        // print('started hours is ${model.startedHours}');
-        // print('Time difference is ${getTimeDifference(model.startedTime)}');
-        Future.delayed(Duration.zero, () {
-          startTimer(
-              context,
-              (double.parse(model.startedHours) * 3600) -
-                  getTimeDifference(model.startedTime));
-        });
+        model.startTimer((double.parse(model.startedHours) * 3600) -
+            getTimeDifference(model.startedTime));
       }
     } catch (e) {
       print(e);
@@ -92,43 +82,10 @@ class _TrackFastingState extends State<TrackFasting> {
     return diff.inSeconds;
   }
 
-  void startTimer(BuildContext context, double seconds) {
-    final model = Provider.of<FastingStatusProvider>(context, listen: false);
-    value = seconds;
-    var focusedMins = value.toInt();
-    fastedHours = (seconds / 3600);
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (value < 1) {
-          model.isStarted = false;
-          setState(() {
-            timer.cancel();
-            value = defaultValue;
-            listHistory = historyController.read("history");
-            listHistory.add(History(
-                dateTime: DateTime.now(),
-                fastingHours: int.parse(model.startedHours)));
-            historyController.save("history", listHistory.cast<History>());
-            print('history is saved: $listHistory');
-          });
-        } else {
-          if (mounted) {
-            setState(() {
-              value--;
-              print(value);
-            });
-          }
-        }
-      },
-    );
-  }
-
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
+    model.timer.cancel();
   }
 
   @override
@@ -217,16 +174,17 @@ class _TrackFastingState extends State<TrackFasting> {
                                   return Center(
                                     child: Text(
                                       !fastingStatusModel.isStarted
-                                          ? _getDuration(
-                                              Duration(seconds: value.toInt()))
+                                          ? _getDuration(Duration(
+                                              seconds: fastingStatusModel.value
+                                                  .toInt()))
                                           : _getDuration(Duration(
-                                              seconds: (int.parse(
+                                              seconds: ((int.parse(
                                                           fastingStatusModel
                                                               .startedHours) *
                                                       3600) -
                                                   getTimeDifference(
                                                       fastingStatusModel
-                                                          .startedTime))),
+                                                          .startedTime)))),
                                       style: TextStyle(
                                         color: primary_color,
                                         fontSize: 46,
@@ -286,23 +244,25 @@ class _TrackFastingState extends State<TrackFasting> {
                       GestureDetector(
                         onTap: () async {
                           setState(() {
-                            try {
-                              if (!fastingStatusModel.isStarted) {
+                            if (!fastingStatusModel.isStarted) {
+                              try {
                                 fastingStatusModel.isStarted = true;
-                                startTimer(
-                                    context, fastingHours.toDouble() * 3600);
+                                fastingStatusModel
+                                    .startTimer(fastingHours.toDouble() * 3600);
                                 addUser(DateTime.now().toString(),
                                     fastingHours.toString());
-                              } else {
-                                //todo: functionality to save or delete the fast
-                                _timer.cancel();
-                                receivedData.update({
-                                  'fasting': false,
-                                });
-                                fastingStatusModel.isStarted = false;
+                              } catch (e) {
+                                print(e);
                               }
-                            } catch (e) {
-                              print(e);
+                            } else {
+                              //todo: functionality to save or delete the fast
+                              fastingStatusModel.value = 0;
+                              fastingStatusModel.timer.cancel();
+                              fastingStatusModel.isStarted = false;
+                              receivedData.update({
+                                'fasting': false,
+                                'hours': '7',
+                              });
                             }
                           });
                         },
