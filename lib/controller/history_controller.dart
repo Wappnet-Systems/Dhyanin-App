@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'package:dhyanin_app/models/history_model.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryController {
   List<String>? list = [];
   List<History>? historyList = [];
   static SharedPreferences? prefs;
-  static Future init() async => prefs = await SharedPreferences.getInstance();
+  static Future init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    prefs = await SharedPreferences.getInstance();
+  }
+
   read(String key) {
     try {
       historyList!.clear();

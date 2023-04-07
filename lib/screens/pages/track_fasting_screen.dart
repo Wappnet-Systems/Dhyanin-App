@@ -1,15 +1,17 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/history_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+
+import '../../models/history_model.dart';
 
 class TrackFasting extends StatefulWidget {
   const TrackFasting({super.key});
@@ -19,12 +21,13 @@ class TrackFasting extends StatefulWidget {
 }
 
 class _TrackFastingState extends State<TrackFasting> {
-  int fastingHours = 7; //user will change value of hours
+  // int fastingHours = 7; //user will change value of hours
   double defaultValue = 0;
   // double value = 0;
   // double fastedHours = 0;
   double timeDifference = 0;
   late FastingStatusProvider model;
+  late bool isStarted;
 
   // List<History> listHistory = [];
 
@@ -55,26 +58,31 @@ class _TrackFastingState extends State<TrackFasting> {
 
   @override
   void initState() {
-    super.initState();
     model = Provider.of<FastingStatusProvider>(context, listen: false);
     model.getUser();
+    isStarted = model.isStarted;
     try {
       HistoryController.init();
       if (model.isStarted) {
         model.startTimer((double.parse(model.startedHours) * 3600) -
             getTimeDifference(model.startedTime));
       }
+
+      // if ((int.parse(model.startedHours) * 3600) -
+      //         getTimeDifference(model.startedTime) <
+      //     0) {
+      //   model.addFastInHistory();
+      //   isStarted = false;
+      //   receivedData.update({
+      //     'fasting': false,
+      //     'hours': '7',
+      //     'startTime': DateTime.now().toString(),
+      //   });
+      // }
     } catch (e) {
       print(e);
     }
-  }
-
-  //get duration from value(seconds)
-  String _getDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    super.initState();
   }
 
   int getTimeDifference(DateTime timeStarted) {
@@ -84,8 +92,41 @@ class _TrackFastingState extends State<TrackFasting> {
 
   @override
   void dispose() {
-    super.dispose();
     model.timer.cancel();
+    super.dispose();
+  }
+
+  void _showDialogue() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: background_color,
+            title: Text('End Fast'),
+            content: Text('Do you really want to end fast now?'),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("No"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  model.fastingHours = 7;
+                  model.endFast();
+                  receivedData.update({
+                    'fasting': false,
+                    'hours': '7',
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text("Yes"),
+              ),
+            ],
+            actionsAlignment: MainAxisAlignment.end,
+          );
+        });
   }
 
   @override
@@ -148,7 +189,9 @@ class _TrackFastingState extends State<TrackFasting> {
                                 min: 0.0,
                                 // max: 100, //for testing slider movement
                                 max: !fastingStatusModel.isStarted
-                                    ? fastingHours.toDouble() * 3600
+                                    ? fastingStatusModel.fastingHours
+                                            .toDouble() *
+                                        3600
                                     : (double.parse(
                                             fastingStatusModel.startedHours) *
                                         3600),
@@ -174,10 +217,10 @@ class _TrackFastingState extends State<TrackFasting> {
                                   return Center(
                                     child: Text(
                                       !fastingStatusModel.isStarted
-                                          ? _getDuration(Duration(
+                                          ? getDuration(Duration(
                                               seconds: fastingStatusModel.value
                                                   .toInt()))
-                                          : _getDuration(Duration(
+                                          : getDuration(Duration(
                                               seconds: ((int.parse(
                                                           fastingStatusModel
                                                               .startedHours) *
@@ -209,20 +252,20 @@ class _TrackFastingState extends State<TrackFasting> {
                             color: primary_color,
                             onPressed: () {
                               setState(() {
-                                if (fastingHours >= 8 &&
+                                if (fastingStatusModel.fastingHours >= 8 &&
                                     !fastingStatusModel.isStarted) {
-                                  fastingHours--;
+                                  fastingStatusModel.decFastingHours();
                                 }
                               });
                             },
                           ),
                           !fastingStatusModel.isStarted
                               ? Text(
-                                  "${fastingHours.toString()} hr",
+                                  "${fastingStatusModel.fastingHours.toString()} hr",
                                   style: const TextStyle(fontSize: 25),
                                 )
                               : Text(
-                                  "${fastingStatusModel.startedHours.toString()} hr",
+                                  "${fastingStatusModel.startedHours} hr",
                                   style: const TextStyle(fontSize: 25),
                                 ),
                           IconButton(
@@ -232,7 +275,7 @@ class _TrackFastingState extends State<TrackFasting> {
                               onPressed: () {
                                 setState(() {
                                   if (!fastingStatusModel.isStarted) {
-                                    fastingHours++;
+                                    fastingStatusModel.incFastingHours();
                                   }
                                 });
                               }),
@@ -244,25 +287,29 @@ class _TrackFastingState extends State<TrackFasting> {
                       GestureDetector(
                         onTap: () async {
                           setState(() {
-                            if (!fastingStatusModel.isStarted) {
-                              try {
-                                fastingStatusModel.isStarted = true;
-                                fastingStatusModel
-                                    .startTimer(fastingHours.toDouble() * 3600);
-                                addUser(DateTime.now().toString(),
-                                    fastingHours.toString());
-                              } catch (e) {
-                                print(e);
+                            try {
+                              if (!fastingStatusModel.isStarted) {
+                                fastingStatusModel.startedHours =
+                                    fastingStatusModel.fastingHours.toString();
+                                fastingStatusModel.startedTime = DateTime.now();
+                                try {
+                                  fastingStatusModel.isStarted = true;
+                                  addUser(
+                                      DateTime.now().toString(),
+                                      fastingStatusModel.fastingHours
+                                          .toString());
+                                  fastingStatusModel.startTimer(
+                                      fastingStatusModel.fastingHours
+                                              .toDouble() *
+                                          3600);
+                                } catch (e) {
+                                  print(e);
+                                }
+                              } else {
+                                _showDialogue();
                               }
-                            } else {
-                              //todo: functionality to save or delete the fast
-                              fastingStatusModel.value = 0;
-                              fastingStatusModel.timer.cancel();
-                              fastingStatusModel.isStarted = false;
-                              receivedData.update({
-                                'fasting': false,
-                                'hours': '7',
-                              });
+                            } catch (e) {
+                              print(e);
                             }
                           });
                         },

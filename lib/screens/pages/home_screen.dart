@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
 import 'package:dhyanin_app/screens/widgets/my_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'meditation_screen.dart';
 
@@ -15,6 +19,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late FastingStatusProvider model;
+
+  int getTimeDifference(DateTime timeStarted) {
+    Duration diff = DateTime.now().difference(timeStarted);
+    return diff.inSeconds;
+  }
+
+  @override
+  void initState() {
+    model = Provider.of<FastingStatusProvider>(context, listen: false);
+    model.getUser();
+    try {
+      if (model.isStarted) {
+        model.startTimer((double.parse(model.startedHours) * 3600) -
+            getTimeDifference(model.startedTime));
+      }
+    } catch (e) {
+      print(e);
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    model.timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

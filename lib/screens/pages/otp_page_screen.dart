@@ -117,6 +117,14 @@ class _OtpPageState extends State<OtpPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                              color: color_2,
+                            ));
+                          });
                       try {
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(

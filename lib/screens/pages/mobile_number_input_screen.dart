@@ -120,6 +120,14 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                              color: color_2,
+                            ));
+                          });
                       await FirebaseAuth.instance.verifyPhoneNumber(
                         phoneNumber: '${countryCodeController.text + phone}',
                         verificationCompleted:

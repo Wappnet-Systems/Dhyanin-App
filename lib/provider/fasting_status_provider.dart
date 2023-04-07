@@ -12,6 +12,17 @@ class FastingStatusProvider extends ChangeNotifier {
   DateTime startedTime = DateTime.now();
   double value = 0;
   double fastedHours = 7;
+  int fastingHours = 7;
+
+  incFastingHours() {
+    fastingHours++;
+    notifyListeners();
+  }
+
+  decFastingHours() {
+    fastingHours--;
+    notifyListeners();
+  }
 
   Timer timer = Timer(const Duration(days: 30), () => print('Timer finished'));
   HistoryController historyController = HistoryController();
@@ -46,20 +57,21 @@ class FastingStatusProvider extends ChangeNotifier {
     timer = Timer.periodic(
       oneSec,
       (Timer timer) {
-        if (value < 1) {
+        if (value < 2) {
+          timer.cancel();
+          isStarted = false;
           FirebaseFirestore.instance
               .collection("users")
               .doc(FirebaseAuth.instance.currentUser?.uid)
               .collection("trackdata")
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .update({'fasting': false, 'hours': '7'});
-          timer.cancel();
           value = 0;
-          // listHistory = historyController.read("history");
-          // listHistory.add(History(
-          //     dateTime: DateTime.now(), fastingHours: int.parse(startedHours)));
-          // historyController.save("history", listHistory.cast<History>());
-          // print('history is saved: $listHistory');
+          listHistory = historyController.read("history");
+          listHistory.add(History(
+              dateTime: DateTime.now(), fastingHours: int.parse(startedHours)));
+          historyController.save("history", listHistory.cast<History>());
+          print('history is saved: $listHistory');
           notifyListeners();
         } else {
           value--;
@@ -68,5 +80,30 @@ class FastingStatusProvider extends ChangeNotifier {
         }
       },
     );
+  }
+
+  endFast() {
+    value = 0;
+    timer.cancel();
+    isStarted = false;
+    notifyListeners();
+  }
+
+  completeFast() {
+    isStarted = false;
+    notifyListeners();
+  }
+
+  addFastInHistory() {
+    HistoryController.init();
+    try {
+      listHistory = historyController.read("history");
+      listHistory.add(History(
+          dateTime: startedTime.add(Duration(hours: int.parse(startedHours))),
+          fastingHours: int.parse(startedHours)));
+      historyController.save("history", listHistory.cast<History>());
+    } catch (e) {
+      print(e);
+    }
   }
 }
