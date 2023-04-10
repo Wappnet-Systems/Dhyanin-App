@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class FastingStatusProvider extends ChangeNotifier {
   bool isStarted = false;
-  String startedHours = "";
+  String startedHours = "7";
   DateTime startedTime = DateTime.now();
   double value = 0;
   double fastedHours = 7;
@@ -89,7 +89,7 @@ class FastingStatusProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  completeFast() {
+  void completeFast() {
     isStarted = false;
     notifyListeners();
   }

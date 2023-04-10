@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/history_screen.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/screens/widgets/get_duration.dart';
+import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,6 @@ class _TrackFastingState extends State<TrackFasting> {
   // double fastedHours = 0;
   double timeDifference = 0;
   late FastingStatusProvider model;
-  late bool isStarted;
 
   // List<History> listHistory = [];
 
@@ -60,34 +61,33 @@ class _TrackFastingState extends State<TrackFasting> {
   void initState() {
     model = Provider.of<FastingStatusProvider>(context, listen: false);
     model.getUser();
-    isStarted = model.isStarted;
     try {
       HistoryController.init();
       if (model.isStarted) {
-        model.startTimer((double.parse(model.startedHours) * 3600) -
-            getTimeDifference(model.startedTime));
+        if ((int.parse(model.startedHours) * 3600) -
+                getTimeDifference(model.startedTime) <
+            0) {
+          model.addFastInHistory();
+          model.isStarted = false;
+          Future.delayed(Duration.zero, () {
+            model.completeFast();
+          });
+          receivedData.update({
+            'fasting': false,
+            'hours': '7',
+            // 'startTime': DateTime.parse(
+            //     DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())),
+          });
+        } else {
+          model.startTimer((double.parse(model.startedHours) * 3600) -
+              getTimeDifference(model.startedTime));
+        }
       }
-
-      // if ((int.parse(model.startedHours) * 3600) -
-      //         getTimeDifference(model.startedTime) <
-      //     0) {
-      //   model.addFastInHistory();
-      //   isStarted = false;
-      //   receivedData.update({
-      //     'fasting': false,
-      //     'hours': '7',
-      //     'startTime': DateTime.now().toString(),
-      //   });
-      // }
     } catch (e) {
       print(e);
     }
-    super.initState();
-  }
 
-  int getTimeDifference(DateTime timeStarted) {
-    Duration diff = DateTime.now().difference(timeStarted);
-    return diff.inSeconds;
+    super.initState();
   }
 
   @override
@@ -131,6 +131,15 @@ class _TrackFastingState extends State<TrackFasting> {
 
   @override
   Widget build(BuildContext context) {
+    if (model.isStarted &&
+        (int.parse(model.startedHours) * 3600) -
+                getTimeDifference(model.startedTime) <
+            0) {
+      Future.delayed(Duration.zero, () {
+        model.completeFast();
+      });
+      model.isStarted = false;
+    }
     return Scaffold(
       backgroundColor: background_color,
       appBar: CustomAppBar(title: 'Track My Fast'),
@@ -295,7 +304,8 @@ class _TrackFastingState extends State<TrackFasting> {
                                 try {
                                   fastingStatusModel.isStarted = true;
                                   addUser(
-                                      DateTime.now().toString(),
+                                      DateFormat("yyyy-MM-dd HH:mm:ss")
+                                          .format(DateTime.now()),
                                       fastingStatusModel.fastingHours
                                           .toString());
                                   fastingStatusModel.startTimer(

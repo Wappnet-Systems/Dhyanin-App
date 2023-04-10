@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
+import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
 import 'package:dhyanin_app/screens/widgets/my_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';
@@ -21,23 +23,32 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late FastingStatusProvider model;
 
-  int getTimeDifference(DateTime timeStarted) {
-    Duration diff = DateTime.now().difference(timeStarted);
-    return diff.inSeconds;
-  }
-
   @override
   void initState() {
     model = Provider.of<FastingStatusProvider>(context, listen: false);
     model.getUser();
+    HistoryController.init();
     try {
       if (model.isStarted) {
-        model.startTimer((double.parse(model.startedHours) * 3600) -
-            getTimeDifference(model.startedTime));
+        if ((int.parse(model.startedHours) * 3600) -
+                getTimeDifference(model.startedTime) <
+            0) {
+          // HistoryController.init();
+          // model.addFastInHistory();
+          // model.isStarted = false;
+          // Future.delayed(Duration.zero, () {
+          //   model.completeFast();
+          // });
+        }
+        // else {
+        //   model.startTimer((double.parse(model.startedHours) * 3600) -
+        //       getTimeDifference(model.startedTime));
+        // }
       }
     } catch (e) {
       print(e);
     }
+
     super.initState();
   }
 

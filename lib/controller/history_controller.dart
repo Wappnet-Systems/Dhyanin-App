@@ -32,6 +32,8 @@ class HistoryController {
     for (var item in historyList) {
       list!.add(json.encode(item.toJson()));
     }
-    prefs!.setStringList(key, list!);
+    if (prefs != null) {
+      prefs!.setStringList(key, list!);
+    }
   }
 }
