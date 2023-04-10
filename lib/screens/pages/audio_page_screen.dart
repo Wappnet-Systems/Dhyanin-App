@@ -19,17 +19,24 @@ class _AudioPageState extends State<AudioPage> {
 
   AudioPlayer audioPlayer = AudioPlayer();
 
+  // https://www.mcgill.ca/wellness-hub/files/wellness-hub/breathing_meditation_0.mp3 //for 5 minutes
+
   void initPlayer() async {
     if (widget.indexOfAudio == 0) {
-      await audioPlayer.setSource(AssetSource("audio/breath_5min.mp3"));
+      await audioPlayer.setSourceUrl(
+          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_5min.mp3?alt=media&token=3338c37f-7eec-40ff-8699-6de94a8032a0");
     } else if (widget.indexOfAudio == 1) {
-      await audioPlayer.setSource(AssetSource("audio/breath_10min.mp3"));
+      await audioPlayer.setSourceUrl(
+          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_10min.mp3?alt=media&token=9eed7fc2-e5f0-45c8-bf3d-7427d0d3ce12");
     } else if (widget.indexOfAudio == 2) {
-      await audioPlayer.setSource(AssetSource("audio/breath_15min.mp3"));
+      await audioPlayer.setSourceUrl(
+          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_15min.mp3?alt=media&token=642f82ea-4ee8-4450-a3a9-d9a70f99dc83");
     } else if (widget.indexOfAudio == 3) {
-      await audioPlayer.setSource(AssetSource("audio/breath_20min.mp3"));
+      await audioPlayer.setSourceUrl(
+          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_20min.mp3?alt=media&token=f0c3bee2-2a50-447e-81a6-654e81b5abfd");
     } else {
-      await audioPlayer.setSource(AssetSource("audio/breath_30min.mp3"));
+      await audioPlayer.setSourceUrl(
+          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_30min.mp3?alt=media&token=85951b66-e7b6-493a-ac15-5d126b99448b");
     }
     duration = (await audioPlayer.getDuration())!;
   }
@@ -40,9 +47,13 @@ class _AudioPageState extends State<AudioPage> {
     initPlayer();
     //Listen to states: playing, pausing, stopped
     audioPlayer.onPlayerStateChanged.listen((state) {
-      setState(() {
-        isPlaying = state == PlayerState.playing;
-      });
+      try {
+        setState(() {
+          isPlaying = state == PlayerState.playing;
+        });
+      } catch (e) {
+        print(e);
+      }
     });
 
     //Listen to audio duration
