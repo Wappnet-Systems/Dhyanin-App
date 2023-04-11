@@ -1,6 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dhyanin_app/screens/pages/home_screen.dart';
-import 'package:dhyanin_app/screens/pages/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -110,7 +110,7 @@ class _MeditationState extends State<Meditation> {
               const Padding(
                 padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
                 child: Text(
-                  'Select Repeat cycle',
+                  'Select Repeat Cycle',
                   style: textStyle_body,
                 ),
               ),
