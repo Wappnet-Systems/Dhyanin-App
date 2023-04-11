@@ -6,7 +6,9 @@ import 'package:lottie/lottie.dart';
 
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
-  const AudioPage({super.key, required this.indexOfAudio});
+  final int? repeatTimes;
+  const AudioPage(
+      {super.key, required this.indexOfAudio, required this.repeatTimes});
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -16,27 +18,21 @@ class _AudioPageState extends State<AudioPage> {
   bool isPlaying = false; //Audio play or pause status
   Duration duration = Duration.zero; //Total duration of the audio
   Duration position = Duration.zero; //Current position of the audio
+  int timesPlayed = 0; //audio completed this times
 
   AudioPlayer audioPlayer = AudioPlayer();
 
-  // https://www.mcgill.ca/wellness-hub/files/wellness-hub/breathing_meditation_0.mp3 //for 5 minutes
-
   void initPlayer() async {
     if (widget.indexOfAudio == 0) {
-      await audioPlayer.setSourceUrl(
-          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_5min.mp3?alt=media&token=3338c37f-7eec-40ff-8699-6de94a8032a0");
+      await audioPlayer.setSourceUrl(Breath5min);
     } else if (widget.indexOfAudio == 1) {
-      await audioPlayer.setSourceUrl(
-          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_10min.mp3?alt=media&token=9eed7fc2-e5f0-45c8-bf3d-7427d0d3ce12");
+      await audioPlayer.setSourceUrl(Breath10min);
     } else if (widget.indexOfAudio == 2) {
-      await audioPlayer.setSourceUrl(
-          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_15min.mp3?alt=media&token=642f82ea-4ee8-4450-a3a9-d9a70f99dc83");
+      await audioPlayer.setSourceUrl(Breath15min);
     } else if (widget.indexOfAudio == 3) {
-      await audioPlayer.setSourceUrl(
-          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_20min.mp3?alt=media&token=f0c3bee2-2a50-447e-81a6-654e81b5abfd");
+      await audioPlayer.setSourceUrl(Breath20min);
     } else {
-      await audioPlayer.setSourceUrl(
-          "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/breath_30min.mp3?alt=media&token=85951b66-e7b6-493a-ac15-5d126b99448b");
+      await audioPlayer.setSourceUrl(Breath30min);
     }
     duration = (await audioPlayer.getDuration())!;
   }
@@ -68,6 +64,25 @@ class _AudioPageState extends State<AudioPage> {
       setState(() {
         position = newPosition;
       });
+    });
+
+    audioPlayer.onPlayerComplete.listen((event) {
+      setState(() {
+        timesPlayed++;
+      });
+      if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
+        if (widget.indexOfAudio == 0) {
+          audioPlayer.play(UrlSource(Breath5min));
+        } else if (widget.indexOfAudio == 1) {
+          audioPlayer.play(UrlSource(Breath10min));
+        } else if (widget.indexOfAudio == 2) {
+          audioPlayer.play(UrlSource(Breath15min));
+        } else if (widget.indexOfAudio == 3) {
+          audioPlayer.play(UrlSource(Breath20min));
+        } else {
+          audioPlayer.play(UrlSource(Breath30min));
+        }
+      }
     });
   }
 

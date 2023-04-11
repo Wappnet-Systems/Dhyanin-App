@@ -14,6 +14,7 @@ class Meditation extends StatefulWidget {
 
 class _MeditationState extends State<Meditation> {
   int value = 0; //index value of by default duration
+  int repeatValue = 0;
 
   //Custom radio button widget for duration
   Widget customRadioButton(String text, int index) {
@@ -31,6 +32,28 @@ class _MeditationState extends State<Meditation> {
         text,
         style: TextStyle(
           color: (value == index) ? color_2 : Colors.black,
+        ),
+      ),
+    );
+  }
+
+  //Custom radio button widget for duration
+  Widget customRadioButtonRepeat(String text, int index) {
+    return OutlinedButton(
+      onPressed: () {
+        setState(() {
+          repeatValue = index;
+        });
+      },
+      style: OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side:
+            BorderSide(color: (repeatValue == index) ? color_2 : Colors.black),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: (repeatValue == index) ? color_2 : Colors.black,
         ),
       ),
     );
@@ -85,6 +108,35 @@ class _MeditationState extends State<Meditation> {
                 height: MediaQuery.of(context).size.height * 0.04,
               ),
               const Padding(
+                padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
+                child: Text(
+                  'Select Repeat cycle',
+                  style: textStyle_body,
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    customRadioButtonRepeat('1 time', 0),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonRepeat('2 times', 1),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonRepeat('3 times', 2),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
+              ),
+              const Padding(
                 padding: EdgeInsets.only(top: 15.0, left: 5.0),
                 child: Text(
                   'Choose Your Meditation',
@@ -98,6 +150,7 @@ class _MeditationState extends State<Meditation> {
                 name: 'Breathe',
                 next_page: AudioPage(
                   indexOfAudio: value,
+                  repeatTimes: repeatValue,
                 ),
               ),
             ],
