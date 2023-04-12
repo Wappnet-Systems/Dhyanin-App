@@ -14,11 +14,14 @@ class AudioPage extends StatefulWidget {
   State<AudioPage> createState() => _AudioPageState();
 }
 
-class _AudioPageState extends State<AudioPage> {
+class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   bool isPlaying = false; //Audio play or pause status
   Duration duration = Duration.zero; //Total duration of the audio
   Duration position = Duration.zero; //Current position of the audio
   int timesPlayed = 0; //audio completed this times
+  late AnimationController _breathingController;
+  String breathMessage = "Inhale";
+  var _breath = 0.0;
 
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -39,7 +42,23 @@ class _AudioPageState extends State<AudioPage> {
 
   @override
   void initState() {
-    super.initState();
+    _breathingController =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
+    _breathingController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _breathingController.reverse();
+        breathMessage = "Exhale";
+      } else if (status == AnimationStatus.dismissed) {
+        _breathingController.forward();
+        breathMessage = "Inhale";
+      }
+    });
+    _breathingController.addListener(() {
+      setState(() {
+        _breath = _breathingController.value;
+      });
+    });
+    _breathingController.forward();
     initPlayer();
     //Listen to states: playing, pausing, stopped
     audioPlayer.onPlayerStateChanged.listen((state) {
@@ -84,16 +103,19 @@ class _AudioPageState extends State<AudioPage> {
         }
       }
     });
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _breathingController.dispose();
     audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = 30.0 + 180.0 * _breath;
     return Scaffold(
       backgroundColor: background_color,
       body: Padding(
@@ -101,50 +123,66 @@ class _AudioPageState extends State<AudioPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Lottie.asset(
-                  'assets/lottie/audio.json',
-                  width: double.infinity,
-                  height: 350,
-                ),
-              ),
-            ),
-            const Text(
-              "Meditation Audio",
-              style: textStyle_body,
-            ),
-            Slider(
-                activeColor: primary_color,
-                min: 0,
-                max: duration.inSeconds.toDouble(),
-                value: position.inSeconds.toDouble(),
-                onChanged: (value) {}),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 1.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(formatTime(position)),
-                  Text(formatTime(duration - position)),
+                  Center(
+                    child: Container(
+                        height: size,
+                        width: size,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100.0),
+                          color: primary_color,
+                        )),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Text(
+                    breathMessage,
+                    style: textStyle_body,
+                  ),
                 ],
               ),
             ),
-            CircleAvatar(
-              radius: 35,
-              backgroundColor: primary_color,
-              child: IconButton(
-                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                iconSize: 50,
-                onPressed: () async {
-                  if (isPlaying) {
-                    await audioPlayer.pause();
-                  } else {
-                    await audioPlayer.resume();
-                  }
-                },
+            Container(
+              height: MediaQuery.of(context).size.height / 5,
+              child: Column(
+                children: [
+                  Slider(
+                      activeColor: primary_color,
+                      min: 0,
+                      max: duration.inSeconds.toDouble(),
+                      value: position.inSeconds.toDouble(),
+                      onChanged: (value) {}),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(formatTime(position)),
+                        Text(formatTime(duration - position)),
+                      ],
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 35,
+                    backgroundColor: primary_color,
+                    child: IconButton(
+                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                      iconSize: 50,
+                      onPressed: () async {
+                        if (isPlaying) {
+                          await audioPlayer.pause();
+                        } else {
+                          await audioPlayer.resume();
+                        }
+                      },
+                    ),
+                  )
+                ],
               ),
             )
           ],

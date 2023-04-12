@@ -129,6 +129,14 @@ class _MeditationState extends State<Meditation> {
                     customRadioButtonRepeat('3 times', 2),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonRepeat('4 times', 3),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonRepeat('5 times', 4),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
                     )
                   ],
                 ),
@@ -139,7 +147,7 @@ class _MeditationState extends State<Meditation> {
               const Padding(
                 padding: EdgeInsets.only(top: 15.0, left: 5.0),
                 child: Text(
-                  'Choose Your Meditation',
+                  'Breathing Guided Meditation',
                   style: textStyle_body,
                 ),
               ),
@@ -147,7 +155,7 @@ class _MeditationState extends State<Meditation> {
                 height: MediaQuery.of(context).size.height * 0.04,
               ),
               SimpleCard(
-                name: 'Breathe',
+                name: 'Start',
                 next_page: AudioPage(
                   indexOfAudio: value,
                   repeatTimes: repeatValue,
