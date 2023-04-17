@@ -68,7 +68,7 @@ class _OtpPageState extends State<OtpPage> {
                   child: const Text(
                     'Registration',
                     textAlign: TextAlign.center,
-                    style: textStyle_heading,
+                    style: headingStyle,
                   ),
                 ),
                 SizedBox(
@@ -117,15 +117,10 @@ class _OtpPageState extends State<OtpPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Center(
-                                child: CircularProgressIndicator(
-                              color: color_2,
-                            ));
-                          });
                       try {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Login Successfully!"),
+                        ));
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(
                                 verificationId: MobileNumberInput.verify,
@@ -138,6 +133,9 @@ class _OtpPageState extends State<OtpPage> {
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen()));
                       } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Invalid OTP! Please try again"),
+                        ));
                         print("Wrong OTP");
                       }
                     },

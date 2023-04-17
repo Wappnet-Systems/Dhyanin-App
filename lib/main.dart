@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             }
             if (snapshot.connectionState == ConnectionState.done) {
               return MaterialApp(
-                  title: PROJECT_TITLE,
+                  title: projectTitle,
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
                     primarySwatch: Colors.blue,

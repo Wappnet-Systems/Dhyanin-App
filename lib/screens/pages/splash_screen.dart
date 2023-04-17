@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               Text(
-                PROJECT_TITLE,
+                projectTitle,
                 style: TextStyle(
                     fontSize: 20, fontWeight: FontWeight.bold, color: color_2),
               )

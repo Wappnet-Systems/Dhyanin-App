@@ -113,16 +113,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: MediaQuery.of(context).size.height * .03),
                     const Text(
                       'Good',
-                      style: textStyle_heading,
+                      style: headingStyle,
                     ),
                     Text(
                       greeting(),
-                      style: textStyle_heading,
+                      style: headingStyle,
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     const Text(
                       'Have a great day!',
-                      style: textStyle_body,
+                      style: bodyStyle,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,

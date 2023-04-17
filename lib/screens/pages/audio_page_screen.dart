@@ -1,8 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
@@ -22,21 +23,33 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   late AnimationController _breathingController;
   String breathMessage = "Inhale";
   var _breath = 0.0;
+  late int meditationMinutes;
+  late int remainingMeditationMinutes;
+  int selectedAudio = 1;
 
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
     if (widget.indexOfAudio == 0) {
-      await audioPlayer.setSourceUrl(Breath5min);
+      meditationMinutes = 5;
+      remainingMeditationMinutes = 5;
     } else if (widget.indexOfAudio == 1) {
-      await audioPlayer.setSourceUrl(Breath10min);
+      meditationMinutes = 10;
+      remainingMeditationMinutes = 10;
     } else if (widget.indexOfAudio == 2) {
-      await audioPlayer.setSourceUrl(Breath15min);
+      meditationMinutes = 15;
+      remainingMeditationMinutes = 15;
     } else if (widget.indexOfAudio == 3) {
-      await audioPlayer.setSourceUrl(Breath20min);
+      meditationMinutes = 20;
+      remainingMeditationMinutes = 20;
     } else {
-      await audioPlayer.setSourceUrl(Breath30min);
+      meditationMinutes = 30;
+      remainingMeditationMinutes = 30;
     }
+    audioPlayer.play(AssetSource(audio1));
+    // audioPlayer.play(UrlSource(
+    // "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
+    // audioPlayer.play(UrlSource(audio1));
     duration = (await audioPlayer.getDuration())!;
   }
 
@@ -86,20 +99,52 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     });
 
     audioPlayer.onPlayerComplete.listen((event) {
-      setState(() {
-        timesPlayed++;
-      });
-      if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
-        if (widget.indexOfAudio == 0) {
-          audioPlayer.play(UrlSource(Breath5min));
-        } else if (widget.indexOfAudio == 1) {
-          audioPlayer.play(UrlSource(Breath10min));
-        } else if (widget.indexOfAudio == 2) {
-          audioPlayer.play(UrlSource(Breath15min));
-        } else if (widget.indexOfAudio == 3) {
-          audioPlayer.play(UrlSource(Breath20min));
-        } else {
-          audioPlayer.play(UrlSource(Breath30min));
+      String audiopath = audio1;
+      switch (selectedAudio) {
+        case 1:
+          {
+            audiopath = audio1;
+          }
+          break;
+        case 2:
+          {
+            audiopath = audio2;
+          }
+          break;
+        case 3:
+          {
+            audiopath = audio3;
+          }
+          break;
+        case 4:
+          {
+            audiopath = audio4;
+          }
+          break;
+        case 5:
+          {
+            audiopath = audio5;
+          }
+          break;
+      }
+
+      if (timesPlayed <= int.parse(widget.repeatTimes.toString()) &&
+          remainingMeditationMinutes > 1) {
+        remainingMeditationMinutes--;
+        // audioPlayer.play(UrlSource(audiopath));
+        audioPlayer.play(AssetSource(audiopath));
+        // audioPlayer.play(UrlSource(
+        //     "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
+      } else {
+        setState(() {
+          timesPlayed++;
+        });
+        if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
+          // audioPlayer.play(UrlSource(audiopath));
+          audioPlayer.play(AssetSource(audiopath));
+          // audioPlayer.play(UrlSource(
+          //     "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
+          remainingMeditationMinutes = meditationMinutes;
         }
       }
     });
@@ -118,74 +163,236 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     final size = 30.0 + 180.0 * _breath;
     return Scaffold(
       backgroundColor: background_color,
+      appBar: const CustomAppBar(title: 'Breath Meditation'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 1.9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Container(
-                        height: size,
-                        width: size,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(100.0),
-                          color: primary_color,
-                        )),
+        child: SafeArea(
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  Text(
-                    breathMessage,
-                    style: textStyle_body,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height / 5,
-              child: Column(
-                children: [
-                  Slider(
-                      activeColor: primary_color,
-                      min: 0,
-                      max: duration.inSeconds.toDouble(),
-                      value: position.inSeconds.toDouble(),
-                      onChanged: (value) {}),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  color: Colors.blueGrey.shade100,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 5,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(formatTime(position)),
-                        Text(formatTime(duration - position)),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5.0, top: 5.0, bottom: 5.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.hourglass_empty_rounded,
+                                color: primary_color,
+                                size: 30,
+                              ),
+                              // SizedBox(
+                              //   width: MediaQuery.of(context).size.width * 0.025,
+                              // ),
+                              Text(
+                                (widget.repeatTimes! + 1 - timesPlayed)
+                                        .toString() +
+                                    ' out ' +
+                                    (widget.repeatTimes! + 1).toString() +
+                                    ' remaining',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: 5.0, top: 5.0, bottom: 5.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.alarm,
+                                color: primary_color,
+                                size: 30,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              Text(
+                                formatTime(position) +
+                                    ' || ' +
+                                    (meditationMinutes).toString() +
+                                    ':00',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundColor: primary_color,
-                    child: IconButton(
-                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                      iconSize: 50,
-                      onPressed: () async {
-                        if (isPlaying) {
-                          await audioPlayer.pause();
-                        } else {
-                          await audioPlayer.resume();
-                        }
-                      },
-                    ),
-                  )
-                ],
+                ),
               ),
-            )
-          ],
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 5,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .8,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/sky.jpeg'),
+                      colorFilter:
+                          ColorFilter.mode(Colors.white, BlendMode.dstATop),
+                      opacity: 1,
+                      fit: BoxFit.fill,
+                      alignment: Alignment.topCenter,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 1.9,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Container(
+                                  height: duration != Duration.zero
+                                      ? (widget.repeatTimes! +
+                                                  1 -
+                                                  timesPlayed) !=
+                                              0
+                                          ? size
+                                          : 200
+                                      : 200,
+                                  width: duration != Duration.zero
+                                      ? (widget.repeatTimes! +
+                                                  1 -
+                                                  timesPlayed) !=
+                                              0
+                                          ? size
+                                          : 200
+                                      : 200,
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    color: Color.fromARGB(255, 239, 101, 200)
+                                        .withOpacity(0.8),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            duration != Duration.zero
+                                ? (widget.repeatTimes! + 1 - timesPlayed) != 0
+                                    ? Text(
+                                        breathMessage,
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.black),
+                                      )
+                                    : Text(
+                                        'Successfully Completed!',
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.black),
+                                      )
+                                : Text(
+                                    'Loading...',
+                                    style: TextStyle(
+                                        fontSize: 25, color: Colors.black),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height / 5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 35,
+                              backgroundColor:
+                                  Color.fromARGB(255, 239, 101, 200)
+                                      .withOpacity(0.8),
+                              child: IconButton(
+                                icon: Icon(Icons.audiotrack),
+                                iconSize: 50,
+                                onPressed: () async {
+                                  if (selectedAudio < 5) {
+                                    selectedAudio++;
+                                  } else {
+                                    selectedAudio = 1;
+                                  }
+                                  setState(() {});
+                                  switch (selectedAudio) {
+                                    case 1:
+                                      {
+                                        audioPlayer.setSourceAsset(audio1);
+                                      }
+                                      break;
+                                    case 2:
+                                      {
+                                        audioPlayer.setSourceAsset(audio2);
+                                      }
+                                      break;
+                                    case 3:
+                                      {
+                                        audioPlayer.setSourceAsset(audio3);
+                                      }
+                                      break;
+                                    case 4:
+                                      {
+                                        audioPlayer.setSourceAsset(audio4);
+                                      }
+                                      break;
+                                    case 5:
+                                      {
+                                        audioPlayer.setSourceAsset(audio5);
+                                      }
+                                      break;
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.05,
+                            ),
+                            CircleAvatar(
+                              radius: 35,
+                              backgroundColor:
+                                  Color.fromARGB(255, 239, 101, 200)
+                                      .withOpacity(0.8),
+                              child: IconButton(
+                                icon: Icon(
+                                    isPlaying ? Icons.pause : Icons.play_arrow),
+                                iconSize: 50,
+                                onPressed: () async {
+                                  if (isPlaying) {
+                                    _breathingController.stop();
+                                    await audioPlayer.pause();
+                                  } else {
+                                    _breathingController.reset();
+                                    await audioPlayer.resume();
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

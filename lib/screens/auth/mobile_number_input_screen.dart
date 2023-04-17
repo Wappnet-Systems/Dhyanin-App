@@ -5,6 +5,8 @@ import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class MobileNumberInput extends StatefulWidget {
   const MobileNumberInput({super.key});
@@ -26,6 +28,16 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
     super.initState();
     countryCodeController.text = '+91';
   }
+
+  var prefixFormatter = new MaskTextInputFormatter(
+      mask: '+###',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
+
+  var mobileNumberFormatter = new MaskTextInputFormatter(
+      mask: '##########',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +83,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                       child: const Text(
                         'Registration',
                         textAlign: TextAlign.center,
-                        style: textStyle_heading,
+                        style: headingStyle,
                       ),
                     ),
                     SizedBox(
@@ -117,6 +129,8 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                           SizedBox(
                             width: 40,
                             child: TextField(
+                              inputFormatters: [prefixFormatter],
+                              keyboardType: TextInputType.phone,
                               controller: countryCodeController,
                               decoration: const InputDecoration(
                                   border: InputBorder.none),
@@ -133,6 +147,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                           ),
                           Expanded(
                             child: TextField(
+                              inputFormatters: [mobileNumberFormatter],
                               onChanged: (value) {
                                 phone = value;
                               },

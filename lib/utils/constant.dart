@@ -1,21 +1,28 @@
 //Project name
 import 'package:flutter/material.dart';
 
-const String PROJECT_TITLE = 'Dhyanin';
+const String projectTitle = 'Dhyanin';
 
 //textstyles
-const TextStyle textStyle_heading =
+const TextStyle headingStyle =
     TextStyle(fontSize: 45, fontWeight: FontWeight.w500);
-const TextStyle textStyle_body = TextStyle(fontSize: 25);
+const TextStyle bodyStyle = TextStyle(fontSize: 25);
 
 //audio files urls
-const String Breath5min =
-    "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/5min.mp3?alt=media&token=fb827c86-8e80-4a02-8ddb-179d5ebcc565";
-const String Breath10min =
-    "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/10min.mp3?alt=media&token=f581ad77-c0e2-49fb-a285-9ae654388cb4";
-const String Breath15min =
-    "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/15min.mp3?alt=media&token=0a9bfdaa-8637-4cee-8a50-490ecd3f94ff";
-const String Breath20min =
-    "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/20min.m4a?alt=media&token=ce069bc9-c8d3-4177-a10b-e091dc4423ea";
-const String Breath30min =
-    "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/30min.m4a?alt=media&token=145d4cfc-1367-408b-8baf-4189179912ec";
+// const String audio1 =
+//     "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/Relaxing%20Audio%2Faudio1.m4a?alt=media&token=b972ccfa-c0e4-4d33-b06a-710e45fe8e88";
+// const String audio2 =
+//     "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/Relaxing%20Audio%2Faudio2.m4a?alt=media&token=17fa9c95-2cef-4e63-8448-092e8d28fe7f";
+// const String audio3 =
+//     "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/Relaxing%20Audio%2Faudio3.m4a?alt=media&token=4579c2d1-bc4d-4210-8e4a-781b13ec81ae";
+// const String audio4 =
+//     "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/Relaxing%20Audio%2Faudio4.m4a?alt=media&token=fc2493be-4b96-4cbf-a7c2-1687ee20bcab";
+// const String audio5 =
+//     "https://firebasestorage.googleapis.com/v0/b/dhyanin-622d7.appspot.com/o/Relaxing%20Audio%2Faudio5.m4a?alt=media&token=07df7dc9-c7a6-420b-bea7-5ef74f502f8d";
+
+//audio files urls for assets
+const String audio1 = "audios/audio1.m4a";
+const String audio2 = "audios/audio2.m4a";
+const String audio3 = "audios/audio3.m4a";
+const String audio4 = "audios/audio4.m4a";
+const String audio5 = "audios/audio5.m4a";

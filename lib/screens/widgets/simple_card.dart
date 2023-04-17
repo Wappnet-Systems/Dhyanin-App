@@ -23,7 +23,7 @@ class SimpleCard extends StatelessWidget {
               color: primary_color, borderRadius: BorderRadius.circular(15.0)),
           child: Row(
             children: [
-              const Icon(Icons.play_arrow, size: 50, color: background_color),
+              const Icon(Icons.play_arrow, size: 40, color: background_color),
               Padding(
                 padding: const EdgeInsets.only(left: 5.0),
                 child: Text(
@@ -31,15 +31,15 @@ class SimpleCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
-              const Expanded(child: SizedBox()),
-              const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  Icons.arrow_forward,
-                  size: 40,
-                  color: background_color,
-                ),
-              )
+              // const Expanded(child: SizedBox()),
+              // const Padding(
+              //   padding: EdgeInsets.only(right: 8.0),
+              //   child: Icon(
+              //     Icons.arrow_forward,
+              //     size: 40,
+              //     color: background_color,
+              //   ),
+              // )
             ],
           ),
         ),

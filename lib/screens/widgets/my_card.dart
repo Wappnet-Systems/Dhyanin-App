@@ -24,6 +24,7 @@ class MyCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
+        margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
         child: Container(
           height: 150,
           width: double.infinity,
@@ -40,7 +41,6 @@ class MyCard extends StatelessWidget {
             ),
           ),
         ),
-        margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
       ),
     );
   }

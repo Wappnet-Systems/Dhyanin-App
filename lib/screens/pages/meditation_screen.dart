@@ -74,7 +74,7 @@ class _MeditationState extends State<Meditation> {
                 padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
                 child: Text(
                   'Select Duration',
-                  style: textStyle_body,
+                  style: bodyStyle,
                 ),
               ),
               SingleChildScrollView(
@@ -111,7 +111,7 @@ class _MeditationState extends State<Meditation> {
                 padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
                 child: Text(
                   'Select Repeat Cycle',
-                  style: textStyle_body,
+                  style: bodyStyle,
                 ),
               ),
               SingleChildScrollView(
@@ -148,7 +148,7 @@ class _MeditationState extends State<Meditation> {
                 padding: EdgeInsets.only(top: 15.0, left: 5.0),
                 child: Text(
                   'Breathing Guided Meditation',
-                  style: textStyle_body,
+                  style: bodyStyle,
                 ),
               ),
               SizedBox(
