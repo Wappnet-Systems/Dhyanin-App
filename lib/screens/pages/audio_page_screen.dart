@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
@@ -26,6 +29,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   late int meditationMinutes;
   late int remainingMeditationMinutes;
   int selectedAudio = 1;
+  Duration currPosition = Duration.zero;
 
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -47,9 +51,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       remainingMeditationMinutes = 30;
     }
     audioPlayer.play(AssetSource(audio1));
-    // audioPlayer.play(UrlSource(
-    // "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
-    // audioPlayer.play(UrlSource(audio1));
     duration = (await audioPlayer.getDuration())!;
   }
 
@@ -99,52 +100,53 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     });
 
     audioPlayer.onPlayerComplete.listen((event) {
-      String audiopath = audio1;
-      switch (selectedAudio) {
-        case 1:
-          {
-            audiopath = audio1;
-          }
-          break;
-        case 2:
-          {
-            audiopath = audio2;
-          }
-          break;
-        case 3:
-          {
-            audiopath = audio3;
-          }
-          break;
-        case 4:
-          {
-            audiopath = audio4;
-          }
-          break;
-        case 5:
-          {
-            audiopath = audio5;
-          }
-          break;
-      }
-
-      if (timesPlayed <= int.parse(widget.repeatTimes.toString()) &&
-          remainingMeditationMinutes > 1) {
-        remainingMeditationMinutes--;
-        // audioPlayer.play(UrlSource(audiopath));
-        audioPlayer.play(AssetSource(audiopath));
-        // audioPlayer.play(UrlSource(
-        //     "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
-      } else {
+      if (position.inSeconds > 58) {
+        print('oncomplete event fired');
         setState(() {
-          timesPlayed++;
+          currPosition += Duration(seconds: 60);
+          position = Duration.zero;
         });
-        if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
-          // audioPlayer.play(UrlSource(audiopath));
-          audioPlayer.play(AssetSource(audiopath));
-          // audioPlayer.play(UrlSource(
-          //     "https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/intromusic.ogg"));
-          remainingMeditationMinutes = meditationMinutes;
+        String audiopath = audio1;
+        switch (selectedAudio) {
+          case 1:
+            {
+              audiopath = audio1;
+            }
+            break;
+          case 2:
+            {
+              audiopath = audio2;
+            }
+            break;
+          case 3:
+            {
+              audiopath = audio3;
+            }
+            break;
+          case 4:
+            {
+              audiopath = audio4;
+            }
+            break;
+          case 5:
+            {
+              audiopath = audio5;
+            }
+            break;
+        }
+
+        if (timesPlayed <= int.parse(widget.repeatTimes.toString()) &&
+            remainingMeditationMinutes > 1) {
+          remainingMeditationMinutes--;
+          audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
+        } else {
+          setState(() {
+            timesPlayed++;
+          });
+          if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
+            audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
+            remainingMeditationMinutes = meditationMinutes;
+          }
         }
       }
     });
@@ -222,10 +224,17 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                 width: MediaQuery.of(context).size.width * 0.02,
                               ),
                               Text(
-                                formatTime(position) +
-                                    ' || ' +
-                                    (meditationMinutes).toString() +
-                                    ':00',
+                                formatTime(currPosition + position) + ' || ',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              meditationMinutes == 5
+                                  ? Text(
+                                      '0',
+                                      style: TextStyle(fontSize: 18),
+                                    )
+                                  : Text(''),
+                              Text(
+                                '${meditationMinutes.toString()}' + ':00',
                                 style: TextStyle(fontSize: 18),
                               ),
                               SizedBox(
@@ -295,15 +304,15 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                 ? (widget.repeatTimes! + 1 - timesPlayed) != 0
                                     ? Text(
                                         breathMessage,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 25, color: Colors.black),
                                       )
-                                    : Text(
+                                    : const Text(
                                         'Successfully Completed!',
                                         style: TextStyle(
                                             fontSize: 25, color: Colors.black),
                                       )
-                                : Text(
+                                : const Text(
                                     'Loading...',
                                     style: TextStyle(
                                         fontSize: 25, color: Colors.black),
@@ -325,38 +334,85 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                 icon: Icon(Icons.audiotrack),
                                 iconSize: 50,
                                 onPressed: () async {
-                                  if (selectedAudio < 5) {
-                                    selectedAudio++;
-                                  } else {
-                                    selectedAudio = 1;
-                                  }
-                                  setState(() {});
-                                  switch (selectedAudio) {
-                                    case 1:
-                                      {
-                                        audioPlayer.setSourceAsset(audio1);
-                                      }
-                                      break;
-                                    case 2:
-                                      {
-                                        audioPlayer.setSourceAsset(audio2);
-                                      }
-                                      break;
-                                    case 3:
-                                      {
-                                        audioPlayer.setSourceAsset(audio3);
-                                      }
-                                      break;
-                                    case 4:
-                                      {
-                                        audioPlayer.setSourceAsset(audio4);
-                                      }
-                                      break;
-                                    case 5:
-                                      {
-                                        audioPlayer.setSourceAsset(audio5);
-                                      }
-                                      break;
+                                  if (isPlaying) {
+                                    if (selectedAudio < 5) {
+                                      selectedAudio++;
+                                    } else {
+                                      selectedAudio = 1;
+                                    }
+                                    setState(() {});
+
+                                    Duration currentPositionOfAudio = position;
+                                    print(
+                                        'current position is $currentPositionOfAudio');
+
+                                    audioPlayer.pause();
+                                    audioPlayer.release();
+
+                                    switch (selectedAudio) {
+                                      case 1:
+                                        {
+                                          audioPlayer.play(AssetSource(audio1),
+                                              position: Duration(
+                                                  seconds:
+                                                      currentPositionOfAudio
+                                                          .inSeconds));
+                                          CustomSnackbar.functionSnackbar(
+                                              context,
+                                              "Audio Changed to Forest Sounds");
+                                        }
+                                        break;
+                                      case 2:
+                                        {
+                                          audioPlayer.play(AssetSource(audio2),
+                                              position: Duration(
+                                                  seconds:
+                                                      currentPositionOfAudio
+                                                          .inSeconds));
+                                          CustomSnackbar.functionSnackbar(
+                                              context,
+                                              "Audio Changed to Waves Voice");
+                                        }
+                                        break;
+                                      case 3:
+                                        {
+                                          audioPlayer.play(AssetSource(audio3),
+                                              position: Duration(
+                                                  seconds:
+                                                      currentPositionOfAudio
+                                                          .inSeconds));
+
+                                          CustomSnackbar.functionSnackbar(
+                                              context,
+                                              "Audio Changed to Stress Relief Music");
+                                        }
+                                        break;
+                                      case 4:
+                                        {
+                                          audioPlayer.play(AssetSource(audio4),
+                                              position: Duration(
+                                                  seconds:
+                                                      currentPositionOfAudio
+                                                          .inSeconds));
+
+                                          CustomSnackbar.functionSnackbar(
+                                              context,
+                                              "Audio Changed to Focus Voice");
+                                        }
+                                        break;
+                                      case 5:
+                                        {
+                                          audioPlayer.play(AssetSource(audio5),
+                                              position: Duration(
+                                                  seconds:
+                                                      currentPositionOfAudio
+                                                          .inSeconds));
+                                          CustomSnackbar.functionSnackbar(
+                                              context,
+                                              "Audio Changed to Flute Meditation Voice");
+                                        }
+                                        break;
+                                    }
                                   }
                                 },
                               ),
