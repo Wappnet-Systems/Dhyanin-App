@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -30,7 +31,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   late int remainingMeditationMinutes;
   int selectedAudio = 1;
   Duration currPosition = Duration.zero;
-
+  bool _enabled = true;
+  String backgroundImage = 'assets/images/background/background_image_1.jpg';
+  int imageIndex = 1;
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
@@ -146,6 +149,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
           if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
             audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
             remainingMeditationMinutes = meditationMinutes;
+            currPosition = Duration.zero;
           }
         }
       }
@@ -172,82 +176,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  color: Colors.blueGrey.shade100,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 5,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 5.0, top: 5.0, bottom: 5.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.hourglass_empty_rounded,
-                                color: primary_color,
-                                size: 30,
-                              ),
-                              // SizedBox(
-                              //   width: MediaQuery.of(context).size.width * 0.025,
-                              // ),
-                              Text(
-                                (widget.repeatTimes! + 1 - timesPlayed)
-                                        .toString() +
-                                    ' out ' +
-                                    (widget.repeatTimes! + 1).toString() +
-                                    ' remaining',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 5.0, top: 5.0, bottom: 5.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.alarm,
-                                color: primary_color,
-                                size: 30,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              Text(
-                                formatTime(currPosition + position) + ' || ',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              meditationMinutes == 5
-                                  ? Text(
-                                      '0',
-                                      style: TextStyle(fontSize: 18),
-                                    )
-                                  : Text(''),
-                              Text(
-                                '${meditationMinutes.toString()}' + ':00',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.02,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -255,12 +183,12 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 elevation: 5,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * .8,
-                  decoration: const BoxDecoration(
+                  height: MediaQuery.of(context).size.height * .87,
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/sky.jpeg'),
-                      colorFilter:
-                          ColorFilter.mode(Colors.white, BlendMode.dstATop),
+                      image: AssetImage(backgroundImage),
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFFFFFFFF), BlendMode.dstATop),
                       opacity: 1,
                       fit: BoxFit.fill,
                       alignment: Alignment.topCenter,
@@ -268,6 +196,76 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                   ),
                   child: Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.10,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 5.5, top: 5.0, bottom: 5.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.hourglass_empty_rounded,
+                                      color: primary_color,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.02,
+                                    ),
+                                    Text(
+                                      (widget.repeatTimes! + 1 - timesPlayed)
+                                              .toString() +
+                                          ' out of ' +
+                                          (widget.repeatTimes! + 1).toString() +
+                                          ' cycles remaining',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 7.0, bottom: 5.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.alarm,
+                                      color: primary_color,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.02,
+                                    ),
+                                    Text(
+                                      '${formatTime(currPosition + position)} || ',
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    meditationMinutes == 5
+                                        ? const Text(
+                                            '0',
+                                            style: TextStyle(fontSize: 18),
+                                          )
+                                        : const Text(''),
+                                    Text(
+                                      '${meditationMinutes.toString()}' ':00',
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.02,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 1.9,
                         child: Column(
@@ -293,7 +291,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       : 200,
                                   child: Material(
                                     borderRadius: BorderRadius.circular(100.0),
-                                    color: Color.fromARGB(255, 239, 101, 200)
+                                    color: const Color(0xFFEF65C8)
                                         .withOpacity(0.8),
                                   )),
                             ),
@@ -310,7 +308,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                     : const Text(
                                         'Successfully Completed!',
                                         style: TextStyle(
-                                            fontSize: 25, color: Colors.black),
+                                            fontSize: 25,
+                                            color: Color(0xFF000000)),
                                       )
                                 : const Text(
                                     'Loading...',
@@ -328,23 +327,24 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                             CircleAvatar(
                               radius: 35,
                               backgroundColor:
-                                  Color.fromARGB(255, 239, 101, 200)
-                                      .withOpacity(0.8),
+                                  Color(0xFFEF65C8).withOpacity(0.8),
                               child: IconButton(
                                 icon: Icon(Icons.audiotrack),
                                 iconSize: 50,
                                 onPressed: () async {
-                                  if (isPlaying) {
-                                    if (selectedAudio < 5) {
-                                      selectedAudio++;
-                                    } else {
-                                      selectedAudio = 1;
-                                    }
-                                    setState(() {});
+                                  if (isPlaying && _enabled) {
+                                    setState(() {
+                                      if (selectedAudio < 5) {
+                                        selectedAudio++;
+                                      } else {
+                                        selectedAudio = 1;
+                                      }
+                                      _enabled = false;
+                                    });
+                                    Timer(Duration(seconds: 10),
+                                        () => setState(() => _enabled = true));
 
                                     Duration currentPositionOfAudio = position;
-                                    print(
-                                        'current position is $currentPositionOfAudio');
 
                                     audioPlayer.pause();
                                     audioPlayer.release();
@@ -423,20 +423,43 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                             CircleAvatar(
                               radius: 35,
                               backgroundColor:
-                                  Color.fromARGB(255, 239, 101, 200)
+                                  const Color.fromARGB(255, 239, 101, 200)
                                       .withOpacity(0.8),
                               child: IconButton(
                                 icon: Icon(
                                     isPlaying ? Icons.pause : Icons.play_arrow),
                                 iconSize: 50,
                                 onPressed: () async {
-                                  if (isPlaying) {
-                                    _breathingController.stop();
-                                    await audioPlayer.pause();
-                                  } else {
-                                    _breathingController.reset();
-                                    await audioPlayer.resume();
+                                  if ((widget.repeatTimes! + 1 - timesPlayed) !=
+                                      0) {
+                                    if (isPlaying) {
+                                      _breathingController.stop();
+                                      await audioPlayer.pause();
+                                    } else {
+                                      _breathingController.forward();
+                                      await audioPlayer.resume();
+                                    }
                                   }
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.05,
+                            ),
+                            CircleAvatar(
+                              radius: 35,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 239, 101, 200)
+                                      .withOpacity(0.8),
+                              child: IconButton(
+                                icon: Icon(Icons.image),
+                                iconSize: 50,
+                                onPressed: () async {
+                                  imageIndex < 7
+                                      ? imageIndex++
+                                      : imageIndex = 1;
+                                  backgroundImage =
+                                      'assets/images/background/background_image_$imageIndex.jpg';
                                 },
                               ),
                             ),

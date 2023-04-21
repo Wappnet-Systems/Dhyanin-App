@@ -35,7 +35,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
       type: MaskAutoCompletionType.lazy);
 
   var mobileNumberFormatter = new MaskTextInputFormatter(
-      mask: '##########',
+      mask: '##### #####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 

@@ -118,9 +118,11 @@ class _OtpPageState extends State<OtpPage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       try {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Login Successfully!"),
-                        ));
+                        Future.delayed(Duration(seconds: 2), () {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Login Successfully!"),
+                          ));
+                        });
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(
                                 verificationId: MobileNumberInput.verify,
