@@ -8,6 +8,7 @@ import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
@@ -34,6 +35,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   bool _enabled = true;
   String backgroundImage = 'assets/images/background/background_image_1.jpg';
   int imageIndex = 1;
+  int completedMeditationMinutes = 0;
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
@@ -108,6 +110,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         setState(() {
           currPosition += Duration(seconds: 60);
           position = Duration.zero;
+          completedMeditationMinutes++;
         });
         String audiopath = audio1;
         switch (selectedAudio) {
@@ -145,6 +148,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         } else {
           setState(() {
             timesPlayed++;
+            completedMeditationMinutes = 0;
           });
           if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
             audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
@@ -196,78 +200,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                   ),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.10,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 5.5, top: 5.0, bottom: 5.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.hourglass_empty_rounded,
-                                      color: primary_color,
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    Text(
-                                      (widget.repeatTimes! + 1 - timesPlayed)
-                                              .toString() +
-                                          ' out of ' +
-                                          (widget.repeatTimes! + 1).toString() +
-                                          ' cycles remaining',
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 7.0, bottom: 5.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.alarm,
-                                      color: primary_color,
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    Text(
-                                      '${formatTime(currPosition + position)} || ',
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    meditationMinutes == 5
-                                        ? const Text(
-                                            '0',
-                                            style: TextStyle(fontSize: 18),
-                                          )
-                                        : const Text(''),
-                                    Text(
-                                      '${meditationMinutes.toString()}' ':00',
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height / 1.9,
+                        height: MediaQuery.of(context).size.height / 2.3,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -319,8 +253,47 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularStepProgressIndicator(
+                              totalSteps: meditationMinutes,
+                              currentStep: completedMeditationMinutes,
+                              selectedColor: primary_color.withOpacity(0.8),
+                              unselectedColor: primary_color.withOpacity(0.2),
+                              child: Center(
+                                child: Text(
+                                  formatTime(currPosition + position),
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            // Text(
+                            //   '${formatTime(currPosition + position)} || ',
+                            //   style: const TextStyle(fontSize: 18),
+                            // ),
+                            // meditationMinutes == 5
+                            //     ? const Text(
+                            //         '0',
+                            //         style: TextStyle(fontSize: 18),
+                            //       )
+                            //     : const Text(''),
+                            // Text(
+                            //   '${meditationMinutes.toString()}' ':00',
+                            //   style: const TextStyle(fontSize: 18),
+                            // )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
                       Container(
-                        height: MediaQuery.of(context).size.height / 5,
+                        height: MediaQuery.of(context).size.height / 6,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -465,7 +438,46 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularStepProgressIndicator(
+                                  totalSteps: widget.repeatTimes! + 1,
+                                  currentStep: timesPlayed,
+                                  selectedColor: primary_color.withOpacity(0.8),
+                                  unselectedColor:
+                                      primary_color.withOpacity(0.2),
+                                  // child: Center(
+                                  //   child: Text(
+                                  //     "Cycles",
+                                  //     style: const TextStyle(fontSize: 18),
+                                  //   ),
+                                  // )
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              Text(
+                                '${(widget.repeatTimes! + 1).toString()} Cycles',
+                                // (widget.repeatTimes! + 1 - timesPlayed)
+                                //         .toString() +
+                                //     ' out of ' +
+                                //     (widget.repeatTimes! + 1).toString() +
+                                //     ' cycles remaining',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
