@@ -148,11 +148,11 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         } else {
           setState(() {
             timesPlayed++;
-            completedMeditationMinutes = 0;
           });
           if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
             audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
             remainingMeditationMinutes = meditationMinutes;
+            completedMeditationMinutes = 0;
             currPosition = Duration.zero;
           }
         }
@@ -177,312 +177,321 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SafeArea(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                elevation: 5,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .87,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(backgroundImage),
-                      colorFilter: const ColorFilter.mode(
-                          Color(0xFFFFFFFF), BlendMode.dstATop),
-                      opacity: 1,
-                      fit: BoxFit.fill,
-                      alignment: Alignment.topCenter,
-                    ),
+          child: SingleChildScrollView(
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 2.3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Container(
-                                  height: duration != Duration.zero
-                                      ? (widget.repeatTimes! +
-                                                  1 -
-                                                  timesPlayed) !=
-                                              0
-                                          ? size
-                                          : 200
-                                      : 200,
-                                  width: duration != Duration.zero
-                                      ? (widget.repeatTimes! +
-                                                  1 -
-                                                  timesPlayed) !=
-                                              0
-                                          ? size
-                                          : 200
-                                      : 200,
-                                  child: Material(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    color: const Color(0xFFEF65C8)
-                                        .withOpacity(0.8),
-                                  )),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.02,
-                            ),
-                            duration != Duration.zero
-                                ? (widget.repeatTimes! + 1 - timesPlayed) != 0
-                                    ? Text(
-                                        breathMessage,
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.black),
-                                      )
-                                    : const Text(
-                                        'Successfully Completed!',
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                            color: Color(0xFF000000)),
-                                      )
-                                : const Text(
-                                    'Loading...',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.black),
-                                  ),
-                          ],
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 5,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .87,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(backgroundImage),
+                        colorFilter: const ColorFilter.mode(
+                            Color(0xFFFFFFFF), BlendMode.dstATop),
+                        opacity: 1,
+                        fit: BoxFit.fill,
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 2.4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Container(
+                                    height: duration != Duration.zero
+                                        ? (widget.repeatTimes! +
+                                                    1 -
+                                                    timesPlayed) !=
+                                                0
+                                            ? size
+                                            : 200
+                                        : 200,
+                                    width: duration != Duration.zero
+                                        ? (widget.repeatTimes! +
+                                                    1 -
+                                                    timesPlayed) !=
+                                                0
+                                            ? size
+                                            : 200
+                                        : 200,
+                                    child: Material(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      color: const Color(0xFFEF65C8)
+                                          .withOpacity(0.8),
+                                    )),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02,
+                              ),
+                              duration != Duration.zero
+                                  ? (widget.repeatTimes! + 1 - timesPlayed) != 0
+                                      ? Text(
+                                          breathMessage,
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.black),
+                                        )
+                                      : const Text(
+                                          'Successfully Completed!',
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              color: Color(0xFF000000)),
+                                        )
+                                  : const Text(
+                                      'Loading...',
+                                      style: TextStyle(
+                                          fontSize: 25, color: Colors.black),
+                                    ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularStepProgressIndicator(
-                              totalSteps: meditationMinutes,
-                              currentStep: completedMeditationMinutes,
-                              selectedColor: primary_color.withOpacity(0.8),
-                              unselectedColor: primary_color.withOpacity(0.2),
-                              child: Center(
-                                child: Text(
-                                  formatTime(currPosition + position),
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                              ),
-                            ),
-                            // Text(
-                            //   '${formatTime(currPosition + position)} || ',
-                            //   style: const TextStyle(fontSize: 18),
-                            // ),
-                            // meditationMinutes == 5
-                            //     ? const Text(
-                            //         '0',
-                            //         style: TextStyle(fontSize: 18),
-                            //       )
-                            //     : const Text(''),
-                            // Text(
-                            //   '${meditationMinutes.toString()}' ':00',
-                            //   style: const TextStyle(fontSize: 18),
-                            // )
-                          ],
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.height / 6,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundColor:
-                                  Color(0xFFEF65C8).withOpacity(0.8),
-                              child: IconButton(
-                                icon: Icon(Icons.audiotrack),
-                                iconSize: 50,
-                                onPressed: () async {
-                                  if (isPlaying && _enabled) {
-                                    setState(() {
-                                      if (selectedAudio < 5) {
-                                        selectedAudio++;
-                                      } else {
-                                        selectedAudio = 1;
-                                      }
-                                      _enabled = false;
-                                    });
-                                    Timer(Duration(seconds: 10),
-                                        () => setState(() => _enabled = true));
-
-                                    Duration currentPositionOfAudio = position;
-
-                                    audioPlayer.pause();
-                                    audioPlayer.release();
-
-                                    switch (selectedAudio) {
-                                      case 1:
-                                        {
-                                          audioPlayer.play(AssetSource(audio1),
-                                              position: Duration(
-                                                  seconds:
-                                                      currentPositionOfAudio
-                                                          .inSeconds));
-                                          CustomSnackbar.functionSnackbar(
-                                              context,
-                                              "Audio Changed to Forest Sounds");
-                                        }
-                                        break;
-                                      case 2:
-                                        {
-                                          audioPlayer.play(AssetSource(audio2),
-                                              position: Duration(
-                                                  seconds:
-                                                      currentPositionOfAudio
-                                                          .inSeconds));
-                                          CustomSnackbar.functionSnackbar(
-                                              context,
-                                              "Audio Changed to Waves Voice");
-                                        }
-                                        break;
-                                      case 3:
-                                        {
-                                          audioPlayer.play(AssetSource(audio3),
-                                              position: Duration(
-                                                  seconds:
-                                                      currentPositionOfAudio
-                                                          .inSeconds));
-
-                                          CustomSnackbar.functionSnackbar(
-                                              context,
-                                              "Audio Changed to Stress Relief Music");
-                                        }
-                                        break;
-                                      case 4:
-                                        {
-                                          audioPlayer.play(AssetSource(audio4),
-                                              position: Duration(
-                                                  seconds:
-                                                      currentPositionOfAudio
-                                                          .inSeconds));
-
-                                          CustomSnackbar.functionSnackbar(
-                                              context,
-                                              "Audio Changed to Focus Voice");
-                                        }
-                                        break;
-                                      case 5:
-                                        {
-                                          audioPlayer.play(AssetSource(audio5),
-                                              position: Duration(
-                                                  seconds:
-                                                      currentPositionOfAudio
-                                                          .inSeconds));
-                                          CustomSnackbar.functionSnackbar(
-                                              context,
-                                              "Audio Changed to Flute Meditation Voice");
-                                        }
-                                        break;
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 239, 101, 200)
-                                      .withOpacity(0.8),
-                              child: IconButton(
-                                icon: Icon(
-                                    isPlaying ? Icons.pause : Icons.play_arrow),
-                                iconSize: 50,
-                                onPressed: () async {
-                                  if ((widget.repeatTimes! + 1 - timesPlayed) !=
-                                      0) {
-                                    if (isPlaying) {
-                                      _breathingController.stop();
-                                      await audioPlayer.pause();
-                                    } else {
-                                      _breathingController.forward();
-                                      await audioPlayer.resume();
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 239, 101, 200)
-                                      .withOpacity(0.8),
-                              child: IconButton(
-                                icon: Icon(Icons.image),
-                                iconSize: 50,
-                                onPressed: () async {
-                                  imageIndex < 7
-                                      ? imageIndex++
-                                      : imageIndex = 1;
-                                  backgroundImage =
-                                      'assets/images/background/background_image_$imageIndex.jpg';
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
+                        Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: CircularStepProgressIndicator(
-                                  totalSteps: widget.repeatTimes! + 1,
-                                  currentStep: timesPlayed,
-                                  selectedColor: primary_color.withOpacity(0.8),
-                                  unselectedColor:
-                                      primary_color.withOpacity(0.2),
-                                  // child: Center(
-                                  //   child: Text(
-                                  //     "Cycles",
-                                  //     style: const TextStyle(fontSize: 18),
-                                  //   ),
-                                  // )
+                              CircularStepProgressIndicator(
+                                totalSteps: meditationMinutes,
+                                currentStep: completedMeditationMinutes,
+                                selectedColor: primary_color.withOpacity(0.8),
+                                unselectedColor: primary_color.withOpacity(0.2),
+                                child: Center(
+                                  child: Text(
+                                    formatTime(currPosition + position),
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              Text(
-                                '${(widget.repeatTimes! + 1).toString()} Cycles',
-                                // (widget.repeatTimes! + 1 - timesPlayed)
-                                //         .toString() +
-                                //     ' out of ' +
-                                //     (widget.repeatTimes! + 1).toString() +
-                                //     ' cycles remaining',
-                                style: TextStyle(fontSize: 18),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 7,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundColor:
+                                    Color(0xFFEF65C8).withOpacity(0.8),
+                                child: IconButton(
+                                  icon: Icon(Icons.audiotrack),
+                                  iconSize: 50,
+                                  onPressed: () async {
+                                    if (isPlaying && _enabled) {
+                                      setState(() {
+                                        if (selectedAudio < 5) {
+                                          selectedAudio++;
+                                        } else {
+                                          selectedAudio = 1;
+                                        }
+                                        _enabled = false;
+                                      });
+                                      Timer(
+                                          Duration(seconds: 10),
+                                          () =>
+                                              setState(() => _enabled = true));
+
+                                      Duration currentPositionOfAudio =
+                                          position;
+
+                                      audioPlayer.pause();
+                                      audioPlayer.release();
+
+                                      switch (selectedAudio) {
+                                        case 1:
+                                          {
+                                            audioPlayer.play(
+                                                AssetSource(audio1),
+                                                position: Duration(
+                                                    seconds:
+                                                        currentPositionOfAudio
+                                                            .inSeconds));
+                                            CustomSnackbar.functionSnackbar(
+                                                context,
+                                                "Audio Changed to Forest Sounds");
+                                          }
+                                          break;
+                                        case 2:
+                                          {
+                                            audioPlayer.play(
+                                                AssetSource(audio2),
+                                                position: Duration(
+                                                    seconds:
+                                                        currentPositionOfAudio
+                                                            .inSeconds));
+                                            CustomSnackbar.functionSnackbar(
+                                                context,
+                                                "Audio Changed to Waves Voice");
+                                          }
+                                          break;
+                                        case 3:
+                                          {
+                                            audioPlayer.play(
+                                                AssetSource(audio3),
+                                                position: Duration(
+                                                    seconds:
+                                                        currentPositionOfAudio
+                                                            .inSeconds));
+
+                                            CustomSnackbar.functionSnackbar(
+                                                context,
+                                                "Audio Changed to Stress Relief Music");
+                                          }
+                                          break;
+                                        case 4:
+                                          {
+                                            audioPlayer.play(
+                                                AssetSource(audio4),
+                                                position: Duration(
+                                                    seconds:
+                                                        currentPositionOfAudio
+                                                            .inSeconds));
+
+                                            CustomSnackbar.functionSnackbar(
+                                                context,
+                                                "Audio Changed to Focus Voice");
+                                          }
+                                          break;
+                                        case 5:
+                                          {
+                                            audioPlayer.play(
+                                                AssetSource(audio5),
+                                                position: Duration(
+                                                    seconds:
+                                                        currentPositionOfAudio
+                                                            .inSeconds));
+                                            CustomSnackbar.functionSnackbar(
+                                                context,
+                                                "Audio Changed to Flute Meditation Voice");
+                                          }
+                                          break;
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 239, 101, 200)
+                                        .withOpacity(0.8),
+                                child: IconButton(
+                                  icon: Icon(isPlaying
+                                      ? Icons.pause
+                                      : Icons.play_arrow),
+                                  iconSize: 50,
+                                  onPressed: () async {
+                                    if ((widget.repeatTimes! +
+                                            1 -
+                                            timesPlayed) !=
+                                        0) {
+                                      if (isPlaying) {
+                                        _breathingController.stop();
+                                        await audioPlayer.pause();
+                                      } else {
+                                        _breathingController.forward();
+                                        await audioPlayer.resume();
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 239, 101, 200)
+                                        .withOpacity(0.8),
+                                child: IconButton(
+                                  icon: Icon(Icons.image),
+                                  iconSize: 50,
+                                  onPressed: () async {
+                                    if (isPlaying) {
+                                      imageIndex < 7
+                                          ? imageIndex++
+                                          : imageIndex = 1;
+                                      backgroundImage =
+                                          'assets/images/background/background_image_$imageIndex.jpg';
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: CircularStepProgressIndicator(
+                                        totalSteps: widget.repeatTimes! + 1,
+                                        currentStep: timesPlayed,
+                                        selectedColor:
+                                            primary_color.withOpacity(0.8),
+                                        unselectedColor:
+                                            primary_color.withOpacity(0.2),
+                                        child: Center(
+                                          child: Text(
+                                            timesPlayed.toString(),
+                                            style:
+                                                const TextStyle(fontSize: 18),
+                                          ),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.02,
+                                  ),
+                                  Text(
+                                    'Completed Cycles',
+                                    // (widget.repeatTimes! + 1 - timesPlayed)
+                                    //         .toString() +
+                                    //     ' out of ' +
+                                    //     (widget.repeatTimes! + 1).toString() +
+                                    //     ' cycles remaining',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
