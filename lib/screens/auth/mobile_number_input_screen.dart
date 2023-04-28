@@ -53,15 +53,15 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                   actions: [
                     MaterialButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("No"),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
                         exit(0);
                       },
                       child: const Text("Yes"),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("No"),
                     ),
                   ],
                   actionsAlignment: MainAxisAlignment.end,

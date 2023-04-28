@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/screens/widgets/custom_audio_icon.dart';
 import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
@@ -287,121 +288,17 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundColor:
-                                    Color(0xFFEF65C8).withOpacity(0.8),
-                                child: IconButton(
+                              AudioIcon(
                                   icon: Icon(Icons.audiotrack),
-                                  iconSize: 50,
-                                  onPressed: () async {
-                                    if (isPlaying && _enabled) {
-                                      setState(() {
-                                        if (selectedAudio < 5) {
-                                          selectedAudio++;
-                                        } else {
-                                          selectedAudio = 1;
-                                        }
-                                        _enabled = false;
-                                      });
-                                      Timer(
-                                          Duration(seconds: 10),
-                                          () =>
-                                              setState(() => _enabled = true));
-
-                                      Duration currentPositionOfAudio =
-                                          position;
-
-                                      audioPlayer.pause();
-                                      audioPlayer.release();
-
-                                      switch (selectedAudio) {
-                                        case 1:
-                                          {
-                                            audioPlayer.play(
-                                                AssetSource(audio1),
-                                                position: Duration(
-                                                    seconds:
-                                                        currentPositionOfAudio
-                                                            .inSeconds));
-                                            CustomSnackbar.functionSnackbar(
-                                                context,
-                                                "Audio Changed to Forest Sounds");
-                                          }
-                                          break;
-                                        case 2:
-                                          {
-                                            audioPlayer.play(
-                                                AssetSource(audio2),
-                                                position: Duration(
-                                                    seconds:
-                                                        currentPositionOfAudio
-                                                            .inSeconds));
-                                            CustomSnackbar.functionSnackbar(
-                                                context,
-                                                "Audio Changed to Waves Voice");
-                                          }
-                                          break;
-                                        case 3:
-                                          {
-                                            audioPlayer.play(
-                                                AssetSource(audio3),
-                                                position: Duration(
-                                                    seconds:
-                                                        currentPositionOfAudio
-                                                            .inSeconds));
-
-                                            CustomSnackbar.functionSnackbar(
-                                                context,
-                                                "Audio Changed to Stress Relief Music");
-                                          }
-                                          break;
-                                        case 4:
-                                          {
-                                            audioPlayer.play(
-                                                AssetSource(audio4),
-                                                position: Duration(
-                                                    seconds:
-                                                        currentPositionOfAudio
-                                                            .inSeconds));
-
-                                            CustomSnackbar.functionSnackbar(
-                                                context,
-                                                "Audio Changed to Focus Voice");
-                                          }
-                                          break;
-                                        case 5:
-                                          {
-                                            audioPlayer.play(
-                                                AssetSource(audio5),
-                                                position: Duration(
-                                                    seconds:
-                                                        currentPositionOfAudio
-                                                            .inSeconds));
-                                            CustomSnackbar.functionSnackbar(
-                                                context,
-                                                "Audio Changed to Flute Meditation Voice");
-                                          }
-                                          break;
-                                      }
-                                    }
-                                  },
-                                ),
-                              ),
+                                  onPress: onPressEventAudio),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.05,
                               ),
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 239, 101, 200)
-                                        .withOpacity(0.8),
-                                child: IconButton(
+                              AudioIcon(
                                   icon: Icon(isPlaying
                                       ? Icons.pause
                                       : Icons.play_arrow),
-                                  iconSize: 50,
-                                  onPressed: () async {
+                                  onPress: () async {
                                     if ((widget.repeatTimes! +
                                             1 -
                                             timesPlayed) !=
@@ -414,21 +311,13 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                         await audioPlayer.resume();
                                       }
                                     }
-                                  },
-                                ),
-                              ),
+                                  }),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.05,
                               ),
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 239, 101, 200)
-                                        .withOpacity(0.8),
-                                child: IconButton(
+                              AudioIcon(
                                   icon: Icon(Icons.image),
-                                  iconSize: 50,
-                                  onPressed: () async {
+                                  onPress: () async {
                                     if (isPlaying) {
                                       imageIndex < 7
                                           ? imageIndex++
@@ -436,14 +325,13 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       backgroundImage =
                                           'assets/images/background/background_image_$imageIndex.jpg';
                                     }
-                                  },
-                                ),
-                              ),
+                                  }),
                             ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
+                          padding:
+                              const EdgeInsets.only(bottom: 5.0, top: 15.0),
                           child: Expanded(
                             child: Align(
                               alignment: Alignment.bottomLeft,
@@ -474,11 +362,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                   ),
                                   Text(
                                     'Completed Cycles',
-                                    // (widget.repeatTimes! + 1 - timesPlayed)
-                                    //         .toString() +
-                                    //     ' out of ' +
-                                    //     (widget.repeatTimes! + 1).toString() +
-                                    //     ' cycles remaining',
                                     style: TextStyle(fontSize: 18),
                                   ),
                                 ],
@@ -503,5 +386,70 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
     String time = "$minutes:$seconds";
     return time;
+  }
+
+  Future<Function?> onPressEventAudio() async {
+    if (isPlaying && _enabled) {
+      setState(() {
+        if (selectedAudio < 5) {
+          selectedAudio++;
+        } else {
+          selectedAudio = 1;
+        }
+        _enabled = false;
+      });
+      Timer(Duration(seconds: 10), () => setState(() => _enabled = true));
+
+      Duration currentPositionOfAudio = position;
+
+      audioPlayer.pause();
+      audioPlayer.release();
+
+      switch (selectedAudio) {
+        case 1:
+          {
+            audioPlayer.play(AssetSource(audio1),
+                position: Duration(seconds: currentPositionOfAudio.inSeconds));
+            CustomSnackbar.functionSnackbar(
+                context, "Audio Changed to Forest Sounds");
+          }
+          break;
+        case 2:
+          {
+            audioPlayer.play(AssetSource(audio2),
+                position: Duration(seconds: currentPositionOfAudio.inSeconds));
+            CustomSnackbar.functionSnackbar(
+                context, "Audio Changed to Waves Voice");
+          }
+          break;
+        case 3:
+          {
+            audioPlayer.play(AssetSource(audio3),
+                position: Duration(seconds: currentPositionOfAudio.inSeconds));
+
+            CustomSnackbar.functionSnackbar(
+                context, "Audio Changed to Stress Relief Music");
+          }
+          break;
+        case 4:
+          {
+            audioPlayer.play(AssetSource(audio4),
+                position: Duration(seconds: currentPositionOfAudio.inSeconds));
+
+            CustomSnackbar.functionSnackbar(
+                context, "Audio Changed to Focus Voice");
+          }
+          break;
+        case 5:
+          {
+            audioPlayer.play(AssetSource(audio5),
+                position: Duration(seconds: currentPositionOfAudio.inSeconds));
+            CustomSnackbar.functionSnackbar(
+                context, "Audio Changed to Flute Meditation Voice");
+          }
+          break;
+      }
+    }
+    return null;
   }
 }

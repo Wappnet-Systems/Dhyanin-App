@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
@@ -107,12 +108,6 @@ class _TrackFastingState extends State<TrackFasting> {
             actions: [
               MaterialButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("No"),
-              ),
-              MaterialButton(
-                onPressed: () {
                   model.fastingHours = 7;
                   model.endFast();
                   receivedData.update({
@@ -122,6 +117,12 @@ class _TrackFastingState extends State<TrackFasting> {
                   Navigator.of(context).pop();
                 },
                 child: Text("Yes"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("No"),
               ),
             ],
             actionsAlignment: MainAxisAlignment.end,
@@ -264,6 +265,9 @@ class _TrackFastingState extends State<TrackFasting> {
                                 if (fastingStatusModel.fastingHours >= 8 &&
                                     !fastingStatusModel.isStarted) {
                                   fastingStatusModel.decFastingHours();
+                                } else {
+                                  CustomSnackbar.functionSnackbar(context,
+                                      'Fasting hours can\'t be less than 7 Hours!');
                                 }
                               });
                             },

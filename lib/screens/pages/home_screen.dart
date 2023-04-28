@@ -75,15 +75,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   actions: [
                     MaterialButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("No"),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
                         exit(0);
                       },
                       child: Text("Yes"),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("No"),
                     ),
                   ],
                   actionsAlignment: MainAxisAlignment.end,
@@ -155,12 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
             content: Text('Are you sure you want to logout?'),
             actions: [
               MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("No"),
-              ),
-              MaterialButton(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.of(context).pop();
@@ -174,6 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   //         builder: (context) => MobileNumberInput()));
                 },
                 child: Text("Yes"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("No"),
               ),
             ],
             actionsAlignment: MainAxisAlignment.end,

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dhyanin_app">
    <application
-        android:label="dhyanin_app"
+        android:label="Dhyanin"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
