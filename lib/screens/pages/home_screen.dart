@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
 import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
+import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
+import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
 import 'package:dhyanin_app/screens/widgets/my_card.dart';
@@ -29,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     model = Provider.of<FastingStatusProvider>(context, listen: false);
+    CheckInternetConnectivity.checkConnectivity(context);
     model.getUser();
     HistoryController.init();
     try {

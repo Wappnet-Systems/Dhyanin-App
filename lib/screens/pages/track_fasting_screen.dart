@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
 import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +31,7 @@ class _TrackFastingState extends State<TrackFasting> {
   // double fastedHours = 0;
   double timeDifference = 0;
   late FastingStatusProvider model;
+  bool _enabled = true;
 
   // List<History> listHistory = [];
 
@@ -61,6 +63,7 @@ class _TrackFastingState extends State<TrackFasting> {
   @override
   void initState() {
     model = Provider.of<FastingStatusProvider>(context, listen: false);
+    CheckInternetConnectivity.checkConnectivity(context);
     model.getUser();
     try {
       HistoryController.init();
@@ -266,8 +269,18 @@ class _TrackFastingState extends State<TrackFasting> {
                                     !fastingStatusModel.isStarted) {
                                   fastingStatusModel.decFastingHours();
                                 } else {
-                                  CustomSnackbar.functionSnackbar(context,
-                                      'Fasting hours can\'t be less than 7 Hours!');
+                                  if (_enabled) {
+                                    CustomSnackbar.functionSnackbar(context,
+                                        'Fasting hours can\'t be less than 7 Hours!');
+                                    _enabled = false;
+                                    Timer(Duration(seconds: 5), () {
+                                      if (this.mounted) {
+                                        setState(() {
+                                          _enabled = true;
+                                        });
+                                      }
+                                    });
+                                  }
                                 }
                               });
                             },
@@ -287,8 +300,23 @@ class _TrackFastingState extends State<TrackFasting> {
                               iconSize: 40,
                               onPressed: () {
                                 setState(() {
-                                  if (!fastingStatusModel.isStarted) {
+                                  if (!fastingStatusModel.isStarted &&
+                                      fastingStatusModel.fastingHours < 48) {
                                     fastingStatusModel.incFastingHours();
+                                  } else {
+                                    if (_enabled) {
+                                      _enabled = false;
+
+                                      CustomSnackbar.functionSnackbar(context,
+                                          'Fasting hours can\'t be more than 48 Hours!');
+                                      Timer(Duration(seconds: 5), () {
+                                        if (this.mounted) {
+                                          setState(() {
+                                            _enabled = true;
+                                          });
+                                        }
+                                      });
+                                    }
                                   }
                                 });
                               }),

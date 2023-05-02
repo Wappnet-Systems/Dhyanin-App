@@ -47,6 +47,7 @@ dependencies:
   lottie: ^2.3.2
   mask_text_input_formatter: ^2.4.0
   step_progress_indicator: ^1.0.2
+  connectivity_plus: ^3.0.6
   
 
 dev_dependencies:
