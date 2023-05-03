@@ -5,12 +5,14 @@ import 'package:flutter/src/widgets/placeholder.dart';
 
 class MyCard extends StatelessWidget {
   final String image_path;
-  final String name;
+  final String title;
+  final String subTitle;
   final Widget next_page;
   const MyCard(
       {super.key,
       required this.image_path,
-      required this.name,
+      required this.title,
+      required this.subTitle,
       required this.next_page});
 
   @override
@@ -19,27 +21,56 @@ class MyCard extends StatelessWidget {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),
       child: Card(
-        semanticContainer: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+        color: Color.fromARGB(255, 255, 216, 244),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(8),
         ),
-        margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
-        child: Container(
-          height: 150,
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color: background_color,
-              borderRadius: BorderRadius.circular(15.0),
-              image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(image_path))),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              name,
-              style: const TextStyle(fontSize: 18),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.12,
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                        color: primary_color.withOpacity(0.4),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.asset(image_path, fit: BoxFit.cover)),
+                  ),
+                  Container(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(height: 5),
+                        Text(
+                          title,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w400),
+                        ),
+                        Container(height: 5),
+                        Text(
+                          subTitle,
+                          style: TextStyle(fontWeight: FontWeight.w300),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

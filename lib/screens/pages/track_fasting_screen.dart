@@ -15,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
-import '../../models/history_model.dart';
-
 class TrackFasting extends StatefulWidget {
   const TrackFasting({super.key});
 
@@ -25,15 +23,8 @@ class TrackFasting extends StatefulWidget {
 }
 
 class _TrackFastingState extends State<TrackFasting> {
-  // int fastingHours = 7; //user will change value of hours
-  double defaultValue = 0;
-  // double value = 0;
-  // double fastedHours = 0;
-  double timeDifference = 0;
-  late FastingStatusProvider model;
-  bool _enabled = true;
-
-  // List<History> listHistory = [];
+  late FastingStatusProvider model; //provider model
+  bool _enabled = true; //to disable snackbar for sometime
 
   var receivedData = FirebaseFirestore.instance
       .collection("users")
@@ -41,6 +32,7 @@ class _TrackFastingState extends State<TrackFasting> {
       .collection("trackdata")
       .doc(FirebaseAuth.instance.currentUser!.uid);
 
+  //add user on firebase database
   Future<void> addUser(String time, String hours) {
     // Call the user's CollectionReference to add a new user
     return receivedData
@@ -53,12 +45,6 @@ class _TrackFastingState extends State<TrackFasting> {
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
-
-  // Timer _timer = Timer(const Duration(days: 30), () => print('Timer finished'));
-
-  // late Timer _timer;
-
-  // HistoryController historyController = HistoryController();
 
   @override
   void initState() {
@@ -79,8 +65,6 @@ class _TrackFastingState extends State<TrackFasting> {
           receivedData.update({
             'fasting': false,
             'hours': '7',
-            // 'startTime': DateTime.parse(
-            //     DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now())),
           });
         } else {
           model.startTimer((double.parse(model.startedHours) * 3600) -
@@ -264,25 +248,26 @@ class _TrackFastingState extends State<TrackFasting> {
                             iconSize: 40,
                             color: primary_color,
                             onPressed: () {
-                              setState(() {
-                                if (fastingStatusModel.fastingHours >= 8 &&
-                                    !fastingStatusModel.isStarted) {
-                                  fastingStatusModel.decFastingHours();
-                                } else {
-                                  if (_enabled) {
-                                    CustomSnackbar.functionSnackbar(context,
-                                        'Fasting hours can\'t be less than 7 Hours!');
-                                    _enabled = false;
-                                    Timer(Duration(seconds: 5), () {
-                                      if (this.mounted) {
-                                        setState(() {
-                                          _enabled = true;
-                                        });
-                                      }
-                                    });
+                              if (!fastingStatusModel.isStarted) {
+                                setState(() {
+                                  if (fastingStatusModel.fastingHours >= 8) {
+                                    fastingStatusModel.decFastingHours();
+                                  } else {
+                                    if (_enabled) {
+                                      CustomSnackbar.functionSnackbar(context,
+                                          'Fasting hours can\'t be less than 7 Hours!');
+                                      _enabled = false;
+                                      Timer(Duration(seconds: 5), () {
+                                        if (this.mounted) {
+                                          setState(() {
+                                            _enabled = true;
+                                          });
+                                        }
+                                      });
+                                    }
                                   }
-                                }
-                              });
+                                });
+                              }
                             },
                           ),
                           !fastingStatusModel.isStarted
@@ -299,27 +284,28 @@ class _TrackFastingState extends State<TrackFasting> {
                               color: primary_color,
                               iconSize: 40,
                               onPressed: () {
-                                setState(() {
-                                  if (!fastingStatusModel.isStarted &&
-                                      fastingStatusModel.fastingHours < 48) {
-                                    fastingStatusModel.incFastingHours();
-                                  } else {
-                                    if (_enabled) {
-                                      _enabled = false;
+                                if (!fastingStatusModel.isStarted) {
+                                  setState(() {
+                                    if (fastingStatusModel.fastingHours < 48) {
+                                      fastingStatusModel.incFastingHours();
+                                    } else {
+                                      if (_enabled) {
+                                        _enabled = false;
 
-                                      CustomSnackbar.functionSnackbar(context,
-                                          'Fasting hours can\'t be more than 48 Hours!');
-                                      Timer(Duration(seconds: 5), () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            _enabled = true;
-                                          });
-                                        }
-                                      });
+                                        CustomSnackbar.functionSnackbar(context,
+                                            'Fasting hours can\'t be more than 48 Hours!');
+                                        Timer(Duration(seconds: 5), () {
+                                          if (this.mounted) {
+                                            setState(() {
+                                              _enabled = true;
+                                            });
+                                          }
+                                        });
+                                      }
                                     }
-                                  }
-                                });
-                              }),
+                                  });
+                                }
+                              })
                         ],
                       ),
                       const SizedBox(

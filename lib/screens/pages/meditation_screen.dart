@@ -14,7 +14,7 @@ class Meditation extends StatefulWidget {
 
 class _MeditationState extends State<Meditation> {
   int value = 0; //index value of by default duration
-  int repeatValue = 0;
+  int repeatValue = 0; //to repeat meditation
 
   //Custom radio button widget for duration
   Widget customRadioButton(String text, int index) {

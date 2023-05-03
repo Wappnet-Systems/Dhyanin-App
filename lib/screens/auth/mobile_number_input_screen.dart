@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:dhyanin_app/screens/auth/otp_page_screen.dart';
+import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class MobileNumberInput extends StatefulWidget {
   const MobileNumberInput({super.key});
 
-  static String verify = "";
+  static String verify = ""; //to store OTP coming from firebase
 
   @override
   State<MobileNumberInput> createState() => _MobileNumberInputState();
@@ -21,19 +21,22 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
   final countryCodeController =
       TextEditingController(); // controller for country code
   var phone = ""; //phone number will be stored in this
-  final auth = FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance; //firebase instance
+  bool loading = false; //to show loading indicator to user
 
   @override
   void initState() {
     super.initState();
-    countryCodeController.text = '+91';
+    countryCodeController.text = '+91'; //default country code for india
   }
 
+  //input formatter for prefix of mobile number
   var prefixFormatter = new MaskTextInputFormatter(
       mask: '+###',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
+  //input formatter for mobile number input
   var mobileNumberFormatter = new MaskTextInputFormatter(
       mask: '##### #####',
       filter: {"#": RegExp(r'[0-9]')},
@@ -168,38 +171,49 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () async {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const Center(
-                                    child: CircularProgressIndicator(
-                                  color: color_2,
-                                ));
-                              });
-                          await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: countryCodeController.text + phone,
-                            verificationCompleted:
-                                (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent:
-                                (String verificationId, int? resendToken) {
-                              setState(() {
-                                MobileNumberInput.verify = verificationId;
-                              });
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const OtpPage()));
-                            },
-                            codeAutoRetrievalTimeout:
-                                (String verificationId) {},
-                          );
+                          if (phone != "" && phone.length > 10) {
+                            setState(() {
+                              loading = true;
+                            });
+                            await FirebaseAuth.instance.verifyPhoneNumber(
+                              phoneNumber: countryCodeController.text + phone,
+                              verificationCompleted:
+                                  (PhoneAuthCredential credential) {},
+                              verificationFailed: (FirebaseAuthException e) {
+                                CustomSnackbar.functionSnackbar(
+                                    context, "Please, enter a valid number!");
+                                setState(() {
+                                  loading = false;
+                                });
+                              },
+                              codeSent:
+                                  (String verificationId, int? resendToken) {
+                                setState(() {
+                                  MobileNumberInput.verify = verificationId;
+                                });
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const OtpPage()));
+                              },
+                              codeAutoRetrievalTimeout:
+                                  (String verificationId) {},
+                            );
+                          } else {
+                            CustomSnackbar.functionSnackbar(
+                                context, "Please, enter a valid number!");
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: color_2,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0))),
-                        child: const Text('Send the code'),
+                        child: loading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                color: background_color,
+                              ))
+                            : const Text('Send the code'),
                       ),
                     )
                   ],

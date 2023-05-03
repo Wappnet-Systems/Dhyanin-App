@@ -31,15 +31,6 @@ class SimpleCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
-              // const Expanded(child: SizedBox()),
-              // const Padding(
-              //   padding: EdgeInsets.only(right: 8.0),
-              //   child: Icon(
-              //     Icons.arrow_forward,
-              //     size: 40,
-              //     color: background_color,
-              //   ),
-              // )
             ],
           ),
         ),

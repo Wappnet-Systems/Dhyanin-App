@@ -12,6 +12,7 @@ class HistoryController {
     prefs = await SharedPreferences.getInstance();
   }
 
+  //to read saved history
   read(String key) {
     try {
       historyList!.clear();
@@ -27,6 +28,7 @@ class HistoryController {
     return historyList;
   }
 
+  //to save in history
   save(String key, List<History> historyList) async {
     list!.clear();
     for (var item in historyList) {

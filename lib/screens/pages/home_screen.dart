@@ -9,6 +9,7 @@ import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
 import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
 import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/screens/widgets/custom_weekday_card.dart';
 import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
 import 'package:dhyanin_app/screens/widgets/my_card.dart';
@@ -29,9 +30,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late FastingStatusProvider model;
+  var weekDay = [0, 0, 0, 0, 0, 0, 0];
 
   @override
   void initState() {
+    setDatesValue();
     model = Provider.of<FastingStatusProvider>(context, listen: false);
     CheckInternetConnectivity.checkConnectivity(context);
     model.getUser();
@@ -110,36 +113,61 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.only(left: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * .03),
                     const Text(
-                      'Good',
+                      'Hello,',
                       style: headingStyle,
                     ),
                     Text(
-                      greeting(),
+                      'Good ' + greeting(),
                       style: headingStyle,
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     const Text(
                       'Have a great day!',
                       style: bodyStyle,
                     ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                    Row(children: [
+                      WeekDayCard(date: weekDay[0], weekDay: 'Mon'),
+                      WeekDayCard(date: weekDay[1], weekDay: 'Tue'),
+                      WeekDayCard(date: weekDay[2], weekDay: 'Wed'),
+                      WeekDayCard(date: weekDay[3], weekDay: 'Thu'),
+                      WeekDayCard(date: weekDay[4], weekDay: 'Fri'),
+                      WeekDayCard(date: weekDay[5], weekDay: 'Sat'),
+                      WeekDayCard(date: weekDay[6], weekDay: 'Sun'),
+                    ]),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .04,
+                      height: MediaQuery.of(context).size.height * .06,
+                    ),
+                    Text(
+                      "Choose what you want to do today!",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .02,
                     ),
                     const MyCard(
                       image_path: 'assets/images/meditation.png',
-                      name: 'Meditation',
+                      title: 'Breathing Meditation',
+                      subTitle:
+                          'Focus your attention to your breath! Calm your mind and reduce stress!',
                       next_page: Meditation(),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .01,
                     ),
                     const MyCard(
                       image_path: 'assets/images/fasting.jpg',
-                      name: 'Track Fasting',
+                      title: 'Track Fasting',
+                      subTitle:
+                          'Restrict your eating to a certain period of time for various health benefits!',
                       next_page: TrackFasting(),
                     )
                   ],
@@ -148,6 +176,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ));
+  }
+
+  setDatesValue() {
+    int todayDate = DateTime.now().day;
+    int todayWeekday = DateTime.now().weekday;
+    int nextDay = 0;
+    int previousDay = -1;
+    for (int i = todayWeekday; i <= 7; i++) {
+      weekDay[i - 1] = DateTime.now().add(Duration(days: nextDay++)).day;
+    }
+    if (todayWeekday > 1) {
+      for (int i = todayWeekday - 1; i > 0; i--) {
+        weekDay[i - 1] = DateTime.now().add(Duration(days: previousDay--)).day;
+      }
+    }
   }
 
   Future<void> signOut(BuildContext context) async {

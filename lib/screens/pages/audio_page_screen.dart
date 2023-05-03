@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/screens/widgets/custom_audio_icon.dart';
 import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
-import 'package:dhyanin_app/screens/widgets/get_duration.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -25,18 +23,19 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   bool isPlaying = false; //Audio play or pause status
   Duration duration = Duration.zero; //Total duration of the audio
   Duration position = Duration.zero; //Current position of the audio
-  int timesPlayed = 0; //audio completed this times
-  late AnimationController _breathingController;
-  String breathMessage = "Inhale";
-  var _breath = 0.0;
-  late int meditationMinutes;
-  late int remainingMeditationMinutes;
-  int selectedAudio = 1;
+  int timesPlayed = 0; //audio completed this many times
+  late AnimationController _breathingController; //animation for breathing
+  String breathMessage = "Inhale"; //message for guide(inhale,exhale)
+  var _breath = 0.0; //start position for animation
+  late int meditationMinutes; //total meditation minutes for one cycle
+  late int remainingMeditationMinutes; //remaining meditation minutes
+  int selectedAudio = 1; //will be changed by user later for audio change
   Duration currPosition = Duration.zero;
-  bool _enabled = true;
-  String backgroundImage = 'assets/images/background/background_image_1.jpg';
-  int imageIndex = 1;
-  int completedMeditationMinutes = 0;
+  bool _enabled = true; //to disable audiochange button for some time
+  String backgroundImage =
+      'assets/images/background/background_image_1.jpg'; //default image for background
+  int imageIndex = 1; //will be changed by user later for background change
+  int completedMeditationMinutes = 0; //completed meditation minutes
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
@@ -381,6 +380,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     );
   }
 
+  //format time to keep track of completed cycles and add into currPosition
   String formatTime(Duration duration) {
     String minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
     String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
@@ -388,6 +388,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     return time;
   }
 
+  //function to change audio
   Future<Function?> onPressEventAudio() async {
     if (isPlaying && _enabled) {
       setState(() {
@@ -398,7 +399,11 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         }
         _enabled = false;
       });
-      Timer(Duration(seconds: 10), () => setState(() => _enabled = true));
+      Timer(Duration(seconds: 10), () {
+        if (mounted) {
+          setState(() => _enabled = true);
+        }
+      });
 
       Duration currentPositionOfAudio = position;
 

@@ -7,28 +7,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FastingStatusProvider extends ChangeNotifier {
-  bool isStarted = false;
-  String startedHours = "7";
-  DateTime startedTime = DateTime.now();
-  double value = 0;
-  double fastedHours = 7;
-  int fastingHours = 7;
+  bool isStarted = false; //to check whether fast is started or not
+  String startedHours =
+      "7"; //default value of fastingHours to update to database when fast is over or ended
+  DateTime startedTime = DateTime.now(); //time when fast started
+  double value = 0; //value (in seconds) to keep track of clock
+  double fastedHours =
+      7; //to calculate remaining hours when fast is already started and user is coming from outside app
+  int fastingHours = 7; //fasting hours selected by user
 
+  //to increase fasting hours
   incFastingHours() {
     fastingHours++;
     notifyListeners();
   }
 
+  //to decrease fasting hours
   decFastingHours() {
     fastingHours--;
     notifyListeners();
   }
 
   Timer timer = Timer(const Duration(days: 30), () => print('Timer finished'));
-  HistoryController historyController = HistoryController();
 
+  //to save fast details when completed
+  HistoryController historyController = HistoryController();
   List<History> listHistory = [];
 
+  //function to get details of user
   Future<void> getUser() {
     return FirebaseFirestore.instance
         .collection("users")
@@ -50,6 +56,7 @@ class FastingStatusProvider extends ChangeNotifier {
     });
   }
 
+  //function to start timer when fast is started
   void startTimer(double seconds) {
     value = seconds;
     fastedHours = (seconds / 3600);
@@ -82,6 +89,7 @@ class FastingStatusProvider extends ChangeNotifier {
     );
   }
 
+  //when user end fast before fasting hours
   endFast() {
     value = 0;
     timer.cancel();
@@ -94,6 +102,7 @@ class FastingStatusProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //when user successfully complete fast, to add in history
   addFastInHistory() {
     HistoryController.init();
     try {

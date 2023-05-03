@@ -1,5 +1,6 @@
 import 'package:dhyanin_app/screens/pages/home_screen.dart';
 import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
@@ -15,10 +16,12 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance; //firebase instance
   var code = ""; //to store code entered by user
+  bool loading = false; // to show loading indicator
   @override
   Widget build(BuildContext context) {
+    //design themes for OTP pinput
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -117,12 +120,10 @@ class _OtpPageState extends State<OtpPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      setState(() {
+                        loading = true;
+                      });
                       try {
-                        Future.delayed(Duration(seconds: 2), () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Login Successfully!"),
-                          ));
-                        });
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(
                                 verificationId: MobileNumberInput.verify,
@@ -135,13 +136,18 @@ class _OtpPageState extends State<OtpPage> {
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen()));
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Invalid OTP! Please try again"),
-                        ));
-                        print("Wrong OTP");
+                        CustomSnackbar.functionSnackbar(context, "Wrong OTP!");
+                        setState(() {
+                          loading = false;
+                        });
                       }
                     },
-                    child: Text('Verify phone number'),
+                    child: loading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                            color: background_color,
+                          ))
+                        : Text('Verify phone number'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: color_2,
                         shape: RoundedRectangleBorder(
