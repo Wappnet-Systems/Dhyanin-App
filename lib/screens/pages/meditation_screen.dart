@@ -15,6 +15,7 @@ class Meditation extends StatefulWidget {
 class _MeditationState extends State<Meditation> {
   int value = 0; //index value of by default duration
   int repeatValue = 0; //to repeat meditation
+  int practiceLevel = 0; //to select duration of inhale-exhale
 
   //Custom radio button widget for duration
   Widget customRadioButton(String text, int index) {
@@ -59,6 +60,28 @@ class _MeditationState extends State<Meditation> {
     );
   }
 
+  //Custom radio button widget for level
+  Widget customRadioButtonLevel(String text, int index) {
+    return OutlinedButton(
+      onPressed: () {
+        setState(() {
+          practiceLevel = index;
+        });
+      },
+      style: OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side: BorderSide(
+            color: (practiceLevel == index) ? color_2 : Colors.black),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: (practiceLevel == index) ? color_2 : Colors.black,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +94,7 @@ class _MeditationState extends State<Meditation> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
+                padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 10.0),
                 child: Text(
                   'Select Duration',
                   style: bodyStyle,
@@ -105,10 +128,10 @@ class _MeditationState extends State<Meditation> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.04,
+                height: MediaQuery.of(context).size.height * 0.03,
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 20.0),
+                padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
                 child: Text(
                   'Select Repeat Cycle',
                   style: bodyStyle,
@@ -142,23 +165,53 @@ class _MeditationState extends State<Meditation> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.04,
+                height: MediaQuery.of(context).size.height * 0.03,
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 15.0, left: 5.0),
+                padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
+                child: Text(
+                  'Select Practice level',
+                  style: bodyStyle,
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    customRadioButtonLevel('Beginner', 0),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonLevel('Intermediate', 1),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    customRadioButtonLevel('Advance', 2),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.03,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
                 child: Text(
                   'Breathing Guided Meditation',
                   style: bodyStyle,
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.04,
+                height: MediaQuery.of(context).size.height * 0.01,
               ),
               SimpleCard(
                 name: 'Start',
                 next_page: AudioPage(
                   indexOfAudio: value,
                   repeatTimes: repeatValue,
+                  practiceLevel: practiceLevel,
                 ),
               ),
             ],

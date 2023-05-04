@@ -12,8 +12,12 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
   final int? repeatTimes;
+  final int? practiceLevel;
   const AudioPage(
-      {super.key, required this.indexOfAudio, required this.repeatTimes});
+      {super.key,
+      required this.indexOfAudio,
+      required this.repeatTimes,
+      this.practiceLevel});
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -36,6 +40,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       'assets/images/background/background_image_1.jpg'; //default image for background
   int imageIndex = 1; //will be changed by user later for background change
   int completedMeditationMinutes = 0; //completed meditation minutes
+  int durationSeconds = 0; //seconds for one inhale cycle
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
@@ -61,12 +66,19 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _breathingController =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
+    setPracticeLevel();
+    _breathingController = AnimationController(
+        vsync: this, duration: Duration(seconds: durationSeconds));
     _breathingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        // _breathingController.stop();
+        // breathMessage = "Hold";
+        // Future.delayed(Duration(seconds: 3), () {
+        // if (mounted) {
         _breathingController.reverse();
         breathMessage = "Exhale";
+        // }
+        // });
       } else if (status == AnimationStatus.dismissed) {
         _breathingController.forward();
         breathMessage = "Inhale";
@@ -456,5 +468,16 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       }
     }
     return null;
+  }
+
+  setPracticeLevel() {
+    if (widget.practiceLevel == 0) {
+      durationSeconds = 3;
+    } else if (widget.practiceLevel == 1) {
+      durationSeconds = 5;
+    } else {
+      durationSeconds = 7;
+    }
+    setState(() {});
   }
 }
