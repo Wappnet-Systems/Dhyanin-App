@@ -15,7 +15,7 @@ class Meditation extends StatefulWidget {
 class _MeditationState extends State<Meditation> {
   int value = 0; //index value of by default duration
   int repeatValue = 0; //to repeat meditation
-  int practiceLevel = 0; //to select duration of inhale-exhale
+  int inhaleSeconds = 2, holdSeconds = 0, exhaleSeconds = 4;
 
   //Custom radio button widget for duration
   Widget customRadioButton(String text, int index) {
@@ -26,13 +26,20 @@ class _MeditationState extends State<Meditation> {
         });
       },
       style: OutlinedButton.styleFrom(
+        backgroundColor: (value == index)
+            ? primary_color.withOpacity(0.8)
+            : background_color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        side: BorderSide(color: (value == index) ? color_2 : Colors.black),
+        side: BorderSide(
+            color: (value == index)
+                ? primary_color
+                : Colors.black.withOpacity(0.6)),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: (value == index) ? color_2 : Colors.black,
+          color:
+              (value == index) ? Colors.white : Colors.black.withOpacity(0.6),
         ),
       ),
     );
@@ -47,36 +54,21 @@ class _MeditationState extends State<Meditation> {
         });
       },
       style: OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        side:
-            BorderSide(color: (repeatValue == index) ? color_2 : Colors.black),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: (repeatValue == index) ? color_2 : Colors.black,
-        ),
-      ),
-    );
-  }
-
-  //Custom radio button widget for level
-  Widget customRadioButtonLevel(String text, int index) {
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          practiceLevel = index;
-        });
-      },
-      style: OutlinedButton.styleFrom(
+        backgroundColor: (repeatValue == index)
+            ? primary_color.withOpacity(0.8)
+            : background_color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide(
-            color: (practiceLevel == index) ? color_2 : Colors.black),
+            color: (repeatValue == index)
+                ? primary_color
+                : Colors.black.withOpacity(0.6)),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: (practiceLevel == index) ? color_2 : Colors.black,
+          color: (repeatValue == index)
+              ? Colors.white
+              : Colors.black.withOpacity(0.6),
         ),
       ),
     );
@@ -170,7 +162,7 @@ class _MeditationState extends State<Meditation> {
               const Padding(
                 padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
                 child: Text(
-                  'Select Practice level',
+                  'Select Breathing Seconds',
                   style: bodyStyle,
                 ),
               ),
@@ -178,15 +170,21 @@ class _MeditationState extends State<Meditation> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    customRadioButtonLevel('Beginner', 0),
+                    Column(
+                      children: [
+                        Icon(Icons.arrow_drop_up_rounded),
+                        Text('inhale'),
+                        Icon(Icons.arrow_drop_down_rounded),
+                      ],
+                    ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.02,
                     ),
-                    customRadioButtonLevel('Intermediate', 1),
+                    Text('hold'),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.02,
                     ),
-                    customRadioButtonLevel('Advance', 2),
+                    Text('exhale'),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.02,
                     ),
@@ -208,11 +206,8 @@ class _MeditationState extends State<Meditation> {
               ),
               SimpleCard(
                 name: 'Start',
-                next_page: AudioPage(
-                  indexOfAudio: value,
-                  repeatTimes: repeatValue,
-                  practiceLevel: practiceLevel,
-                ),
+                next_page:
+                    AudioPage(indexOfAudio: value, repeatTimes: repeatValue),
               ),
             ],
           ),

@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 signOut(context);
               },
-              backgroundColor: Color.fromARGB(255, 217, 65, 136),
+              backgroundColor: primary_color,
               child: const Icon(Icons.logout_rounded),
             ),
           ),

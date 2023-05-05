@@ -15,13 +15,13 @@ class WeekDayCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           side: BorderSide(
             color: DateTime.now().day != date
-                ? primary_color.withOpacity(0.3)
-                : Color(0xFFECA0D6),
+                // ? primary_color.withOpacity(0.3)
+                ? Colors.white
+                : primary_color,
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color:
-            DateTime.now().day == date ? Color(0xFFECA0D6) : background_color,
+        color: DateTime.now().day == date ? primary_color : background_color,
         elevation: 4,
         child: Column(
           children: [
@@ -29,13 +29,22 @@ class WeekDayCard extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.01,
             ),
             Text(date.toString(),
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 25,
+                    color: DateTime.now().day == date
+                        ? Colors.white
+                        : Colors.black)),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),
             Text(
               weekDay,
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
+              style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  color:
+                      DateTime.now().day == date ? Colors.white : Colors.black),
             )
           ],
         ),

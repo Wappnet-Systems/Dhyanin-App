@@ -12,12 +12,8 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
   final int? repeatTimes;
-  final int? practiceLevel;
   const AudioPage(
-      {super.key,
-      required this.indexOfAudio,
-      required this.repeatTimes,
-      this.practiceLevel});
+      {super.key, required this.indexOfAudio, required this.repeatTimes});
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -66,19 +62,20 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    setPracticeLevel();
     _breathingController = AnimationController(
-        vsync: this, duration: Duration(seconds: durationSeconds));
+        vsync: this,
+        duration: Duration(seconds: durationSeconds),
+        reverseDuration: Duration(seconds: 10));
     _breathingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // _breathingController.stop();
-        // breathMessage = "Hold";
-        // Future.delayed(Duration(seconds: 3), () {
-        // if (mounted) {
-        _breathingController.reverse();
-        breathMessage = "Exhale";
-        // }
-        // });
+        _breathingController.stop();
+        breathMessage = "Hold Your Breath";
+        Future.delayed(Duration(seconds: 3), () {
+          if (mounted && isPlaying) {
+            _breathingController.reverse();
+            breathMessage = "Exhale";
+          }
+        });
       } else if (status == AnimationStatus.dismissed) {
         _breathingController.forward();
         breathMessage = "Inhale";
@@ -318,7 +315,11 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                         _breathingController.stop();
                                         await audioPlayer.pause();
                                       } else {
-                                        _breathingController.forward();
+                                        if (breathMessage == 'Inhale') {
+                                          _breathingController.forward();
+                                        } else {
+                                          _breathingController.reverse();
+                                        }
                                         await audioPlayer.resume();
                                       }
                                     }
@@ -468,16 +469,5 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       }
     }
     return null;
-  }
-
-  setPracticeLevel() {
-    if (widget.practiceLevel == 0) {
-      durationSeconds = 3;
-    } else if (widget.practiceLevel == 1) {
-      durationSeconds = 5;
-    } else {
-      durationSeconds = 7;
-    }
-    setState(() {});
   }
 }
