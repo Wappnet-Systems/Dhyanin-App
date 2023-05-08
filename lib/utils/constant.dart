@@ -6,7 +6,11 @@ const String projectTitle = 'Dhyanin';
 //textstyles
 const TextStyle headingStyle =
     TextStyle(fontSize: 35, fontWeight: FontWeight.w500);
-const TextStyle bodyStyle = TextStyle(fontSize: 25);
+const TextStyle bodyStyle = TextStyle(fontSize: 22);
+const TextStyle sliderText = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w400,
+);
 
 //audio files urls for assets
 const String audio1 = "audios/audio1.m4a";

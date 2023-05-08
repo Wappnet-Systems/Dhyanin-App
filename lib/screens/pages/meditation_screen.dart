@@ -15,7 +15,9 @@ class Meditation extends StatefulWidget {
 class _MeditationState extends State<Meditation> {
   int value = 0; //index value of by default duration
   int repeatValue = 0; //to repeat meditation
-  int inhaleSeconds = 2, holdSeconds = 0, exhaleSeconds = 4;
+  double inhaleSeconds = 2;
+  double holdSeconds = 0;
+  double exhaleSeconds = 4;
 
   //Custom radio button widget for duration
   Widget customRadioButton(String text, int index) {
@@ -88,7 +90,7 @@ class _MeditationState extends State<Meditation> {
               const Padding(
                 padding: EdgeInsets.only(top: 15.0, left: 5.0, bottom: 10.0),
                 child: Text(
-                  'Select Duration',
+                  'Select Duration (per cycle)',
                   style: bodyStyle,
                 ),
               ),
@@ -166,48 +168,145 @@ class _MeditationState extends State<Meditation> {
                   style: bodyStyle,
                 ),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Column(
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Card(
+                  color: background_color,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      side: BorderSide(color: primary_color)),
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    // height: MediaQuery.of(context).size.height * 0.28,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
                       children: [
-                        Icon(Icons.arrow_drop_up_rounded),
-                        Text('inhale'),
-                        Icon(Icons.arrow_drop_down_rounded),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Text(
+                                'Inhale (2-6)',
+                                textAlign: TextAlign.left,
+                                style: sliderText,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 7,
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  valueIndicatorColor: primary_color,
+                                ),
+                                child: Slider(
+                                    value: inhaleSeconds,
+                                    label: inhaleSeconds.round().toString(),
+                                    min: 2,
+                                    max: 6,
+                                    activeColor: primary_color,
+                                    inactiveColor:
+                                        primary_color.withOpacity(0.4),
+                                    divisions: 4,
+                                    onChanged: (newValue) {
+                                      inhaleSeconds = newValue;
+                                      setState(() {});
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                'Hold (0-8)  ',
+                                style: sliderText,
+                              ),
+                              flex: 3,
+                            ),
+                            Flexible(
+                              flex: 7,
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  valueIndicatorColor: primary_color,
+                                ),
+                                child: Slider(
+                                    value: holdSeconds,
+                                    label: holdSeconds.round().toString(),
+                                    min: 0,
+                                    max: 8,
+                                    activeColor: primary_color,
+                                    inactiveColor:
+                                        primary_color.withOpacity(0.4),
+                                    divisions: 8,
+                                    onChanged: (newValue) {
+                                      holdSeconds = newValue;
+                                      setState(() {});
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Text(
+                                'Exhale (4-8)',
+                                style: sliderText,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 7,
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  valueIndicatorColor: primary_color,
+                                ),
+                                child: Slider(
+                                    value: exhaleSeconds,
+                                    label: exhaleSeconds.round().toString(),
+                                    min: 4,
+                                    max: 8,
+                                    activeColor: primary_color,
+                                    inactiveColor:
+                                        primary_color.withOpacity(0.4),
+                                    divisions: 4,
+                                    onChanged: (newValue) {
+                                      exhaleSeconds = newValue;
+                                      setState(() {});
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
                       ],
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    Text('hold'),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    Text('exhale'),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                  ],
+                  ),
                 ),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.03,
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
-                child: Text(
-                  'Breathing Guided Meditation',
-                  style: bodyStyle,
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
-              ),
               SimpleCard(
                 name: 'Start',
-                next_page:
-                    AudioPage(indexOfAudio: value, repeatTimes: repeatValue),
+                next_page: AudioPage(
+                  indexOfAudio: value,
+                  repeatTimes: repeatValue,
+                  inhaleSeconds: inhaleSeconds,
+                  holdSeconds: holdSeconds,
+                  exhaleSeconds: exhaleSeconds,
+                ),
               ),
             ],
           ),

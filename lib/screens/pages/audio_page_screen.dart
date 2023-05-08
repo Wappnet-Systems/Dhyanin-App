@@ -12,8 +12,16 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 class AudioPage extends StatefulWidget {
   final int? indexOfAudio;
   final int? repeatTimes;
+  final double inhaleSeconds;
+  final double holdSeconds;
+  final double exhaleSeconds;
   const AudioPage(
-      {super.key, required this.indexOfAudio, required this.repeatTimes});
+      {super.key,
+      required this.indexOfAudio,
+      required this.repeatTimes,
+      required this.inhaleSeconds,
+      required this.holdSeconds,
+      required this.exhaleSeconds});
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -36,7 +44,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       'assets/images/background/background_image_1.jpg'; //default image for background
   int imageIndex = 1; //will be changed by user later for background change
   int completedMeditationMinutes = 0; //completed meditation minutes
-  int durationSeconds = 0; //seconds for one inhale cycle
+  // int durationSeconds = 0; //seconds for one inhale cycle
   AudioPlayer audioPlayer = AudioPlayer();
 
   void initPlayer() async {
@@ -64,13 +72,15 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   void initState() {
     _breathingController = AnimationController(
         vsync: this,
-        duration: Duration(seconds: durationSeconds),
-        reverseDuration: Duration(seconds: 10));
+        duration: Duration(seconds: widget.inhaleSeconds.toInt()),
+        reverseDuration: Duration(seconds: widget.exhaleSeconds.toInt()));
     _breathingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _breathingController.stop();
-        breathMessage = "Hold Your Breath";
-        Future.delayed(Duration(seconds: 3), () {
+        if (widget.holdSeconds > 0) {
+          _breathingController.stop();
+          breathMessage = "Hold Your Breath";
+        }
+        Future.delayed(Duration(seconds: widget.holdSeconds.toInt()), () {
           if (mounted && isPlaying) {
             _breathingController.reverse();
             breathMessage = "Exhale";

@@ -25,20 +25,23 @@ class _HistoryItemState extends State<HistoryItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           if (widget.isNewDay)
-            Text(
-              (widget.history.dateTime.day == today.day &&
-                      widget.history.dateTime.month == today.month &&
-                      widget.history.dateTime.year == today.year)
-                  ? "Today"
-                  : (widget.history.dateTime.day == (today.day - 1) &&
-                          widget.history.dateTime.month == today.month &&
-                          widget.history.dateTime.year == today.year)
-                      ? "Yesterday"
-                      : DateFormat('MM/dd/yyyy')
-                          .format(widget.history.dateTime),
-              style: TextStyle(
-                color: primary_color,
-                fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                (widget.history.dateTime.day == today.day &&
+                        widget.history.dateTime.month == today.month &&
+                        widget.history.dateTime.year == today.year)
+                    ? "Today"
+                    : (widget.history.dateTime.day == (today.day - 1) &&
+                            widget.history.dateTime.month == today.month &&
+                            widget.history.dateTime.year == today.year)
+                        ? "Yesterday"
+                        : DateFormat('MM/dd/yyyy')
+                            .format(widget.history.dateTime),
+                style: TextStyle(
+                  color: primary_color,
+                  fontSize: 16,
+                ),
               ),
             ),
           if (widget.isNewDay)
