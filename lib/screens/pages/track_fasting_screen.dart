@@ -89,7 +89,6 @@ class _TrackFastingState extends State<TrackFasting> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: background_color,
             title: Text('End Fast'),
             content: Text('Do you really want to end fast now?'),
             actions: [
@@ -129,7 +128,6 @@ class _TrackFastingState extends State<TrackFasting> {
       model.isStarted = false;
     }
     return Scaffold(
-      backgroundColor: background_color,
       appBar: CustomAppBar(title: 'Track My Fast'),
       body: Consumer<FastingStatusProvider>(
         builder: (context, fastingStatusModel, child) => SafeArea(

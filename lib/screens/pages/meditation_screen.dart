@@ -30,18 +30,19 @@ class _MeditationState extends State<Meditation> {
       style: OutlinedButton.styleFrom(
         backgroundColor: (value == index)
             ? primary_color.withOpacity(0.8)
-            : background_color,
+            : Theme.of(context).colorScheme.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide(
             color: (value == index)
                 ? primary_color
-                : Colors.black.withOpacity(0.6)),
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color:
-              (value == index) ? Colors.white : Colors.black.withOpacity(0.6),
+          color: (value == index)
+              ? Colors.white
+              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         ),
       ),
     );
@@ -56,21 +57,22 @@ class _MeditationState extends State<Meditation> {
         });
       },
       style: OutlinedButton.styleFrom(
-        backgroundColor: (repeatValue == index)
-            ? primary_color.withOpacity(0.8)
-            : background_color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        side: BorderSide(
+          backgroundColor: (repeatValue == index)
+              ? primary_color.withOpacity(0.8)
+              : Theme.of(context).colorScheme.background,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          side: BorderSide(
             color: (repeatValue == index)
                 ? primary_color
-                : Colors.black.withOpacity(0.6)),
-      ),
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          )),
       child: Text(
         text,
         style: TextStyle(
           color: (repeatValue == index)
               ? Colors.white
-              : Colors.black.withOpacity(0.6),
+              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         ),
       ),
     );
@@ -79,7 +81,6 @@ class _MeditationState extends State<Meditation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background_color,
       appBar: const CustomAppBar(title: 'Dhyanin'),
       body: SafeArea(
         child: Padding(
@@ -171,10 +172,11 @@ class _MeditationState extends State<Meditation> {
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
                 child: Card(
-                  color: background_color,
+                  color: Theme.of(context).colorScheme.background,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
-                      side: BorderSide(color: primary_color)),
+                      side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary)),
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     // height: MediaQuery.of(context).size.height * 0.28,

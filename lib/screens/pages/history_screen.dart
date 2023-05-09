@@ -33,7 +33,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background_color,
       appBar: CustomAppBar(title: 'History'),
       body: listHistory.length == 0
           ? Center(

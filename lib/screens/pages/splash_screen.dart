@@ -1,9 +1,11 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:dhyanin_app/provider/theme_provider.dart';
 import 'package:dhyanin_app/screens/pages/home_screen.dart';
 import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/colors.dart';
 
@@ -15,31 +17,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  var auth = FirebaseAuth.instance;
-  var isLogin = false; //user login status
-
-  checkIfLogin() async {
-    auth.authStateChanges().listen((User? user) {
-      if (user != null && mounted) {
-        setState(() {
-          isLogin = true;
-        });
-      }
-    });
-  }
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
-    checkIfLogin();
+    Provider.of<ThemeManagerProvider>(context, listen: false)
+        .checkThemeStatus();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
+        backgroundColor: Theme.of(context).colorScheme.background,
         duration: 1500,
         splashTransition: SplashTransition.scaleTransition,
-        backgroundColor: background_color,
         splashIconSize: 250,
         animationDuration: Duration(milliseconds: 1500),
         splash: Center(
@@ -48,7 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 height: 225,
                 child: Image.asset(
-                  'assets/images/splash_screen.jpg',
+                  'assets/images/splash_rounded.png',
+                  // 'assets/images/splash_screen.jpg',
                   height: 250,
                   width: 250,
                 ),
@@ -61,6 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
         ),
-        nextScreen: isLogin ? HomeScreen() : MobileNumberInput());
+        nextScreen: user != null ? HomeScreen() : MobileNumberInput());
   }
 }

@@ -21,7 +21,6 @@ class MyCard extends StatelessWidget {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),
       child: Card(
-        color: Color.fromARGB(255, 255, 216, 244),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -40,7 +39,7 @@ class MyCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(
-                        color: primary_color.withOpacity(0.4),
+                        color: Theme.of(context).primaryColor.withOpacity(0.4),
                         width: 1.0,
                       ),
                     ),

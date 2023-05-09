@@ -39,7 +39,7 @@ class _HistoryItemState extends State<HistoryItem> {
                         : DateFormat('MM/dd/yyyy')
                             .format(widget.history.dateTime),
                 style: TextStyle(
-                  color: primary_color,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 16,
                 ),
               ),

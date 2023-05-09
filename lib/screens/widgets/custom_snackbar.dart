@@ -9,7 +9,10 @@ class CustomSnackbar {
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
       functionSnackbar(BuildContext context, String text) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
+      content: Text(
+        text,
+        style: TextStyle(color: Colors.white),
+      ),
       backgroundColor: primary_color.withOpacity(0.6),
     ));
   }

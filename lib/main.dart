@@ -1,4 +1,5 @@
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
+import 'package:dhyanin_app/provider/theme_provider.dart';
 import 'package:dhyanin_app/screens/pages/splash_screen.dart';
 import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,9 +11,14 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of application.
   @override
   Widget build(BuildContext context) {
@@ -21,25 +27,29 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => FastingStatusProvider())
+        ChangeNotifierProvider(create: (context) => FastingStatusProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeManagerProvider()),
       ],
-      child: FutureBuilder(
-          future: initialization,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print("object");
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
-              return MaterialApp(
-                  title: projectTitle,
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    primarySwatch: Colors.blue,
-                  ),
-                  home: const SplashScreen());
-            }
-            return CircularProgressIndicator();
-          }),
+      child: Consumer<ThemeManagerProvider>(
+        builder: (context, themeModel, child) => FutureBuilder(
+            future: initialization,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print("object");
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                return MaterialApp(
+                    title: projectTitle,
+                    debugShowCheckedModeBanner: false,
+                    theme: themeModel.isDark ? darkTheme : lightTheme,
+                    darkTheme: darkTheme,
+                    themeMode:
+                        themeModel.isDark ? ThemeMode.dark : ThemeMode.light,
+                    home: const SplashScreen());
+              }
+              return CircularProgressIndicator();
+            }),
+      ),
     );
   }
 }

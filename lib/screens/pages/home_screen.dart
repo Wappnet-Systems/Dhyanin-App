@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dhyanin_app/controller/history_controller.dart';
 import 'package:dhyanin_app/provider/fasting_status_provider.dart';
+import 'package:dhyanin_app/provider/theme_provider.dart';
 import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
 import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
-import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/screens/widgets/custom_weekday_card.dart';
 import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
 import 'package:dhyanin_app/screens/widgets/greeting.dart';
@@ -77,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  backgroundColor: background_color,
                   title: Text('Exit App'),
                   content: Text('Do you want to exit?'),
                   actions: [
@@ -100,77 +97,96 @@ class _HomeScreenState extends State<HomeScreen> {
           return true;
         },
         child: Scaffold(
-          backgroundColor: background_color,
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
             child: FloatingActionButton(
+              backgroundColor: primary_color,
               onPressed: () {
                 signOut(context);
               },
-              backgroundColor: primary_color,
               child: const Icon(Icons.logout_rounded),
             ),
           ),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * .03),
-                    const Text(
-                      'Hello,',
-                      style: headingStyle,
-                    ),
-                    Text(
-                      'Good ' + greeting(),
-                      style: headingStyle,
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                    const Text(
-                      'Have a great day!',
-                      style: bodyStyle,
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                    Row(children: [
-                      WeekDayCard(date: weekDay[0], weekDay: 'Mon'),
-                      WeekDayCard(date: weekDay[1], weekDay: 'Tue'),
-                      WeekDayCard(date: weekDay[2], weekDay: 'Wed'),
-                      WeekDayCard(date: weekDay[3], weekDay: 'Thu'),
-                      WeekDayCard(date: weekDay[4], weekDay: 'Fri'),
-                      WeekDayCard(date: weekDay[5], weekDay: 'Sat'),
-                      WeekDayCard(date: weekDay[6], weekDay: 'Sun'),
-                    ]),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .06,
-                    ),
-                    Text(
-                      "Choose what you want to do today!",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
-                    const MyCard(
-                      image_path: 'assets/images/meditation.png',
-                      title: 'Breathing Meditation',
-                      subTitle:
-                          'Focus your attention to your breath! Calm your mind and reduce stress!',
-                      next_page: Meditation(),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .01,
-                    ),
-                    const MyCard(
-                      image_path: 'assets/images/fasting.jpg',
-                      title: 'Track Fasting',
-                      subTitle:
-                          'Restrict your eating to a certain period of time for various health benefits!',
-                      next_page: TrackFasting(),
-                    )
-                  ],
+          body: Consumer<ThemeManagerProvider>(
+            builder: (context, themeModel, child) => SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * .03),
+                      Row(
+                        children: [
+                          const Text(
+                            'Hello,',
+                            style: headingStyle,
+                          ),
+                          Spacer(),
+                          InkWell(
+                              onTap: () {
+                                themeModel.changeTheme();
+                              },
+                              child: Icon(
+                                themeModel.isDark
+                                    ? Icons.dark_mode
+                                    : Icons.light_mode,
+                                size: 32,
+                              )),
+                        ],
+                      ),
+                      Text(
+                        'Good ' + greeting(),
+                        style: headingStyle,
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02),
+                      const Text(
+                        'Have a great day!',
+                        style: bodyStyle,
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03),
+                      Row(children: [
+                        WeekDayCard(date: weekDay[0], weekDay: 'Mon'),
+                        WeekDayCard(date: weekDay[1], weekDay: 'Tue'),
+                        WeekDayCard(date: weekDay[2], weekDay: 'Wed'),
+                        WeekDayCard(date: weekDay[3], weekDay: 'Thu'),
+                        WeekDayCard(date: weekDay[4], weekDay: 'Fri'),
+                        WeekDayCard(date: weekDay[5], weekDay: 'Sat'),
+                        WeekDayCard(date: weekDay[6], weekDay: 'Sun'),
+                      ]),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .06,
+                      ),
+                      Text(
+                        "Choose what you want to do today!",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                      const MyCard(
+                        image_path: 'assets/images/meditation.png',
+                        title: 'Breathing Meditation',
+                        subTitle:
+                            'Focus your attention to your breath! Calm your mind and reduce stress!',
+                        next_page: Meditation(),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .01,
+                      ),
+                      const MyCard(
+                        image_path: 'assets/images/fasting.jpg',
+                        title: 'Track Fasting',
+                        subTitle:
+                            'Restrict your eating to a certain period of time for various health benefits!',
+                        next_page: TrackFasting(),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -198,7 +214,6 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: background_color,
             title: Text('Logout'),
             content: Text('Are you sure you want to logout?'),
             actions: [

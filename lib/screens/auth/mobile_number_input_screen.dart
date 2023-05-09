@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dhyanin_app/screens/auth/otp_page_screen.dart';
+import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
 import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constant.dart';
@@ -26,8 +27,9 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
 
   @override
   void initState() {
-    super.initState();
+    CheckInternetConnectivity();
     countryCodeController.text = '+91'; //default country code for india
+    super.initState();
   }
 
   //input formatter for prefix of mobile number
@@ -50,7 +52,6 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  backgroundColor: background_color,
                   title: const Text('Exit App'),
                   content: const Text('Do you want to exit?'),
                   actions: [

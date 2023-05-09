@@ -191,7 +191,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final size = 30.0 + 180.0 * _breath;
     return Scaffold(
-      backgroundColor: background_color,
       appBar: const CustomAppBar(title: 'Breath Meditation'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -307,15 +306,19 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               AudioIcon(
-                                  icon: Icon(Icons.audiotrack),
+                                  icon: Icon(
+                                    Icons.audiotrack,
+                                    color: Colors.white,
+                                  ),
                                   onPress: onPressEventAudio),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.05,
                               ),
                               AudioIcon(
-                                  icon: Icon(isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow),
+                                  icon: Icon(
+                                    isPlaying ? Icons.pause : Icons.play_arrow,
+                                    color: Colors.white,
+                                  ),
                                   onPress: () async {
                                     if ((widget.repeatTimes! +
                                             1 -
@@ -338,7 +341,10 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                 width: MediaQuery.of(context).size.width * 0.05,
                               ),
                               AudioIcon(
-                                  icon: Icon(Icons.image),
+                                  icon: Icon(
+                                    Icons.image,
+                                    color: Colors.white,
+                                  ),
                                   onPress: () async {
                                     if (isPlaying) {
                                       imageIndex < 7

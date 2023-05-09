@@ -16,7 +16,8 @@ class CheckInternetConnectivity {
             checkConnectivity(context);
           },
         ),
-        content: Text('Please, Connect to the internet!'),
+        content: Text('Please, Connect to the internet!',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: primary_color.withOpacity(0.6),
       ));
     }
