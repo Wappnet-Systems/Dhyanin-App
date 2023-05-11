@@ -1,4 +1,4 @@
-import 'package:dhyanin_app/models/history_model.dart';
+import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +53,7 @@ class _HistoryItemState extends State<HistoryItem> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             decoration: BoxDecoration(
-              color: history_card_color,
+              color: historyCardColor,
               borderRadius: BorderRadius.circular(7),
               boxShadow: [
                 BoxShadow(
@@ -73,14 +73,14 @@ class _HistoryItemState extends State<HistoryItem> {
                     Text(
                       "You have completed fasting for",
                       style: TextStyle(
-                        color: background_color,
+                        color: backgroundColor,
                         fontSize: 16,
                       ),
                     ),
                     Text(
                       "${widget.history.fastingHours} Hours",
                       style: TextStyle(
-                        color: background_color,
+                        color: backgroundColor,
                         fontSize: 23,
                         fontWeight: FontWeight.w500,
                       ),
@@ -93,7 +93,7 @@ class _HistoryItemState extends State<HistoryItem> {
                   child: Text(
                     DateFormat('hh:mm a').format(widget.history.dateTime),
                     style: TextStyle(
-                      color: background_color,
+                      color: backgroundColor,
                       fontSize: 13,
                     ),
                   ),

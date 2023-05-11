@@ -1,7 +1,8 @@
-import 'package:dhyanin_app/controller/history_controller.dart';
-import 'package:dhyanin_app/models/history_model.dart';
-import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/screens/widgets/history_item.dart';
+import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/models/history_model.dart';
+import 'package:dhyanin_app/utils/images.dart';
+import 'package:dhyanin_app/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/widgets/track_fasting/history_item.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: primary_color));
+        SystemUiOverlayStyle(statusBarColor: primaryColor));
     HistoryController.init();
     listHistory.addAll(historyController.read("history"));
     listHistory.sort((a, b) {
@@ -39,7 +40,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset('assets/lottie/empty_list.json', width: 250),
+                  Lottie.asset(emptyHistoryListLottie, width: 250),
                   Text(
                     'You haven\'t fasted yet!',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),

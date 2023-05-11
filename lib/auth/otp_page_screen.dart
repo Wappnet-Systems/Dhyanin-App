@@ -1,12 +1,13 @@
-import 'package:dhyanin_app/screens/pages/home_screen.dart';
-import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
-import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/screens/home_screen.dart';
+import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/utils/images.dart';
+import 'package:dhyanin_app/utils/styles.dart';
+import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-import '../../utils/colors.dart';
-import '../../utils/constant.dart';
+import '../utils/colors.dart';
 
 class OtpPage extends StatefulWidget {
   const OtpPage({super.key});
@@ -30,7 +31,7 @@ class _OtpPageState extends State<OtpPage> {
           color: Color.fromRGBO(30, 60, 87, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: color_2),
+        border: Border.all(color: secondaryColor2),
         borderRadius: BorderRadius.circular(20),
       ),
     );
@@ -58,7 +59,7 @@ class _OtpPageState extends State<OtpPage> {
               color: Colors.black,
             )),
       ),
-      backgroundColor: background_color,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -78,7 +79,7 @@ class _OtpPageState extends State<OtpPage> {
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Image.asset(
-                  'assets/images/registration.png',
+                  registrationImage,
                   height: MediaQuery.of(context).size.height * 0.25,
                 ),
                 Container(
@@ -145,11 +146,11 @@ class _OtpPageState extends State<OtpPage> {
                     child: loading
                         ? Center(
                             child: CircularProgressIndicator(
-                            color: background_color,
+                            color: backgroundColor,
                           ))
                         : Text('Verify phone number'),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: color_2,
+                        backgroundColor: secondaryColor2,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0))),
                   ),

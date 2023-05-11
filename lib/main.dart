@@ -1,7 +1,8 @@
-import 'package:dhyanin_app/provider/fasting_status_provider.dart';
-import 'package:dhyanin_app/provider/theme_provider.dart';
-import 'package:dhyanin_app/screens/pages/splash_screen.dart';
-import 'package:dhyanin_app/utils/constant.dart';
+import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
+import 'package:dhyanin_app/services/providers/theme_provider.dart';
+import 'package:dhyanin_app/screens/splash_screen.dart';
+import 'package:dhyanin_app/utils/constants.dart';
+import 'package:dhyanin_app/utils/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

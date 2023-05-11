@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/screens/widgets/custom_audio_icon.dart';
-import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/utils/images.dart';
+import 'package:dhyanin_app/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/widgets/breath_meditation/custom_audio_screen_icon.dart';
+import 'package:dhyanin_app/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/widgets/breath_meditation/default_image_background.dart';
+import 'package:dhyanin_app/widgets/breath_meditation/select_image_elevatedbutton.dart';
 import 'package:dhyanin_app/utils/colors.dart';
-import 'package:dhyanin_app/utils/constant.dart';
+import 'package:dhyanin_app/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class AudioPage extends StatefulWidget {
@@ -40,12 +45,12 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   int selectedAudio = 1; //will be changed by user later for audio change
   Duration currPosition = Duration.zero;
   bool _enabled = true; //to disable audiochange button for some time
-  String backgroundImage =
-      'assets/images/background/background_image_1.jpg'; //default image for background
+  String backgroundImage = backgroundImage1; //default image for background
   int imageIndex = 1; //will be changed by user later for background change
   int completedMeditationMinutes = 0; //completed meditation minutes
   // int durationSeconds = 0; //seconds for one inhale cycle
   AudioPlayer audioPlayer = AudioPlayer();
+  File? pickedImage;
 
   void initPlayer() async {
     if (widget.indexOfAudio == 0) {
@@ -209,7 +214,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                     height: MediaQuery.of(context).size.height * .87,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(backgroundImage),
+                        image: pickedImage != null
+                            ? FileImage(pickedImage!) as ImageProvider
+                            : AssetImage(backgroundImage),
                         colorFilter: const ColorFilter.mode(
                             Color(0xFFFFFFFF), BlendMode.dstATop),
                         opacity: 1,
@@ -285,8 +292,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                               CircularStepProgressIndicator(
                                 totalSteps: meditationMinutes,
                                 currentStep: completedMeditationMinutes,
-                                selectedColor: primary_color.withOpacity(0.8),
-                                unselectedColor: primary_color.withOpacity(0.2),
+                                selectedColor: primaryColor.withOpacity(0.8),
+                                unselectedColor: primaryColor.withOpacity(0.2),
                                 child: Center(
                                   child: Text(
                                     formatTime(currPosition + position),
@@ -347,11 +354,159 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                   ),
                                   onPress: () async {
                                     if (isPlaying) {
-                                      imageIndex < 7
-                                          ? imageIndex++
-                                          : imageIndex = 1;
-                                      backgroundImage =
-                                          'assets/images/background/background_image_$imageIndex.jpg';
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: [
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage1,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage1;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage2,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage2;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage3,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage3;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage4,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage4;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage5,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage5;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage6,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage6;
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage7,
+                                                    ontap: () {
+                                                      backgroundImage =
+                                                          backgroundImage7;
+                                                    },
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      showModalBottomSheet<
+                                                              dynamic>(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      vertical:
+                                                                          5.0),
+                                                                  child: Text(
+                                                                    'Select Image From',
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                                ImageElevatedButton(
+                                                                    onPress:
+                                                                        () {
+                                                                      pickImage(
+                                                                          ImageSource
+                                                                              .camera);
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .camera,
+                                                                    ),
+                                                                    label:
+                                                                        "Camera"),
+                                                                ImageElevatedButton(
+                                                                    onPress:
+                                                                        () {
+                                                                      pickImage(
+                                                                          ImageSource
+                                                                              .gallery);
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .image,
+                                                                    ),
+                                                                    label:
+                                                                        "Gallary"),
+                                                                ImageElevatedButton(
+                                                                    onPress:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .close,
+                                                                    ),
+                                                                    label:
+                                                                        "Cancel"),
+                                                              ],
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.195,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  primaryColor)),
+                                                      child: Icon(
+                                                        Icons
+                                                            .add_circle_outline,
+                                                        color: primaryColor,
+                                                        size: 40,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.03,
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          });
                                     }
                                   }),
                             ],
@@ -373,9 +528,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                         totalSteps: widget.repeatTimes! + 1,
                                         currentStep: timesPlayed,
                                         selectedColor:
-                                            primary_color.withOpacity(0.8),
+                                            primaryColor.withOpacity(0.8),
                                         unselectedColor:
-                                            primary_color.withOpacity(0.2),
+                                            primaryColor.withOpacity(0.2),
                                         child: Center(
                                           child: Text(
                                             timesPlayed.toString(),
@@ -485,5 +640,20 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       }
     }
     return null;
+  }
+
+  //image picker function
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
+      setState(() {
+        pickedImage = tempImage;
+      });
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -14,11 +14,11 @@ class WeekDayCard extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: DateTime.now().day != date ? Colors.white : primary_color,
+            color: DateTime.now().day != date ? Colors.white : primaryColor,
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color: DateTime.now().day == date ? primary_color : background_color,
+        color: DateTime.now().day == date ? primaryColor : backgroundColor,
         elevation: 4,
         child: Column(
           children: [

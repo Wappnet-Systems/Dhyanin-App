@@ -11,14 +11,14 @@ class CheckInternetConnectivity {
         dismissDirection: DismissDirection.none,
         action: SnackBarAction(
           label: 'Check Now!',
-          textColor: background_color, // or some operation you would like
+          textColor: backgroundColor, // or some operation you would like
           onPressed: () {
             checkConnectivity(context);
           },
         ),
         content: Text('Please, Connect to the internet!',
             style: TextStyle(color: Colors.white)),
-        backgroundColor: primary_color.withOpacity(0.6),
+        backgroundColor: primaryColor.withOpacity(0.6),
       ));
     }
   }

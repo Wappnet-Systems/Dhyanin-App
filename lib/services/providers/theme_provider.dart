@@ -9,7 +9,7 @@ class ThemeManagerProvider with ChangeNotifier {
 
   Future<void> checkThemeStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isDark = prefs.getBool('isDark')!;
+    isDark = prefs.getBool('isDark') ?? false;
     notifyListeners();
   }
 

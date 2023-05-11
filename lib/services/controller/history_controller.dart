@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:dhyanin_app/models/history_model.dart';
+import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

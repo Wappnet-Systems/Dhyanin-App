@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/controller/history_controller.dart';
-import 'package:dhyanin_app/models/history_model.dart';
+import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

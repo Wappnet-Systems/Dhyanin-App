@@ -1,8 +1,7 @@
-import 'package:dhyanin_app/screens/pages/audio_page_screen.dart';
-import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/screens/widgets/simple_card.dart';
+import 'package:dhyanin_app/screens/breath_meditation/audio_page_screen.dart';
+import 'package:dhyanin_app/utils/styles.dart';
+import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/utils/colors.dart';
-import 'package:dhyanin_app/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class Meditation extends StatefulWidget {
@@ -29,12 +28,12 @@ class _MeditationState extends State<Meditation> {
       },
       style: OutlinedButton.styleFrom(
         backgroundColor: (value == index)
-            ? primary_color.withOpacity(0.8)
+            ? primaryColor
             : Theme.of(context).colorScheme.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide(
             color: (value == index)
-                ? primary_color
+                ? primaryColor
                 : Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
       ),
       child: Text(
@@ -58,13 +57,13 @@ class _MeditationState extends State<Meditation> {
       },
       style: OutlinedButton.styleFrom(
           backgroundColor: (repeatValue == index)
-              ? primary_color.withOpacity(0.8)
+              ? primaryColor
               : Theme.of(context).colorScheme.background,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           side: BorderSide(
             color: (repeatValue == index)
-                ? primary_color
+                ? primaryColor
                 : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           )),
       child: Text(
@@ -198,16 +197,16 @@ class _MeditationState extends State<Meditation> {
                               flex: 7,
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  valueIndicatorColor: primary_color,
+                                  valueIndicatorColor: primaryColor,
                                 ),
                                 child: Slider(
                                     value: inhaleSeconds,
                                     label: inhaleSeconds.round().toString(),
                                     min: 2,
                                     max: 6,
-                                    activeColor: primary_color,
+                                    activeColor: primaryColor,
                                     inactiveColor:
-                                        primary_color.withOpacity(0.4),
+                                        primaryColor.withOpacity(0.4),
                                     divisions: 4,
                                     onChanged: (newValue) {
                                       inhaleSeconds = newValue;
@@ -234,16 +233,16 @@ class _MeditationState extends State<Meditation> {
                               flex: 7,
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  valueIndicatorColor: primary_color,
+                                  valueIndicatorColor: primaryColor,
                                 ),
                                 child: Slider(
                                     value: holdSeconds,
                                     label: holdSeconds.round().toString(),
                                     min: 0,
                                     max: 8,
-                                    activeColor: primary_color,
+                                    activeColor: primaryColor,
                                     inactiveColor:
-                                        primary_color.withOpacity(0.4),
+                                        primaryColor.withOpacity(0.4),
                                     divisions: 8,
                                     onChanged: (newValue) {
                                       holdSeconds = newValue;
@@ -270,16 +269,16 @@ class _MeditationState extends State<Meditation> {
                               flex: 7,
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  valueIndicatorColor: primary_color,
+                                  valueIndicatorColor: primaryColor,
                                 ),
                                 child: Slider(
                                     value: exhaleSeconds,
                                     label: exhaleSeconds.round().toString(),
                                     min: 4,
                                     max: 8,
-                                    activeColor: primary_color,
+                                    activeColor: primaryColor,
                                     inactiveColor:
-                                        primary_color.withOpacity(0.4),
+                                        primaryColor.withOpacity(0.4),
                                     divisions: 4,
                                     onChanged: (newValue) {
                                       exhaleSeconds = newValue;
@@ -300,14 +299,35 @@ class _MeditationState extends State<Meditation> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.03,
               ),
-              SimpleCard(
-                name: 'Start',
-                next_page: AudioPage(
-                  indexOfAudio: value,
-                  repeatTimes: repeatValue,
-                  inhaleSeconds: inhaleSeconds,
-                  holdSeconds: holdSeconds,
-                  exhaleSeconds: exhaleSeconds,
+              Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          )),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AudioPage(
+                            indexOfAudio: value,
+                            repeatTimes: repeatValue,
+                            inhaleSeconds: inhaleSeconds,
+                            holdSeconds: holdSeconds,
+                            exhaleSeconds: exhaleSeconds,
+                          ),
+                        ));
+                      },
+                      icon: Icon(
+                        Icons.play_arrow,
+                        size: 30,
+                      ),
+                      label: Text(
+                        'Start',
+                        style:
+                            const TextStyle(fontSize: 25, color: Colors.white),
+                      )),
                 ),
               ),
             ],

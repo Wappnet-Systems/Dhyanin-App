@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:dhyanin_app/screens/auth/otp_page_screen.dart';
-import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
-import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/auth/otp_page_screen.dart';
+import 'package:dhyanin_app/utils/images.dart';
+import 'package:dhyanin_app/utils/styles.dart';
+import 'package:dhyanin_app/services/functions/check_connectivity.dart';
+import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/utils/colors.dart';
-import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -74,7 +75,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
           return true;
         },
         child: Scaffold(
-          backgroundColor: background_color,
+          backgroundColor: backgroundColor,
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -94,7 +95,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                       height: MediaQuery.of(context).size.height * 0.05,
                     ),
                     Image.asset(
-                      'assets/images/registration.png',
+                      registrationImage,
                       height: MediaQuery.of(context).size.height * 0.25,
                     ),
                     Container(
@@ -206,13 +207,13 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: color_2,
+                            backgroundColor: secondaryColor2,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0))),
                         child: loading
                             ? Center(
                                 child: CircularProgressIndicator(
-                                color: background_color,
+                                color: backgroundColor,
                               ))
                             : const Text('Send the code'),
                       ),

@@ -1,13 +1,14 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:dhyanin_app/provider/theme_provider.dart';
-import 'package:dhyanin_app/screens/pages/home_screen.dart';
-import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
-import 'package:dhyanin_app/utils/constant.dart';
+import 'package:dhyanin_app/services/providers/theme_provider.dart';
+import 'package:dhyanin_app/screens/home_screen.dart';
+import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/utils/constants.dart';
+import 'package:dhyanin_app/utils/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/colors.dart';
+import '../utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -40,8 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 height: 225,
                 child: Image.asset(
-                  'assets/images/splash_rounded.png',
-                  // 'assets/images/splash_screen.jpg',
+                  splashImage,
                   height: 250,
                   width: 250,
                 ),
@@ -49,7 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
               Text(
                 projectTitle,
                 style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: color_2),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: secondaryColor2),
               )
             ],
           ),

@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
-import 'package:dhyanin_app/screens/widgets/custom_snackbar.dart';
+import 'package:dhyanin_app/services/functions/check_connectivity.dart';
+import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/controller/history_controller.dart';
-import 'package:dhyanin_app/provider/fasting_status_provider.dart';
-import 'package:dhyanin_app/screens/pages/history_screen.dart';
-import 'package:dhyanin_app/screens/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/screens/widgets/get_duration.dart';
-import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
+import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
+import 'package:dhyanin_app/screens/track_fasting/history_screen.dart';
+import 'package:dhyanin_app/widgets/custom_app_bar.dart';
+import 'package:dhyanin_app/services/functions/get_duration.dart';
+import 'package:dhyanin_app/services/functions/get_time_difference.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +147,7 @@ class _TrackFastingState extends State<TrackFasting> {
                     IconButton(
                       icon: Icon(
                         Icons.history,
-                        color: primary_color,
+                        color: primaryColor,
                         size: 35,
                       ),
                       onPressed: () {
@@ -198,10 +198,10 @@ class _TrackFastingState extends State<TrackFasting> {
                                     shadowWidth: 0,
                                   ),
                                   customColors: CustomSliderColors(
-                                    trackColor: color_1,
-                                    progressBarColor: primary_color,
+                                    trackColor: secondaryColor1,
+                                    progressBarColor: primaryColor,
                                     hideShadow: true,
-                                    dotColor: primary_color,
+                                    dotColor: primaryColor,
                                   ),
                                   size: 250,
                                   angleRange: 360,
@@ -224,7 +224,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                                       fastingStatusModel
                                                           .startedTime)))),
                                       style: TextStyle(
-                                        color: primary_color,
+                                        color: primaryColor,
                                         fontSize: 46,
                                       ),
                                     ),
@@ -244,7 +244,7 @@ class _TrackFastingState extends State<TrackFasting> {
                           IconButton(
                             icon: const Icon(Icons.remove_circle_outlined),
                             iconSize: 40,
-                            color: primary_color,
+                            color: primaryColor,
                             onPressed: () {
                               if (!fastingStatusModel.isStarted) {
                                 setState(() {
@@ -279,7 +279,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                 ),
                           IconButton(
                               icon: const Icon(Icons.add_circle_outlined),
-                              color: primary_color,
+                              color: primaryColor,
                               iconSize: 40,
                               onPressed: () {
                                 if (!fastingStatusModel.isStarted) {
@@ -343,7 +343,7 @@ class _TrackFastingState extends State<TrackFasting> {
                           width: 200,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: primary_color,
+                            color: primaryColor,
                             borderRadius: BorderRadius.circular(14),
                             boxShadow: [
                               BoxShadow(
@@ -360,7 +360,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                 ? "End Fast"
                                 : "Start Fast",
                             style: const TextStyle(
-                              color: background_color,
+                              color: backgroundColor,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
                             ),

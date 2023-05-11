@@ -9,7 +9,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      backgroundColor: primary_color,
+      backgroundColor: primaryColor,
       elevation: 0,
       leading: IconButton(
         onPressed: () {
@@ -17,12 +17,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         },
         icon: Icon(
           Icons.arrow_back_ios,
-          color: background_color,
+          color: backgroundColor,
         ),
       ),
       title: Text(
         title,
-        style: TextStyle(color: background_color),
+        style: TextStyle(color: backgroundColor),
       ),
     );
   }

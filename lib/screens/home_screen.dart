@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dhyanin_app/controller/history_controller.dart';
-import 'package:dhyanin_app/provider/fasting_status_provider.dart';
-import 'package:dhyanin_app/provider/theme_provider.dart';
-import 'package:dhyanin_app/screens/auth/mobile_number_input_screen.dart';
-import 'package:dhyanin_app/screens/pages/track_fasting_screen.dart';
-import 'package:dhyanin_app/screens/widgets/check_connectivity.dart';
-import 'package:dhyanin_app/screens/widgets/custom_weekday_card.dart';
-import 'package:dhyanin_app/screens/widgets/get_time_difference.dart';
-import 'package:dhyanin_app/screens/widgets/greeting.dart';
-import 'package:dhyanin_app/screens/widgets/my_card.dart';
+import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
+import 'package:dhyanin_app/services/providers/theme_provider.dart';
+import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/screens/track_fasting/track_fasting_screen.dart';
+import 'package:dhyanin_app/utils/images.dart';
+import 'package:dhyanin_app/utils/styles.dart';
+import 'package:dhyanin_app/services/functions/check_connectivity.dart';
+import 'package:dhyanin_app/widgets/custom_weekday_card.dart';
+import 'package:dhyanin_app/services/functions/get_time_difference.dart';
+import 'package:dhyanin_app/services/functions/greeting.dart';
+import 'package:dhyanin_app/widgets/custom_home_screen_card.dart';
 import 'package:dhyanin_app/utils/colors.dart';
-import 'package:dhyanin_app/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'meditation_screen.dart';
+import 'breath_meditation/meditation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
             child: FloatingActionButton(
-              backgroundColor: primary_color,
+              backgroundColor: primaryColor,
               onPressed: () {
                 signOut(context);
               },
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: MediaQuery.of(context).size.height * .02,
                       ),
                       const MyCard(
-                        image_path: 'assets/images/meditation.png',
+                        image_path: meditationImage,
                         title: 'Breathing Meditation',
                         subTitle:
                             'Focus your attention to your breath! Calm your mind and reduce stress!',
@@ -179,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: MediaQuery.of(context).size.height * .01,
                       ),
                       const MyCard(
-                        image_path: 'assets/images/fasting.jpg',
+                        image_path: trackFastingImage,
                         title: 'Track Fasting',
                         subTitle:
                             'Restrict your eating to a certain period of time for various health benefits!',
