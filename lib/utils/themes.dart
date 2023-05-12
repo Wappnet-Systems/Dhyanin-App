@@ -1,4 +1,4 @@
-//Theme constants
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ ThemeData lightTheme = ThemeData(
       background: backgroundColor,
       // onBackground: PrimaryColor.color_bottle_green,
       brightness: Brightness.light),
-  cardColor: Color(0xFFFFD8F4),
+  cardColor: secondaryColor1,
   hintColor: Colors.black38,
   dialogBackgroundColor: backgroundColor,
 );

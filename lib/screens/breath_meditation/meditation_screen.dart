@@ -175,7 +175,7 @@ class _MeditationState extends State<Meditation> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                       side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary)),
+                          color: Theme.of(context).colorScheme.onSurface)),
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     // height: MediaQuery.of(context).size.height * 0.28,

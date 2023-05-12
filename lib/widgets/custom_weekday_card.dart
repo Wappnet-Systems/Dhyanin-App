@@ -1,5 +1,8 @@
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/providers/colors_theme_provider.dart';
 
 class WeekDayCard extends StatelessWidget {
   int date;

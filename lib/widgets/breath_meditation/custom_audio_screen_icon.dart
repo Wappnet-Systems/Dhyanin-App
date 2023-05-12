@@ -1,3 +1,4 @@
+import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AudioIcon extends StatelessWidget {
@@ -9,8 +10,7 @@ class AudioIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 35,
-      backgroundColor:
-          const Color.fromARGB(255, 239, 101, 200).withOpacity(0.8),
+      backgroundColor: primaryColor.withOpacity(0.6),
       child: IconButton(
           icon: icon,
           iconSize: 40,

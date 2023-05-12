@@ -252,8 +252,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                     child: Material(
                                       borderRadius:
                                           BorderRadius.circular(100.0),
-                                      color: const Color(0xFFEF65C8)
-                                          .withOpacity(0.8),
+                                      color: primaryColor.withOpacity(0.6),
                                     )),
                               ),
                               SizedBox(

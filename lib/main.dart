@@ -1,3 +1,4 @@
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
 import 'package:dhyanin_app/services/providers/theme_provider.dart';
 import 'package:dhyanin_app/screens/splash_screen.dart';
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => FastingStatusProvider()),
         ChangeNotifierProvider(create: (context) => ThemeManagerProvider()),
+        ChangeNotifierProvider(create: (context) => ColorsThemeNotifier()),
       ],
       child: Consumer<ThemeManagerProvider>(
         builder: (context, themeModel, child) => FutureBuilder(

@@ -53,7 +53,7 @@ class _HistoryItemState extends State<HistoryItem> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             decoration: BoxDecoration(
-              color: historyCardColor,
+              color: primaryColor.withOpacity(0.8),
               borderRadius: BorderRadius.circular(7),
               boxShadow: [
                 BoxShadow(

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
 import 'package:dhyanin_app/services/providers/theme_provider.dart';
-import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
 import 'package:dhyanin_app/screens/track_fasting/track_fasting_screen.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/utils/styles.dart';
@@ -13,11 +13,12 @@ import 'package:dhyanin_app/widgets/custom_weekday_card.dart';
 import 'package:dhyanin_app/services/functions/get_time_difference.dart';
 import 'package:dhyanin_app/services/functions/greeting.dart';
 import 'package:dhyanin_app/widgets/custom_home_screen_card.dart';
-import 'package:dhyanin_app/utils/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../widgets/header_drawer.dart';
+import '../widgets/list_drawer.dart';
 import 'breath_meditation/meditation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,12 +30,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late FastingStatusProvider model;
+  String userName = "user";
   var weekDay = [0, 0, 0, 0, 0, 0, 0];
 
   @override
   void initState() {
+    getProfile();
     setDatesValue();
     model = Provider.of<FastingStatusProvider>(context, listen: false);
+
     CheckInternetConnectivity.checkConnectivity(context);
     model.getUser();
     HistoryController.init();
@@ -68,6 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  Future<void> getProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('name')!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -98,16 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return true;
         },
         child: Scaffold(
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-            child: FloatingActionButton(
-              backgroundColor: primaryColor,
-              onPressed: () {
-                signOut(context);
-              },
-              child: const Icon(Icons.logout_rounded),
-            ),
-          ),
           body: Consumer<ThemeManagerProvider>(
             builder: (context, themeModel, child) => SafeArea(
               child: Padding(
@@ -120,19 +121,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: MediaQuery.of(context).size.height * .03),
                       Row(
                         children: [
-                          const Text(
-                            'Hello,',
+                          Text(
+                            'Hello ${userName},',
                             style: headingStyle,
                           ),
                           Spacer(),
                           InkWell(
                               onTap: () {
-                                themeModel.changeTheme();
+                                Scaffold.of(context).openEndDrawer();
                               },
                               child: Icon(
-                                themeModel.isDark
-                                    ? Icons.dark_mode
-                                    : Icons.light_mode,
+                                Icons.settings,
                                 size: 32,
                               )),
                         ],
@@ -192,11 +191,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          endDrawer: Drawer(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                MyHeaderDrawer(context),
+                MyDrawerList(context),
+              ],
+            ),
+          ),
         ));
   }
 
   setDatesValue() {
-    int todayDate = DateTime.now().day;
     int todayWeekday = DateTime.now().weekday;
     int nextDay = 0;
     int previousDay = -1;
@@ -208,40 +216,5 @@ class _HomeScreenState extends State<HomeScreen> {
         weekDay[i - 1] = DateTime.now().add(Duration(days: previousDay--)).day;
       }
     }
-  }
-
-  Future<void> signOut(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Logout'),
-            content: Text('Are you sure you want to logout?'),
-            actions: [
-              MaterialButton(
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MobileNumberInput()));
-                  // Navigator.of(context).pushReplacement(
-                  //     ,
-                  //     result: MaterialPageRoute(
-                  //         builder: (context) => MobileNumberInput()));
-                },
-                child: Text("Yes"),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("No"),
-              ),
-            ],
-            actionsAlignment: MainAxisAlignment.end,
-          );
-        });
   }
 }

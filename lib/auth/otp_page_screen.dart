@@ -1,5 +1,5 @@
-import 'package:dhyanin_app/screens/home_screen.dart';
 import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
+import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/utils/styles.dart';
 import 'package:dhyanin_app/widgets/custom_snackbar.dart';
@@ -135,7 +135,7 @@ class _OtpPageState extends State<OtpPage> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                                builder: (context) => ProfileScreen()));
                       } catch (e) {
                         CustomSnackbar.functionSnackbar(context, "Wrong OTP!");
                         setState(() {

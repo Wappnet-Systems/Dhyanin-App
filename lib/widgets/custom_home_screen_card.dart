@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/providers/colors_theme_provider.dart';
 
 class MyCard extends StatelessWidget {
   final String image_path;
@@ -14,6 +17,9 @@ class MyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier colorsModel =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
+
     return InkWell(
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => next_page)),

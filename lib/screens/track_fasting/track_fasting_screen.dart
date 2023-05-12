@@ -198,7 +198,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                     shadowWidth: 0,
                                   ),
                                   customColors: CustomSliderColors(
-                                    trackColor: secondaryColor1,
+                                    trackColor: primaryColor.withOpacity(0.4),
                                     progressBarColor: primaryColor,
                                     hideShadow: true,
                                     dotColor: primaryColor,
@@ -359,7 +359,7 @@ class _TrackFastingState extends State<TrackFasting> {
                             fastingStatusModel.isStarted
                                 ? "End Fast"
                                 : "Start Fast",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: backgroundColor,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
