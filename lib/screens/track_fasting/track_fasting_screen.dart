@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dhyanin_app/services/functions/check_connectivity.dart';
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -129,8 +130,8 @@ class _TrackFastingState extends State<TrackFasting> {
     }
     return Scaffold(
       appBar: CustomAppBar(title: 'Track My Fast'),
-      body: Consumer<FastingStatusProvider>(
-        builder: (context, fastingStatusModel, child) => SafeArea(
+      body: Consumer2<FastingStatusProvider, ColorsThemeNotifier>(
+        builder: (context, fastingStatusModel, themeModel, child) => SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -147,7 +148,7 @@ class _TrackFastingState extends State<TrackFasting> {
                     IconButton(
                       icon: Icon(
                         Icons.history,
-                        color: primaryColor,
+                        color: themeModel.primaryColor,
                         size: 35,
                       ),
                       onPressed: () {
@@ -198,10 +199,11 @@ class _TrackFastingState extends State<TrackFasting> {
                                     shadowWidth: 0,
                                   ),
                                   customColors: CustomSliderColors(
-                                    trackColor: primaryColor.withOpacity(0.4),
-                                    progressBarColor: primaryColor,
+                                    trackColor: themeModel.primaryColor
+                                        .withOpacity(0.4),
+                                    progressBarColor: themeModel.primaryColor,
                                     hideShadow: true,
-                                    dotColor: primaryColor,
+                                    dotColor: themeModel.primaryColor,
                                   ),
                                   size: 250,
                                   angleRange: 360,
@@ -224,7 +226,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                                       fastingStatusModel
                                                           .startedTime)))),
                                       style: TextStyle(
-                                        color: primaryColor,
+                                        color: themeModel.primaryColor,
                                         fontSize: 46,
                                       ),
                                     ),
@@ -244,7 +246,7 @@ class _TrackFastingState extends State<TrackFasting> {
                           IconButton(
                             icon: const Icon(Icons.remove_circle_outlined),
                             iconSize: 40,
-                            color: primaryColor,
+                            color: themeModel.primaryColor,
                             onPressed: () {
                               if (!fastingStatusModel.isStarted) {
                                 setState(() {
@@ -279,7 +281,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                 ),
                           IconButton(
                               icon: const Icon(Icons.add_circle_outlined),
-                              color: primaryColor,
+                              color: themeModel.primaryColor,
                               iconSize: 40,
                               onPressed: () {
                                 if (!fastingStatusModel.isStarted) {
@@ -343,7 +345,7 @@ class _TrackFastingState extends State<TrackFasting> {
                           width: 200,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: primaryColor,
+                            color: themeModel.primaryColor,
                             borderRadius: BorderRadius.circular(14),
                             boxShadow: [
                               BoxShadow(
@@ -360,7 +362,7 @@ class _TrackFastingState extends State<TrackFasting> {
                                 ? "End Fast"
                                 : "Start Fast",
                             style: TextStyle(
-                              color: backgroundColor,
+                              color: themeModel.backgroundColor,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
                             ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-Color primaryColor = Color(0xffDE0CA3);
-Color backgroundColor = Color(0xfff6ddfa);
-Color secondaryColor1 = Color.fromARGB(255, 255, 207, 241);
-Color secondaryColor2 = Color(0xffc5236e);
+// Color primaryColor = Color(0xffDE0CA3);
+// Color backgroundColor = Color(0xfff6ddfa);
+// Color secondaryColor1 = Color.fromARGB(255, 255, 207, 241);
+// Color secondaryColor2 = Color(0xffc5236e);
 
 // Color primaryColor = Colors.red;
 // Color backgroundColor = Color.fromARGB(255, 240, 209, 207);

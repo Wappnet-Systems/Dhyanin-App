@@ -7,6 +7,9 @@ import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/providers/colors_theme_provider.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -21,14 +24,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   void initState() {
-    super.initState();
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: false);
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: primaryColor));
+        SystemUiOverlayStyle(statusBarColor: model.primaryColor));
     HistoryController.init();
     listHistory.addAll(historyController.read("history"));
     listHistory.sort((a, b) {
       return b.dateTime.compareTo(a.dateTime);
     });
+    super.initState();
   }
 
   @override

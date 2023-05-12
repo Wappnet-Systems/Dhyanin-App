@@ -11,17 +11,22 @@ class WeekDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return Container(
       height: MediaQuery.of(context).size.height * 0.095,
       width: MediaQuery.of(context).size.width / 7.7,
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: DateTime.now().day != date ? Colors.white : primaryColor,
+            color:
+                DateTime.now().day != date ? Colors.white : model.primaryColor,
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color: DateTime.now().day == date ? primaryColor : backgroundColor,
+        color: DateTime.now().day == date
+            ? model.primaryColor
+            : model.backgroundColor,
         elevation: 4,
         child: Column(
           children: [

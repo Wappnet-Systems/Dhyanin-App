@@ -1,5 +1,8 @@
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/providers/colors_theme_provider.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
@@ -7,9 +10,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return AppBar(
       centerTitle: true,
-      backgroundColor: primaryColor,
+      backgroundColor: model.primaryColor,
       elevation: 0,
       leading: IconButton(
         onPressed: () {
@@ -17,12 +22,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         },
         icon: Icon(
           Icons.arrow_back_ios,
-          color: backgroundColor,
+          color: model.backgroundColor,
         ),
       ),
       title: Text(
         title,
-        style: TextStyle(color: backgroundColor),
+        style: TextStyle(color: model.backgroundColor),
       ),
     );
   }

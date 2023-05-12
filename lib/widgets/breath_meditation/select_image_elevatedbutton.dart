@@ -1,5 +1,8 @@
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/providers/colors_theme_provider.dart';
 
 class ImageElevatedButton extends StatelessWidget {
   final Function onPress;
@@ -13,11 +16,13 @@ class ImageElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
       child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
+            backgroundColor: model.primaryColor,
           ),
           onPressed: () {
             onPress();

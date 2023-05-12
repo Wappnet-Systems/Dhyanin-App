@@ -33,8 +33,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => ThemeManagerProvider()),
         ChangeNotifierProvider(create: (context) => ColorsThemeNotifier()),
       ],
-      child: Consumer<ThemeManagerProvider>(
-        builder: (context, themeModel, child) => FutureBuilder(
+      child: Consumer2<ThemeManagerProvider, ColorsThemeNotifier>(
+        builder: (context, themeModel, colorModel, child) => FutureBuilder(
             future: initialization,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -44,8 +44,10 @@ class _MyAppState extends State<MyApp> {
                 return MaterialApp(
                     title: projectTitle,
                     debugShowCheckedModeBanner: false,
-                    theme: themeModel.isDark ? darkTheme : lightTheme,
-                    darkTheme: darkTheme,
+                    theme: themeModel.isDark
+                        ? getDarkThemeFromProvider(colorModel)
+                        : getLightThemeFromProvider(colorModel),
+                    darkTheme: getDarkThemeFromProvider(colorModel),
                     themeMode:
                         themeModel.isDark ? ThemeMode.dark : ThemeMode.light,
                     home: const SplashScreen());

@@ -78,150 +78,153 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
           return true;
         },
         child: Scaffold(
-          backgroundColor: backgroundColor,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(top: 22.0),
-                      width: double.infinity,
-                      child: const Text(
-                        'Registration',
-                        textAlign: TextAlign.center,
-                        style: headingStyle,
+          // backgroundColor: backgroundColor,
+          body: Consumer<ColorsThemeNotifier>(
+            builder: (context, themeModel, child) => SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 22.0),
+                        width: double.infinity,
+                        child: const Text(
+                          'Registration',
+                          textAlign: TextAlign.center,
+                          style: headingStyle,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    Image.asset(
-                      registrationImage,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      width: double.infinity,
-                      child: const Text(
-                        'Phone Number Verification',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.w500),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      width: double.infinity,
-                      child: const Text(
-                        'We will send a code (via SMS text message) to your phone number',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w300),
+                      Image.asset(
+                        registrationImage,
+                        height: MediaQuery.of(context).size.height * 0.25,
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    Container(
-                      height: 55,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.black),
-                          borderRadius: BorderRadius.circular(10.0)),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          SizedBox(
-                            width: 40,
-                            child: TextField(
-                              inputFormatters: [prefixFormatter],
-                              keyboardType: TextInputType.phone,
-                              controller: countryCodeController,
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none),
+                      Container(
+                        padding: const EdgeInsets.only(top: 40.0),
+                        width: double.infinity,
+                        child: const Text(
+                          'Phone Number Verification',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        width: double.infinity,
+                        child: const Text(
+                          'We will send a code (via SMS text message) to your phone number',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w300),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      Container(
+                        height: 55,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.black),
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 15,
                             ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Text("|",
-                              style: TextStyle(
-                                  fontSize: 33, color: Colors.black54)),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              inputFormatters: [mobileNumberFormatter],
-                              onChanged: (value) {
-                                phone = value;
-                              },
-                              keyboardType: TextInputType.phone,
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Phone number'),
+                            SizedBox(
+                              width: 40,
+                              child: TextField(
+                                inputFormatters: [prefixFormatter],
+                                keyboardType: TextInputType.phone,
+                                controller: countryCodeController,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none),
+                              ),
                             ),
-                          )
-                        ],
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const Text("|",
+                                style: TextStyle(
+                                    fontSize: 33, color: Colors.black54)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                inputFormatters: [mobileNumberFormatter],
+                                onChanged: (value) {
+                                  phone = value;
+                                },
+                                keyboardType: TextInputType.phone,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Phone number'),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    SizedBox(
-                      height: 45,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (phone != "" && phone.length > 10) {
-                            setState(() {
-                              loading = true;
-                            });
-                            await FirebaseAuth.instance.verifyPhoneNumber(
-                              phoneNumber: countryCodeController.text + phone,
-                              verificationCompleted:
-                                  (PhoneAuthCredential credential) {},
-                              verificationFailed: (FirebaseAuthException e) {
-                                CustomSnackbar.functionSnackbar(
-                                    context, "Please, enter a valid number!");
-                                setState(() {
-                                  loading = false;
-                                });
-                              },
-                              codeSent:
-                                  (String verificationId, int? resendToken) {
-                                setState(() {
-                                  MobileNumberInput.verify = verificationId;
-                                });
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const OtpPage()));
-                              },
-                              codeAutoRetrievalTimeout:
-                                  (String verificationId) {},
-                            );
-                          } else {
-                            CustomSnackbar.functionSnackbar(
-                                context, "Please, enter a valid number!");
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: secondaryColor2,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                        child: loading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                color: backgroundColor,
-                              ))
-                            : const Text('Send the code'),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: 45,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (phone != "" && phone.length > 10) {
+                              setState(() {
+                                loading = true;
+                              });
+                              await FirebaseAuth.instance.verifyPhoneNumber(
+                                phoneNumber: countryCodeController.text + phone,
+                                verificationCompleted:
+                                    (PhoneAuthCredential credential) {},
+                                verificationFailed: (FirebaseAuthException e) {
+                                  CustomSnackbar.functionSnackbar(
+                                      context, "Please, enter a valid number!");
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                },
+                                codeSent:
+                                    (String verificationId, int? resendToken) {
+                                  setState(() {
+                                    MobileNumberInput.verify = verificationId;
+                                  });
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const OtpPage()));
+                                },
+                                codeAutoRetrievalTimeout:
+                                    (String verificationId) {},
+                              );
+                            } else {
+                              CustomSnackbar.functionSnackbar(
+                                  context, "Please, enter a valid number!");
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: themeModel.secondaryColor2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          child: loading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                  color: themeModel.backgroundColor,
+                                ))
+                              : const Text('Send the code'),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

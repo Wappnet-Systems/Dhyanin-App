@@ -1,5 +1,8 @@
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/providers/colors_theme_provider.dart';
 
 class AudioIcon extends StatelessWidget {
   Icon icon;
@@ -8,9 +11,11 @@ class AudioIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return CircleAvatar(
       radius: 35,
-      backgroundColor: primaryColor.withOpacity(0.6),
+      backgroundColor: model.primaryColor.withOpacity(0.6),
       child: IconButton(
           icon: icon,
           iconSize: 40,

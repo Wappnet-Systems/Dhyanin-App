@@ -1,10 +1,12 @@
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/colors.dart';
+import 'package:provider/provider.dart';
 
 Widget MyHeaderDrawer(BuildContext context) {
+  ColorsThemeNotifier model =
+      Provider.of<ColorsThemeNotifier>(context, listen: true);
   return Container(
-      color: Theme.of(context).colorScheme.primary,
+      color: model.primaryColor,
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.15,
       padding: EdgeInsets.only(left: 15.0),
@@ -12,7 +14,6 @@ Widget MyHeaderDrawer(BuildContext context) {
           alignment: Alignment.centerLeft,
           child: Text(
             'Settings',
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.background, fontSize: 25),
+            style: TextStyle(color: Colors.white, fontSize: 25),
           )));
 }

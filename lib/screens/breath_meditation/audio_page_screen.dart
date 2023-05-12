@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/widgets/breath_meditation/custom_audio_screen_icon.dart';
@@ -12,6 +13,7 @@ import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class AudioPage extends StatefulWidget {
@@ -197,365 +199,385 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     final size = 30.0 + 180.0 * _breath;
     return Scaffold(
       appBar: const CustomAppBar(title: 'Breath Meditation'),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 5,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * .87,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: pickedImage != null
-                            ? FileImage(pickedImage!) as ImageProvider
-                            : AssetImage(backgroundImage),
-                        colorFilter: const ColorFilter.mode(
-                            Color(0xFFFFFFFF), BlendMode.dstATop),
-                        opacity: 1,
-                        fit: BoxFit.fill,
-                        alignment: Alignment.topCenter,
-                      ),
+      body: Consumer<ColorsThemeNotifier>(
+        builder: (context, themeModel, child) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 2.4,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Container(
-                                    height: duration != Duration.zero
-                                        ? (widget.repeatTimes! +
-                                                    1 -
-                                                    timesPlayed) !=
-                                                0
-                                            ? size
-                                            : 200
-                                        : 200,
-                                    width: duration != Duration.zero
-                                        ? (widget.repeatTimes! +
-                                                    1 -
-                                                    timesPlayed) !=
-                                                0
-                                            ? size
-                                            : 200
-                                        : 200,
-                                    child: Material(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      color: primaryColor.withOpacity(0.6),
-                                    )),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.02,
-                              ),
-                              duration != Duration.zero
-                                  ? (widget.repeatTimes! + 1 - timesPlayed) != 0
-                                      ? Text(
-                                          breathMessage,
-                                          style: const TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.black),
-                                        )
-                                      : const Text(
-                                          'Successfully Completed!',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: Color(0xFF000000)),
-                                        )
-                                  : const Text(
-                                      'Loading...',
-                                      style: TextStyle(
-                                          fontSize: 25, color: Colors.black),
-                                    ),
-                            ],
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 5,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * .87,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: pickedImage != null
+                              ? FileImage(pickedImage!) as ImageProvider
+                              : AssetImage(backgroundImage),
+                          colorFilter: const ColorFilter.mode(
+                              Color(0xFFFFFFFF), BlendMode.dstATop),
+                          opacity: 1,
+                          fit: BoxFit.fill,
+                          alignment: Alignment.topCenter,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 2.4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Container(
+                                      height: duration != Duration.zero
+                                          ? (widget.repeatTimes! +
+                                                      1 -
+                                                      timesPlayed) !=
+                                                  0
+                                              ? size
+                                              : 200
+                                          : 200,
+                                      width: duration != Duration.zero
+                                          ? (widget.repeatTimes! +
+                                                      1 -
+                                                      timesPlayed) !=
+                                                  0
+                                              ? size
+                                              : 200
+                                          : 200,
+                                      child: Material(
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                        color: themeModel.primaryColor
+                                            .withOpacity(0.6),
+                                      )),
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                ),
+                                duration != Duration.zero
+                                    ? (widget.repeatTimes! + 1 - timesPlayed) !=
+                                            0
+                                        ? Text(
+                                            breathMessage,
+                                            style: const TextStyle(
+                                                fontSize: 25,
+                                                color: Colors.black),
+                                          )
+                                        : const Text(
+                                            'Successfully Completed!',
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                color: Color(0xFF000000)),
+                                          )
+                                    : const Text(
+                                        'Loading...',
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.black),
+                                      ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularStepProgressIndicator(
-                                totalSteps: meditationMinutes,
-                                currentStep: completedMeditationMinutes,
-                                selectedColor: primaryColor.withOpacity(0.8),
-                                unselectedColor: primaryColor.withOpacity(0.2),
-                                child: Center(
-                                  child: Text(
-                                    formatTime(currPosition + position),
-                                    style: const TextStyle(fontSize: 18),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularStepProgressIndicator(
+                                  totalSteps: meditationMinutes,
+                                  currentStep: completedMeditationMinutes,
+                                  selectedColor:
+                                      themeModel.primaryColor.withOpacity(0.8),
+                                  unselectedColor:
+                                      themeModel.primaryColor.withOpacity(0.2),
+                                  child: Center(
+                                    child: Text(
+                                      formatTime(currPosition + position),
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.04,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 7,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AudioIcon(
-                                  icon: Icon(
-                                    Icons.audiotrack,
-                                    color: Colors.white,
-                                  ),
-                                  onPress: onPressEventAudio),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                              ),
-                              AudioIcon(
-                                  icon: Icon(
-                                    isPlaying ? Icons.pause : Icons.play_arrow,
-                                    color: Colors.white,
-                                  ),
-                                  onPress: () async {
-                                    if ((widget.repeatTimes! +
-                                            1 -
-                                            timesPlayed) !=
-                                        0) {
-                                      if (isPlaying) {
-                                        _breathingController.stop();
-                                        await audioPlayer.pause();
-                                      } else {
-                                        if (breathMessage == 'Inhale') {
-                                          _breathingController.forward();
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.04,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 7,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AudioIcon(
+                                    icon: Icon(
+                                      Icons.audiotrack,
+                                      color: Colors.white,
+                                    ),
+                                    onPress: onPressEventAudio),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                AudioIcon(
+                                    icon: Icon(
+                                      isPlaying
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                      color: Colors.white,
+                                    ),
+                                    onPress: () async {
+                                      if ((widget.repeatTimes! +
+                                              1 -
+                                              timesPlayed) !=
+                                          0) {
+                                        if (isPlaying) {
+                                          _breathingController.stop();
+                                          await audioPlayer.pause();
                                         } else {
-                                          _breathingController.reverse();
+                                          if (breathMessage == 'Inhale') {
+                                            _breathingController.forward();
+                                          } else {
+                                            _breathingController.reverse();
+                                          }
+                                          await audioPlayer.resume();
                                         }
-                                        await audioPlayer.resume();
                                       }
-                                    }
-                                  }),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                              ),
-                              AudioIcon(
-                                  icon: Icon(
-                                    Icons.image,
-                                    color: Colors.white,
-                                  ),
-                                  onPress: () async {
-                                    if (isPlaying) {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) {
-                                            return SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                children: [
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage1,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage1;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage2,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage2;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage3,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage3;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage4,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage4;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage5,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage5;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage6,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage6;
-                                                    },
-                                                  ),
-                                                  DefaultImage(
-                                                    imagePath: backgroundImage7,
-                                                    ontap: () {
-                                                      backgroundImage =
-                                                          backgroundImage7;
-                                                    },
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      showModalBottomSheet<
-                                                              dynamic>(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          5.0),
-                                                                  child: Text(
-                                                                    'Select Image From',
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
+                                    }),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                AudioIcon(
+                                    icon: Icon(
+                                      Icons.image,
+                                      color: Colors.white,
+                                    ),
+                                    onPress: () async {
+                                      if (isPlaying) {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage1,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage1;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage2,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage2;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage3,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage3;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage4,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage4;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage5,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage5;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage6,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage6;
+                                                      },
+                                                    ),
+                                                    DefaultImage(
+                                                      imagePath:
+                                                          backgroundImage7,
+                                                      ontap: () {
+                                                        backgroundImage =
+                                                            backgroundImage7;
+                                                      },
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        showModalBottomSheet<
+                                                                dynamic>(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            5.0),
+                                                                    child: Text(
+                                                                      'Select Image From',
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                ImageElevatedButton(
-                                                                    onPress:
-                                                                        () {
-                                                                      pickImage(
-                                                                          ImageSource
-                                                                              .camera);
-                                                                    },
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .camera,
-                                                                    ),
-                                                                    label:
-                                                                        "Camera"),
-                                                                ImageElevatedButton(
-                                                                    onPress:
-                                                                        () {
-                                                                      pickImage(
-                                                                          ImageSource
-                                                                              .gallery);
-                                                                    },
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .image,
-                                                                    ),
-                                                                    label:
-                                                                        "Gallary"),
-                                                                ImageElevatedButton(
-                                                                    onPress:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .close,
-                                                                    ),
-                                                                    label:
-                                                                        "Cancel"),
-                                                              ],
-                                                            );
-                                                          });
-                                                    },
-                                                    child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.195,
-                                                      decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                              color:
-                                                                  primaryColor)),
-                                                      child: Icon(
-                                                        Icons
-                                                            .add_circle_outline,
-                                                        color: primaryColor,
-                                                        size: 40,
+                                                                  ImageElevatedButton(
+                                                                      onPress:
+                                                                          () {
+                                                                        pickImage(
+                                                                            ImageSource.camera);
+                                                                      },
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .camera,
+                                                                      ),
+                                                                      label:
+                                                                          "Camera"),
+                                                                  ImageElevatedButton(
+                                                                      onPress:
+                                                                          () {
+                                                                        pickImage(
+                                                                            ImageSource.gallery);
+                                                                      },
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .image,
+                                                                      ),
+                                                                      label:
+                                                                          "Gallary"),
+                                                                  ImageElevatedButton(
+                                                                      onPress:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .close,
+                                                                      ),
+                                                                      label:
+                                                                          "Cancel"),
+                                                                ],
+                                                              );
+                                                            });
+                                                      },
+                                                      child: Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.195,
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: themeModel
+                                                                    .primaryColor)),
+                                                        child: Icon(
+                                                          Icons
+                                                              .add_circle_outline,
+                                                          color: themeModel
+                                                              .primaryColor,
+                                                          size: 40,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.03,
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          });
-                                    }
-                                  }),
-                            ],
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03,
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            });
+                                      }
+                                    }),
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 5.0, top: 15.0),
-                          child: Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircularStepProgressIndicator(
-                                        totalSteps: widget.repeatTimes! + 1,
-                                        currentStep: timesPlayed,
-                                        selectedColor:
-                                            primaryColor.withOpacity(0.8),
-                                        unselectedColor:
-                                            primaryColor.withOpacity(0.2),
-                                        child: Center(
-                                          child: Text(
-                                            timesPlayed.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 18),
-                                          ),
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.02,
-                                  ),
-                                  Text(
-                                    'Completed Cycles',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 5.0, top: 15.0),
+                            child: Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularStepProgressIndicator(
+                                          totalSteps: widget.repeatTimes! + 1,
+                                          currentStep: timesPlayed,
+                                          selectedColor: themeModel.primaryColor
+                                              .withOpacity(0.8),
+                                          unselectedColor: themeModel
+                                              .primaryColor
+                                              .withOpacity(0.2),
+                                          child: Center(
+                                            child: Text(
+                                              timesPlayed.toString(),
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.02,
+                                    ),
+                                    Text(
+                                      'Completed Cycles',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

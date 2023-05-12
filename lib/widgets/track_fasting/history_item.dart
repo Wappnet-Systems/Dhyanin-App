@@ -2,6 +2,9 @@ import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/providers/colors_theme_provider.dart';
 
 class HistoryItem extends StatefulWidget {
   final History history;
@@ -18,6 +21,8 @@ class _HistoryItemState extends State<HistoryItem> {
 
   @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -53,7 +58,7 @@ class _HistoryItemState extends State<HistoryItem> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.8),
+              color: model.primaryColor.withOpacity(0.8),
               borderRadius: BorderRadius.circular(7),
               boxShadow: [
                 BoxShadow(
@@ -73,14 +78,14 @@ class _HistoryItemState extends State<HistoryItem> {
                     Text(
                       "You have completed fasting for",
                       style: TextStyle(
-                        color: backgroundColor,
+                        color: model.backgroundColor,
                         fontSize: 16,
                       ),
                     ),
                     Text(
                       "${widget.history.fastingHours} Hours",
                       style: TextStyle(
-                        color: backgroundColor,
+                        color: model.backgroundColor,
                         fontSize: 23,
                         fontWeight: FontWeight.w500,
                       ),
@@ -93,7 +98,7 @@ class _HistoryItemState extends State<HistoryItem> {
                   child: Text(
                     DateFormat('hh:mm a').format(widget.history.dateTime),
                     style: TextStyle(
-                      color: backgroundColor,
+                      color: model.backgroundColor,
                       fontSize: 13,
                     ),
                   ),

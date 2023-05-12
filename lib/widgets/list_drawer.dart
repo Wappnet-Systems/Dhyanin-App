@@ -1,5 +1,4 @@
 import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';
-import 'package:dhyanin_app/services/functions/select_theme.dart';
 import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/services/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -164,10 +163,10 @@ class ColorCircle extends StatelessWidget {
         Provider.of<ColorsThemeNotifier>(context, listen: true);
     return InkWell(
       onTap: () async {
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        // prefs.setInt('theme', themeIndex);
-        selectTheme(themeIndex);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setInt('theme', themeIndex);
         colorsModel.selectTheme(themeIndex);
+        Navigator.of(context).pop();
       },
       child: Container(
         width: 40,

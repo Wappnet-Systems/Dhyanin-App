@@ -7,7 +7,9 @@ import 'package:dhyanin_app/utils/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/providers/colors_theme_provider.dart';
 import '../utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,6 +21,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   User? user = FirebaseAuth.instance.currentUser;
+  int themeIndex = 1;
 
   @override
   void initState() {
@@ -28,7 +31,25 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ColorsThemeNotifier colorsModel =
+        Provider.of<ColorsThemeNotifier>(context, listen: false);
+    getThemeIndex();
+    colorsModel.selectTheme(themeIndex);
+  }
+
+  Future<void> getThemeIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      themeIndex = prefs.getInt('theme')!;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
     return AnimatedSplashScreen(
         backgroundColor: Theme.of(context).colorScheme.background,
         duration: 1500,
@@ -51,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: secondaryColor2),
+                    color: model.secondaryColor2),
               )
             ],
           ),
