@@ -1,7 +1,5 @@
 import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 ThemeData buildCustomThemeData({
   required Color scaffoldBackgroundColor,
@@ -13,6 +11,7 @@ ThemeData buildCustomThemeData({
   required Color dialogBackgroundColor,
 }) {
   return ThemeData(
+    fontFamily: 'ubuntu',
     scaffoldBackgroundColor: scaffoldBackgroundColor,
     primaryColor: primaryColor,
     brightness: brightness,
@@ -26,7 +25,7 @@ ThemeData buildCustomThemeData({
 // Create a function that returns the light theme using the colors from the provider
 ThemeData getLightThemeFromProvider(ColorsThemeNotifier provider) {
   return buildCustomThemeData(
-    scaffoldBackgroundColor: provider.backgroundColor,
+    scaffoldBackgroundColor: Colors.transparent,
     primaryColor: provider.primaryColor,
     brightness: Brightness.light,
     colorScheme: ColorScheme.fromSeed(seedColor: provider.primaryColor)
@@ -34,6 +33,8 @@ ThemeData getLightThemeFromProvider(ColorsThemeNotifier provider) {
             primary: provider.primaryColor,
             onSurface: Colors.black,
             background: provider.backgroundColor,
+            onPrimary: Colors.black,
+            onBackground: Colors.transparent,
             brightness: Brightness.light),
     cardColor: provider.secondaryColor1,
     hintColor: Colors.black38,
@@ -52,9 +53,11 @@ ThemeData getDarkThemeFromProvider(ColorsThemeNotifier provider) {
             primary: Colors.white,
             onSurface: Colors.white,
             background: Colors.grey.shade900,
+            onPrimary: Colors.white,
+            onBackground: provider.backgroundColor,
             brightness: Brightness.dark),
-    cardColor: provider.primaryColor,
-    hintColor: Colors.black38,
+    cardColor: provider.secondaryColor1,
+    hintColor: Colors.white.withOpacity(0.6),
     dialogBackgroundColor: Colors.grey.shade800,
   );
 }

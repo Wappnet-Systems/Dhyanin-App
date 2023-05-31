@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/models/meditation_history_model.dart';
+import '../../services/providers/colors_theme_provider.dart';
+
+class MeditationHistoryItem extends StatefulWidget {
+  final MeditationHistory history;
+  final bool isNewDay;
+  const MeditationHistoryItem(
+      {Key? key, required this.history, required this.isNewDay})
+      : super(key: key);
+
+  @override
+  State<MeditationHistoryItem> createState() => _HistoryItemState();
+}
+
+class _HistoryItemState extends State<MeditationHistoryItem> {
+  DateTime today = DateTime.now();
+
+  @override
+  Widget build(BuildContext context) {
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (widget.isNewDay)
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                (widget.history.dateTime.day == today.day &&
+                        widget.history.dateTime.month == today.month &&
+                        widget.history.dateTime.year == today.year)
+                    ? "Today"
+                    : (widget.history.dateTime.day == (today.day - 1) &&
+                            widget.history.dateTime.month == today.month &&
+                            widget.history.dateTime.year == today.year)
+                        ? "Yesterday"
+                        : DateFormat('MM/dd/yyyy')
+                            .format(widget.history.dateTime),
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          if (widget.isNewDay)
+            const SizedBox(
+              height: 15,
+            ),
+          Container(
+            height: 72,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+            decoration: BoxDecoration(
+              color: model.secondaryColor2.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(7),
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: 3,
+                  blurRadius: 3,
+                  offset: const Offset(0, 3),
+                  color: Colors.black.withOpacity(0.16),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "You have completed Meditation of ",
+                      style: TextStyle(
+                        color: model.backgroundColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "${widget.history.duration * widget.history.repeatTimes} Minutes",
+                      style: TextStyle(
+                        color: model.backgroundColor,
+                        fontSize: 23,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: 0.0,
+                  right: 0.0,
+                  child: Text(
+                    DateFormat('hh:mm a').format(widget.history.dateTime),
+                    style: TextStyle(
+                      color: model.backgroundColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

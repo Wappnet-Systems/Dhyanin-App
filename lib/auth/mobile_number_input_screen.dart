@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/colors.dart';
-
 class MobileNumberInput extends StatefulWidget {
   const MobileNumberInput({super.key});
 
@@ -128,7 +126,9 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                       Container(
                         height: 55,
                         decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: Colors.black),
+                            border: Border.all(
+                                width: 1,
+                                color: Theme.of(context).colorScheme.onPrimary),
                             borderRadius: BorderRadius.circular(10.0)),
                         child: Row(
                           children: [
@@ -148,9 +148,12 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                             const SizedBox(
                               width: 5,
                             ),
-                            const Text("|",
+                            Text("|",
                                 style: TextStyle(
-                                    fontSize: 33, color: Colors.black54)),
+                                    fontSize: 33,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary)),
                             const SizedBox(
                               width: 10,
                             ),
@@ -220,7 +223,10 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                                   child: CircularProgressIndicator(
                                   color: themeModel.backgroundColor,
                                 ))
-                              : const Text('Send the code'),
+                              : const Text(
+                                  'Send the code',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                         ),
                       )
                     ],

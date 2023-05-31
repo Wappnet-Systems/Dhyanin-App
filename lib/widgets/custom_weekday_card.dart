@@ -1,4 +1,3 @@
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,34 +23,49 @@ class WeekDayCard extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color: DateTime.now().day == date
-            ? model.primaryColor
-            : model.backgroundColor,
         elevation: 4,
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                DateTime.now().day == date
+                    ? model.primaryColor.withOpacity(0.6)
+                    : model.backgroundColor,
+                DateTime.now().day == date
+                    ? model.secondaryColor2
+                    : model.backgroundColor,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            Text(date.toString(),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
+              Text(date.toString(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 25,
+                      color: DateTime.now().day == date
+                          ? Colors.white
+                          : Colors.black)),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
+              Text(
+                weekDay,
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 25,
+                    fontSize: 15,
                     color: DateTime.now().day == date
                         ? Colors.white
-                        : Colors.black)),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
-            ),
-            Text(
-              weekDay,
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
-                  color:
-                      DateTime.now().day == date ? Colors.white : Colors.black),
-            )
-          ],
+                        : Colors.black),
+              )
+            ],
+          ),
         ),
       ),
     );

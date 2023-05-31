@@ -1,4 +1,3 @@
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +9,7 @@ class CustomSnackbar {
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
       functionSnackbar(BuildContext context, String text) {
     ColorsThemeNotifier model =
-        Provider.of<ColorsThemeNotifier>(context, listen: true);
+        Provider.of<ColorsThemeNotifier>(context, listen: false);
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         text,

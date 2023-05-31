@@ -1,8 +1,14 @@
 const String splashImage = 'assets/images/splash_rounded.png';
 const String registrationImage = 'assets/images/registration.png';
-const String emptyHistoryListLottie = 'assets/lottie/empty_list.json';
-const String meditationImage = 'assets/images/meditation.png';
-const String trackFastingImage = 'assets/images/fasting.jpg';
+const String meditationImage = 'assets/images/splash_rounded.png';
+const String trackFastingImage = 'assets/images/fasting.png';
+
+//empty list lottie files for different theme colors
+const String emptyHistoryListPink = 'assets/lottie/empty_list_pink.json';
+const String emptyHistoryListBlue = 'assets/lottie/empty_list_blue.json';
+const String emptyHistoryListGreen = 'assets/lottie/empty_list_green.json';
+const String emptyHistoryListPurple = 'assets/lottie/empty_list_purple.json';
+const String emptyHistoryListRed = 'assets/lottie/empty_list_red.json';
 
 //background images for audio page screen
 const String backgroundImage1 =

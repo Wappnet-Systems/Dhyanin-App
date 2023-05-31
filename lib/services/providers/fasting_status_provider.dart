@@ -63,7 +63,7 @@ class FastingStatusProvider extends ChangeNotifier {
     const oneSec = Duration(seconds: 1);
     timer = Timer.periodic(
       oneSec,
-      (Timer timer) {
+      (Timer timer) async {
         if (value < 2) {
           timer.cancel();
           isStarted = false;
@@ -74,11 +74,15 @@ class FastingStatusProvider extends ChangeNotifier {
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .update({'fasting': false, 'hours': '7'});
           value = 0;
-          listHistory = historyController.read("history");
-          listHistory.add(History(
-              dateTime: DateTime.now(), fastingHours: int.parse(startedHours)));
-          historyController.save("history", listHistory.cast<History>());
-          print('history is saved: $listHistory');
+          var documentReference = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .collection("fastHistory")
+              .doc();
+          await documentReference.set({
+            'dateTime': DateTime.now(),
+            "fastingHours": int.parse(startedHours)
+          });
           notifyListeners();
         } else {
           value--;
@@ -103,14 +107,17 @@ class FastingStatusProvider extends ChangeNotifier {
   }
 
   //when user successfully complete fast, to add in history
-  addFastInHistory() {
-    HistoryController.init();
+  addFastInHistory() async {
     try {
-      listHistory = historyController.read("history");
-      listHistory.add(History(
-          dateTime: startedTime.add(Duration(hours: int.parse(startedHours))),
-          fastingHours: int.parse(startedHours)));
-      historyController.save("history", listHistory.cast<History>());
+      var documentReference = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("fastHistory")
+          .doc();
+      await documentReference.set({
+        'dateTime': startedTime.add(Duration(hours: int.parse(startedHours))),
+        "fastingHours": int.parse(startedHours)
+      });
     } catch (e) {
       print(e);
     }

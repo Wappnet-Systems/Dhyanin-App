@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ColorsThemeNotifier extends ChangeNotifier {
-  Color primaryColor = Color(0xffDE0CA3);
-  Color backgroundColor = Color(0xfff6ddfa);
-  Color secondaryColor1 = Color.fromARGB(255, 255, 207, 241);
+  Color primaryColor = Color(0xFFF06292);
+  Color backgroundColor = Color(0xFFFFFFFF);
+  Color secondaryColor1 = Color(0xFFFFF6F9);
   Color secondaryColor2 = Color(0xffc5236e);
 
   void selectTheme(int newThemeIndex) {
     if (newThemeIndex == 1) {
-      primaryColor = Color(0xffDE0CA3);
-      backgroundColor = Color(0xfff6ddfa);
-      secondaryColor1 = Color.fromARGB(255, 255, 207, 241);
+      primaryColor = Color(0xFFF06292);
+      backgroundColor = Color(0xFFFFF5F9);
+      secondaryColor1 = Color(0xFFFFE3F0);
       secondaryColor2 = Color(0xffc5236e);
     } else if (newThemeIndex == 2) {
-      primaryColor = Colors.red;
-      backgroundColor = Color.fromARGB(255, 248, 222, 222);
-      secondaryColor1 = Color.fromARGB(255, 255, 202, 198);
-      secondaryColor2 = Color.fromARGB(255, 255, 144, 134);
+      primaryColor = Color(0xFF4DB6AC);
+      backgroundColor = Color(0xFFEAFDFB);
+      secondaryColor1 = Color(0xFFE0F2E9);
+      secondaryColor2 = Color(0xFF00A6BD);
     } else if (newThemeIndex == 3) {
-      primaryColor = Colors.green;
-      backgroundColor = Color.fromARGB(255, 225, 243, 225);
-      secondaryColor1 = Color.fromARGB(255, 210, 255, 211);
-      secondaryColor2 = Color.fromARGB(255, 111, 235, 115);
+      primaryColor = Color(0xFF81C784);
+      backgroundColor = Color(0xFFF5F5F5);
+      secondaryColor1 = Color(0xFFE0F1FF);
+      secondaryColor2 = Color(0xFF20B993);
     } else if (newThemeIndex == 4) {
-      primaryColor = Colors.blue;
-      backgroundColor = Color.fromARGB(255, 207, 225, 240);
-      secondaryColor1 = Color.fromARGB(255, 176, 212, 240);
-      secondaryColor2 = Color.fromARGB(255, 88, 129, 162);
+      primaryColor = Color(0xFF64B5F6);
+      backgroundColor = Color(0xFFF5F5F5);
+      secondaryColor1 = Color(0xFFF1EDFF);
+      secondaryColor2 = Color(0xFF739EEA);
     } else {
-      primaryColor = Colors.purple;
-      backgroundColor = Color.fromARGB(255, 242, 209, 248);
-      secondaryColor1 = Color.fromARGB(255, 235, 181, 244);
-      secondaryColor2 = Color.fromARGB(255, 140, 84, 150);
+      primaryColor = Color(0xFF9575CD);
+      backgroundColor = Color(0xFFFCF8FF);
+      secondaryColor1 = Color(0xFFFAEAFF);
+      secondaryColor2 = Color(0xFF4F7FD1);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();

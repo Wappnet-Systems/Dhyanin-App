@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:dhyanin_app/auth/otp_page_screen.dart';
 import 'package:dhyanin_app/services/providers/theme_provider.dart';
 import 'package:dhyanin_app/screens/home_screen.dart';
 import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/providers/colors_theme_provider.dart';
-import '../utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> getThemeIndex() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      themeIndex = prefs.getInt('theme')!;
+      themeIndex = prefs.getInt('theme') ?? 1;
     });
   }
 
@@ -72,11 +72,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: model.secondaryColor2),
+                    color: model.primaryColor),
               )
             ],
           ),
         ),
-        nextScreen: user != null ? HomeScreen() : MobileNumberInput());
+        nextScreen:
+            // MobileNumberInput()
+            user != null ? HomeScreen() : MobileNumberInput());
   }
 }

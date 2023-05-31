@@ -3,7 +3,6 @@ import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/widgets/track_fasting/history_item.dart';
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
@@ -21,31 +20,52 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   HistoryController historyController = HistoryController();
   List<History> listHistory = [];
+  late String lottiePath;
 
   @override
   void initState() {
     ColorsThemeNotifier model =
         Provider.of<ColorsThemeNotifier>(context, listen: false);
+    if (model.primaryColor == Color(0xFFF06292)) {
+      lottiePath = emptyHistoryListPink;
+    } else if (model.primaryColor == Color(0xFFFF9800)) {
+      lottiePath = emptyHistoryListRed;
+    } else if (model.primaryColor == Color(0xFF43A047)) {
+      lottiePath = emptyHistoryListGreen;
+    } else if (model.primaryColor == Color(0xFF536DFE)) {
+      lottiePath = emptyHistoryListBlue;
+    } else {
+      lottiePath = emptyHistoryListPurple;
+    }
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: model.primaryColor));
-    HistoryController.init();
-    listHistory.addAll(historyController.read("history"));
-    listHistory.sort((a, b) {
-      return b.dateTime.compareTo(a.dateTime);
-    });
     super.initState();
+    fetchHistoryData();
+  }
+
+  getHistory() async {
+    listHistory = await historyController.read();
+  }
+
+  void fetchHistoryData() async {
+    await getHistory();
+    setState(() {
+      listHistory.sort((a, b) {
+        return b.dateTime.compareTo(a.dateTime);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'History'),
+      appBar: CustomAppBar(title: 'Fast History'),
       body: listHistory.length == 0
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset(emptyHistoryListLottie, width: 250),
+                  Lottie.asset(lottiePath, width: 250),
                   Text(
                     'You haven\'t fasted yet!',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),

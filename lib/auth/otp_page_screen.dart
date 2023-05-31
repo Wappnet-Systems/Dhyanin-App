@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/colors.dart';
-
 class OtpPage extends StatefulWidget {
   const OtpPage({super.key});
 
@@ -47,7 +45,7 @@ class _OtpPageState extends State<OtpPage> {
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromARGB(255, 234, 134, 181),
+        color: model.secondaryColor1,
       ),
     );
     return Scaffold(
@@ -156,7 +154,10 @@ class _OtpPageState extends State<OtpPage> {
                               child: CircularProgressIndicator(
                               color: themeModel.backgroundColor,
                             ))
-                          : Text('Verify phone number'),
+                          : Text(
+                              'Verify phone number',
+                              style: TextStyle(color: Colors.white),
+                            ),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: themeModel.secondaryColor2,
                           shape: RoundedRectangleBorder(

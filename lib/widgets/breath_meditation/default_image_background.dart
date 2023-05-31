@@ -17,7 +17,6 @@ class _DefaultImageState extends State<DefaultImage> {
       child: InkWell(
         onTap: () {
           widget.ontap();
-          Navigator.of(context).pop();
         },
         child: Image.asset(
           widget.imagePath,

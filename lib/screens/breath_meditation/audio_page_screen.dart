@@ -2,29 +2,35 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:dhyanin_app/widgets/breath_meditation/custom_audio_screen_icon.dart';
 import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:dhyanin_app/widgets/breath_meditation/default_image_background.dart';
-import 'package:dhyanin_app/widgets/breath_meditation/select_image_elevatedbutton.dart';
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../services/controller/meditation_history_controller.dart';
+import '../../services/models/meditation_history_model.dart';
+import '../../widgets/list_drawer.dart';
+
+String fileBackgroundImage = "";
+
 class AudioPage extends StatefulWidget {
-  final int? indexOfAudio;
+  final int? duration;
   final int? repeatTimes;
   final double inhaleSeconds;
   final double holdSeconds;
   final double exhaleSeconds;
   const AudioPage(
       {super.key,
-      required this.indexOfAudio,
+      required this.duration,
       required this.repeatTimes,
       required this.inhaleSeconds,
       required this.holdSeconds,
@@ -42,35 +48,22 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   late AnimationController _breathingController; //animation for breathing
   String breathMessage = "Inhale"; //message for guide(inhale,exhale)
   var _breath = 0.0; //start position for animation
-  late int meditationMinutes; //total meditation minutes for one cycle
-  late int remainingMeditationMinutes; //remaining meditation minutes
+  int meditationMinutes = 5; //total meditation minutes for one cycle
+  int remainingMeditationMinutes = 5; //remaining meditation minutes
   int selectedAudio = 1; //will be changed by user later for audio change
   Duration currPosition = Duration.zero;
   bool _enabled = true; //to disable audiochange button for some time
   String backgroundImage = backgroundImage1; //default image for background
   int imageIndex = 1; //will be changed by user later for background change
   int completedMeditationMinutes = 0; //completed meditation minutes
-  // int durationSeconds = 0; //seconds for one inhale cycle
+  bool isFileImage = false; //if user selects images from gallary
   AudioPlayer audioPlayer = AudioPlayer();
-  File? pickedImage;
+  MeditationHistoryController historyController = MeditationHistoryController();
+  List<MeditationHistory> listHistory = [];
 
   void initPlayer() async {
-    if (widget.indexOfAudio == 0) {
-      meditationMinutes = 5;
-      remainingMeditationMinutes = 5;
-    } else if (widget.indexOfAudio == 1) {
-      meditationMinutes = 10;
-      remainingMeditationMinutes = 10;
-    } else if (widget.indexOfAudio == 2) {
-      meditationMinutes = 15;
-      remainingMeditationMinutes = 15;
-    } else if (widget.indexOfAudio == 3) {
-      meditationMinutes = 20;
-      remainingMeditationMinutes = 20;
-    } else {
-      meditationMinutes = 30;
-      remainingMeditationMinutes = 30;
-    }
+    meditationMinutes = widget.duration!;
+    remainingMeditationMinutes = widget.duration!;
     audioPlayer.play(AssetSource(audio1));
     duration = (await audioPlayer.getDuration())!;
   }
@@ -132,7 +125,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
 
     audioPlayer.onPlayerComplete.listen((event) {
       if (position.inSeconds > 58) {
-        print('oncomplete event fired');
         setState(() {
           currPosition += Duration(seconds: 60);
           position = Duration.zero;
@@ -175,7 +167,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
           setState(() {
             timesPlayed++;
           });
-          if (timesPlayed <= int.parse(widget.repeatTimes.toString())) {
+          if (timesPlayed < int.parse(widget.repeatTimes.toString())) {
             audioPlayer.play(AssetSource(audiopath), position: Duration.zero);
             remainingMeditationMinutes = meditationMinutes;
             completedMeditationMinutes = 0;
@@ -191,6 +183,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   void dispose() {
     _breathingController.dispose();
     audioPlayer.dispose();
+    if ((widget.repeatTimes! - timesPlayed) == 0) {
+      addMeditationInHistory();
+    }
     super.dispose();
   }
 
@@ -217,8 +212,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                       height: MediaQuery.of(context).size.height * .87,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: pickedImage != null
-                              ? FileImage(pickedImage!) as ImageProvider
+                          image: isFileImage
+                              ? FileImage(File(backgroundImage))
+                                  as ImageProvider<Object>
                               : AssetImage(backgroundImage),
                           colorFilter: const ColorFilter.mode(
                               Color(0xFFFFFFFF), BlendMode.dstATop),
@@ -237,16 +233,14 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                 Center(
                                   child: Container(
                                       height: duration != Duration.zero
-                                          ? (widget.repeatTimes! +
-                                                      1 -
+                                          ? (widget.repeatTimes! -
                                                       timesPlayed) !=
                                                   0
                                               ? size
                                               : 200
                                           : 200,
                                       width: duration != Duration.zero
-                                          ? (widget.repeatTimes! +
-                                                      1 -
+                                          ? (widget.repeatTimes! -
                                                       timesPlayed) !=
                                                   0
                                               ? size
@@ -264,8 +258,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       MediaQuery.of(context).size.height * 0.02,
                                 ),
                                 duration != Duration.zero
-                                    ? (widget.repeatTimes! + 1 - timesPlayed) !=
-                                            0
+                                    ? (widget.repeatTimes! - timesPlayed) != 0
                                         ? Text(
                                             breathMessage,
                                             style: const TextStyle(
@@ -336,9 +329,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       color: Colors.white,
                                     ),
                                     onPress: () async {
-                                      if ((widget.repeatTimes! +
-                                              1 -
-                                              timesPlayed) !=
+                                      if ((widget.repeatTimes! - timesPlayed) !=
                                           0) {
                                         if (isPlaying) {
                                           _breathingController.stop();
@@ -363,170 +354,126 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       color: Colors.white,
                                     ),
                                     onPress: () async {
-                                      if (isPlaying) {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) {
-                                              return SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  children: [
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage1,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage1;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage2,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage2;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage3,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage3;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage4,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage4;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage5,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage5;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage6,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage6;
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage7,
-                                                      ontap: () {
-                                                        backgroundImage =
-                                                            backgroundImage7;
-                                                      },
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        showModalBottomSheet<
-                                                                dynamic>(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .symmetric(
-                                                                        vertical:
-                                                                            5.0),
-                                                                    child: Text(
-                                                                      'Select Image From',
-                                                                      style: TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ),
-                                                                  ImageElevatedButton(
-                                                                      onPress:
-                                                                          () {
-                                                                        pickImage(
-                                                                            ImageSource.camera);
-                                                                      },
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .camera,
-                                                                      ),
-                                                                      label:
-                                                                          "Camera"),
-                                                                  ImageElevatedButton(
-                                                                      onPress:
-                                                                          () {
-                                                                        pickImage(
-                                                                            ImageSource.gallery);
-                                                                      },
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .image,
-                                                                      ),
-                                                                      label:
-                                                                          "Gallary"),
-                                                                  ImageElevatedButton(
-                                                                      onPress:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      },
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .close,
-                                                                      ),
-                                                                      label:
-                                                                          "Cancel"),
-                                                                ],
-                                                              );
-                                                            });
-                                                      },
-                                                      child: Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
+                                      _breathingController.stop();
+                                      audioPlayer.pause();
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: [
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage1,
+                                                    ontap: () {
+                                                      isFileImage = false;
+                                                      backgroundImage =
+                                                          backgroundImage1;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage2,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage2;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage3,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage3;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage4,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage4;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage5,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage5;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage6,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage6;
+                                                      audioPlayer.resume();
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  DefaultImage(
+                                                    imagePath: backgroundImage7,
+                                                    ontap: () {
+                                                      isFileImage = false;
+
+                                                      backgroundImage =
+                                                          backgroundImage7;
+                                                      resume();
+                                                    },
+                                                  ),
+                                                  SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.195,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                color: themeModel
-                                                                    .primaryColor)),
-                                                        child: Icon(
-                                                          Icons
-                                                              .add_circle_outline,
-                                                          color: themeModel
-                                                              .primaryColor,
-                                                          size: 40,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.03,
-                                                    )
-                                                  ],
-                                                ),
-                                              );
-                                            });
-                                      }
+                                                            0.2,
+                                                    child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        shrinkWrap: true,
+                                                        itemCount:
+                                                            savedImagePaths
+                                                                .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        12.0),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                isFileImage =
+                                                                    true;
+                                                                backgroundImage =
+                                                                    savedImagePaths[
+                                                                        index];
+                                                                resume();
+                                                              },
+                                                              child: Image.file(File(
+                                                                  savedImagePaths[
+                                                                      index])),
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          });
                                     }),
                               ],
                             ),
@@ -544,7 +491,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       height: 50,
                                       width: 50,
                                       child: CircularStepProgressIndicator(
-                                          totalSteps: widget.repeatTimes! + 1,
+                                          totalSteps: widget.repeatTimes!,
                                           currentStep: timesPlayed,
                                           selectedColor: themeModel.primaryColor
                                               .withOpacity(0.8),
@@ -583,6 +530,16 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  void resume() {
+    if (breathMessage == 'Inhale') {
+      _breathingController.forward();
+    } else {
+      _breathingController.reverse();
+    }
+    Navigator.of(context).pop();
+    audioPlayer.resume();
   }
 
   //format time to keep track of completed cycles and add into currPosition
@@ -663,16 +620,18 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     return null;
   }
 
-  //image picker function
-  pickImage(ImageSource imageType) async {
+  addMeditationInHistory() async {
     try {
-      final photo = await ImagePicker().pickImage(source: imageType);
-      if (photo == null) return;
-      final tempImage = File(photo.path);
-      setState(() {
-        pickedImage = tempImage;
+      var documentReference = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("meditationHistory")
+          .doc();
+      await documentReference.set({
+        'dateTime': DateTime.now(),
+        'duration': meditationMinutes,
+        'repeatTimes': widget.repeatTimes
       });
-      Navigator.of(context).pop();
     } catch (e) {
       print(e);
     }

@@ -1,5 +1,4 @@
 import 'package:dhyanin_app/services/models/history_model.dart';
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +57,7 @@ class _HistoryItemState extends State<HistoryItem> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             decoration: BoxDecoration(
-              color: model.primaryColor.withOpacity(0.8),
+              color: model.secondaryColor2.withOpacity(0.8),
               borderRadius: BorderRadius.circular(7),
               boxShadow: [
                 BoxShadow(

@@ -28,51 +28,86 @@ class MyCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor.withOpacity(0.4),
-                        width: 1.0,
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: FractionalOffset.centerLeft,
+            end: FractionalOffset.center,
+            colors: [
+              colorsModel.primaryColor,
+              colorsModel.secondaryColor1,
+            ],
+          )),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        // border: Border.all(
+                        //   color: colorsModel.primaryColor.withOpacity(0.4),
+                        //   width: 1.0,
+                        // ),
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.asset(image_path, fit: BoxFit.cover)),
+                    ),
+                    Container(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 5),
+                          Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                          Container(height: 5),
+                          Text(
+                            subTitle,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
                     ),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Image.asset(image_path, fit: BoxFit.cover)),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    Icons.play_circle_fill_rounded,
+                    color: colorsModel.secondaryColor2,
                   ),
-                  Container(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(height: 5),
-                        Text(
-                          title,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        Container(height: 5),
-                        Text(
-                          subTitle,
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
+                  SizedBox(
+                    width: 3,
                   ),
+                  Text(
+                    'Get Started Now!',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.05,
+                  )
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            ],
+          ),
         ),
       ),
     );

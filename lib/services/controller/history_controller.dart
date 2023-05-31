@@ -1,41 +1,36 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/services/models/history_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryController {
   List<String>? list = [];
   List<History>? historyList = [];
-  static SharedPreferences? prefs;
-  static Future init() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    prefs = await SharedPreferences.getInstance();
-  }
 
   //to read saved history
-  read(String key) {
+  Future<List<History>> read() async {
+    List<History> historyList = [];
     try {
-      historyList!.clear();
-      list!.clear();
-      list!.addAll(prefs!.getStringList(key)!);
-      for (var item in list!) {
-        historyList!.add(History.fromJson(json.decode(item)));
-      }
-    } catch (_) {
-      // print(e);
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("fastHistory")
+          .get();
+
+      querySnapshot.docs.forEach((doc) {
+        var data = doc.data();
+        var history = History(
+          dateTime: data['dateTime'].toDate(),
+          fastingHours: data['fastingHours'],
+        );
+        historyList.add(history);
+      });
+    } catch (e) {
+      print(e);
     }
 
     return historyList;
-  }
-
-  //to save in history
-  save(String key, List<History> historyList) async {
-    list!.clear();
-    for (var item in historyList) {
-      list!.add(json.encode(item.toJson()));
-    }
-    if (prefs != null) {
-      prefs!.setStringList(key, list!);
-    }
   }
 }

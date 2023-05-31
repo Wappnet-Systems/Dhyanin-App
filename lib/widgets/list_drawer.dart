@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dhyanin_app/screens/custom_images/custom_background_images.dart';
+import 'package:dhyanin_app/screens/past_history/past_history_screen.dart';
 import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/services/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/mobile_number_input_screen.dart';
-import '../utils/colors.dart';
+import 'color_circle.dart';
+
+List<String> savedImagePaths = [];
 
 Widget MyDrawerList(BuildContext context) {
   ThemeManagerProvider model =
@@ -20,7 +26,8 @@ Widget MyDrawerList(BuildContext context) {
           Divider(thickness: 0.5),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ProfileScreen()));
             },
             child: SizedBox(
@@ -45,18 +52,49 @@ Widget MyDrawerList(BuildContext context) {
           ),
           Divider(thickness: 0.5),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CustomBackgroundImages()));
+            },
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,
               child: Row(
                 children: [
                   Text(
-                    'Add Custom Images',
+                    'Custom Images',
                     style: TextStyle(fontSize: 20),
                   ),
                   Spacer(),
                   Icon(
                     Icons.photo_library,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+            ),
+          ),
+          Divider(thickness: 0.5),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PastHistoryScreen()));
+            },
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+              child: Row(
+                children: [
+                  Text(
+                    'History',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.history,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   SizedBox(
@@ -84,9 +122,13 @@ Widget MyDrawerList(BuildContext context) {
           ),
           Divider(thickness: 0.5),
           ExpansionTile(
+            tilePadding: EdgeInsets.only(left: 0, right: 15),
             title: Text(
               'Change Theme',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              ),
             ),
             children: [
               Row(
@@ -95,23 +137,23 @@ Widget MyDrawerList(BuildContext context) {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.025,
                   ),
-                  ColorCircle(Color(0xffDE0CA3), 1),
+                  ColorCircle(Color(0xFFF06292), 1),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
-                  ColorCircle(Colors.red, 2),
+                  ColorCircle(Color(0xFF4DB6AC), 2),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
-                  ColorCircle(Colors.green, 3),
+                  ColorCircle(Color(0xFF81C784), 3),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
-                  ColorCircle(Colors.blue, 4),
+                  ColorCircle(Color(0xFF64B5F6), 4),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
-                  ColorCircle(Colors.purple, 5),
+                  ColorCircle(Color(0xFF9575CD), 5),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
@@ -152,35 +194,6 @@ Widget MyDrawerList(BuildContext context) {
       ));
 }
 
-class ColorCircle extends StatelessWidget {
-  final Color color;
-  final int themeIndex;
-  ColorCircle(this.color, this.themeIndex);
-
-  @override
-  Widget build(BuildContext context) {
-    ColorsThemeNotifier colorsModel =
-        Provider.of<ColorsThemeNotifier>(context, listen: true);
-    return InkWell(
-      onTap: () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setInt('theme', themeIndex);
-        colorsModel.selectTheme(themeIndex);
-        Navigator.of(context).pop();
-      },
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white),
-          color: color,
-        ),
-      ),
-    );
-  }
-}
-
 Future<void> signOut(BuildContext context) async {
   showDialog(
       context: context,
@@ -197,6 +210,9 @@ Future<void> signOut(BuildContext context) async {
                     context,
                     MaterialPageRoute(
                         builder: (context) => MobileNumberInput()));
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setString('name', "");
+                prefs.setString('email', "");
               },
               child: Text("Yes"),
             ),

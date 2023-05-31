@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dhyanin_app/screens/home_screen.dart';
-import 'package:dhyanin_app/utils/colors.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,46 +28,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ColorsThemeNotifier model =
-        Provider.of<ColorsThemeNotifier>(context, listen: true);
-    return WillPopScope(
-      onWillPop: () async {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Exit App'),
-                content: Text('Do you want to exit?'),
-                actions: [
-                  MaterialButton(
-                    onPressed: () {
-                      exit(0);
-                    },
-                    child: Text("Yes"),
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("No"),
-                  ),
-                ],
-                actionsAlignment: MainAxisAlignment.end,
-              );
-            });
-        return true;
-      },
+    ColorsThemeNotifier colorsModel =
+        Provider.of<ColorsThemeNotifier>(context, listen: false);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorsModel.backgroundColor,
+            colorsModel.secondaryColor2,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: model.primaryColor,
-            elevation: 0,
-            title: Text(
-              "Profile",
-              style: TextStyle(color: model.backgroundColor),
-            ),
-          ),
+          // backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: CustomAppBar(title: "Profile"),
           body: Consumer<ColorsThemeNotifier>(
             builder: (context, themeModel, child) => Center(
               child: Padding(
@@ -89,11 +64,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         TextFormField(
                           controller: nameController,
-                          maxLength: 15,
+                          maxLength: 12,
                           decoration: InputDecoration(
                               hintText: "Your First Name",
-                              hintStyle: TextStyle(
-                                  color: Colors.black.withOpacity(0.6)),
                               labelText: "Name",
                               labelStyle: TextStyle(
                                   color:
@@ -107,9 +80,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               // contentPadding: EdgeInsets.all(10.0),
                               prefixIcon: Icon(
                                 Icons.person,
-                                color: themeModel.primaryColor,
+                                color: themeModel.secondaryColor2,
                                 size: 35,
                               )),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015,
                         ),
                         TextFormField(
                           controller: emailController,
@@ -117,8 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           maxLength: 25,
                           decoration: InputDecoration(
                               hintText: "Your Email",
-                              hintStyle: TextStyle(
-                                  color: Colors.black.withOpacity(0.6)),
                               labelText: "Email",
                               labelStyle: TextStyle(
                                   color:
@@ -132,13 +106,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               // contentPadding: EdgeInsets.all(10.0),
                               prefixIcon: Icon(
                                 Icons.email,
-                                color: themeModel.primaryColor,
+                                color: themeModel.secondaryColor2,
                                 size: 28,
                               )),
                         ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015,
+                        ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: themeModel.primaryColor),
+                                backgroundColor: themeModel.secondaryColor2),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 await saveProfile();
@@ -147,7 +124,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         builder: ((context) => HomeScreen())));
                               }
                             },
-                            child: Text('Submit'))
+                            child: Text(
+                              'Submit',
+                              style: TextStyle(color: Colors.white),
+                            ))
                       ],
                     )),
               ),
