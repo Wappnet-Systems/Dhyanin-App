@@ -44,7 +44,7 @@ class _HistoryItemState extends State<MeditationHistoryItem> {
                         : DateFormat('MM/dd/yyyy')
                             .format(widget.history.dateTime),
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 16,
                 ),
               ),

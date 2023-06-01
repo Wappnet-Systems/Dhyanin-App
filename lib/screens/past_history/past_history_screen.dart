@@ -1,5 +1,6 @@
 import 'package:dhyanin_app/services/controller/meditation_history_controller.dart';
 import 'package:dhyanin_app/services/models/meditation_history_model.dart';
+import 'package:dhyanin_app/utils/styles.dart';
 import 'package:intl/intl.dart';
 
 import 'package:dhyanin_app/services/controller/history_controller.dart';
@@ -157,164 +158,187 @@ class _PastHistoryScreenState extends State<PastHistoryScreen> {
         Provider.of<ColorsThemeNotifier>(context, listen: true);
     return DefaultTabController(
         length: 2,
-        child: Scaffold(
-          appBar: CustomAppBar(title: 'History'),
-          body: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.chevron_left),
-                    onPressed: _goToPreviousWeek,
-                  ),
-                  Text(
-                    _getFormattedWeekRange(),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.chevron_right),
-                    onPressed: _goToNextWeek,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.095,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 7, // Number of weeks to display
-                    itemBuilder: (context, index) {
-                      final weekStartDate =
-                          startOfWeek.add(Duration(days: index));
-                      final date = weekStartDate.day;
-                      final weekDay = _getWeekdayName(weekStartDate.weekday);
-                      String formattedSelectedDate =
-                          DateFormat('yyyy-MM-dd').format(selectedDateTime);
-                      String formattedWeekStartDate =
-                          DateFormat('yyyy-MM-dd').format(weekStartDate);
-                      if (formattedSelectedDate == formattedWeekStartDate)
-                        selectedDateTime = weekStartDate;
-                      return GestureDetector(
-                        onTap: () {
-                          if (weekStartDate.isBefore(DateTime.now())) {
-                            setState(() {
-                              selectedDateTime = weekStartDate;
-                            });
-                            filteredFastingHistoryData();
-                            filteredMeditationHistoryData();
-                          }
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 7.7,
-                          margin: EdgeInsets.symmetric(horizontal: 2),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: weekStartDate.isAfter(DateTime.now())
-                                    ? Colors.grey
-                                    : selectedDateTime == weekStartDate
-                                        ? model.primaryColor
-                                        : Colors.white,
-                              ),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: weekStartDate.isAfter(DateTime.now())
-                                ? Colors.grey
-                                : selectedDateTime == weekStartDate
-                                    ? model.primaryColor
-                                    : model.backgroundColor,
-                            elevation: 4,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  date.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 25,
-                                    color: weekStartDate.isAfter(DateTime.now())
-                                        ? Colors.white
-                                        : selectedDateTime == weekStartDate
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  weekDay,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15,
-                                    color: weekStartDate.isAfter(DateTime.now())
-                                        ? Colors.white
-                                        : selectedDateTime == weekStartDate
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              TabBar(
-                indicator: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 1),
-                  borderRadius: BorderRadius.circular(20),
-                  color: model.secondaryColor2.withOpacity(0.8),
-                ),
-                tabs: [
-                  Tab(
-                    text: 'Meditation History',
-                  ),
-                  Tab(
-                    text: 'Fasting History',
-                  )
-                ],
-                unselectedLabelColor: Colors.grey,
-                labelColor: Colors.white,
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              Expanded(
-                child: TabBarView(
+        child: Container(
+          decoration: topLeftToBottomRightGradient(model),
+          child: Scaffold(
+            appBar: CustomAppBar(title: 'History'),
+            body: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ListView.separated(
-                      itemBuilder: (context, index) {
-                        return meditationItems[index];
-                      },
-                      itemCount: meditationItems.length,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(
-                        thickness: 0,
-                        color: Colors.transparent,
-                      ),
+                    IconButton(
+                      icon: Icon(Icons.chevron_left),
+                      onPressed: _goToPreviousWeek,
                     ),
-                    ListView.separated(
-                      itemBuilder: (context, index) {
-                        return fastingItems[index];
-                      },
-                      itemCount: fastingItems.length,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(
-                        thickness: 0,
-                        color: Colors.transparent,
-                      ),
+                    Text(
+                      _getFormattedWeekRange(),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.chevron_right),
+                      onPressed: _goToNextWeek,
                     ),
                   ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.095,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7, // Number of weeks to display
+                      itemBuilder: (context, index) {
+                        final weekStartDate =
+                            startOfWeek.add(Duration(days: index));
+                        final date = weekStartDate.day;
+                        final weekDay = _getWeekdayName(weekStartDate.weekday);
+                        String formattedSelectedDate =
+                            DateFormat('yyyy-MM-dd').format(selectedDateTime);
+                        String formattedWeekStartDate =
+                            DateFormat('yyyy-MM-dd').format(weekStartDate);
+                        if (formattedSelectedDate == formattedWeekStartDate)
+                          selectedDateTime = weekStartDate;
+                        return GestureDetector(
+                          onTap: () {
+                            if (weekStartDate.isBefore(DateTime.now())) {
+                              setState(() {
+                                selectedDateTime = weekStartDate;
+                              });
+                              filteredFastingHistoryData();
+                              filteredMeditationHistoryData();
+                            }
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 7.7,
+                            margin: EdgeInsets.symmetric(horizontal: 2),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: weekStartDate.isAfter(DateTime.now())
+                                      ? Colors.grey
+                                      : selectedDateTime == weekStartDate
+                                          ? model.primaryColor
+                                          : Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              color: Colors.transparent,
+                              elevation: 4,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      weekStartDate.isAfter(DateTime.now())
+                                          ? Colors.grey
+                                          : selectedDateTime == weekStartDate
+                                              ? model.primaryColor
+                                              : model.backgroundColor,
+                                      weekStartDate.isAfter(DateTime.now())
+                                          ? Colors.grey
+                                          : selectedDateTime == weekStartDate
+                                              ? model.secondaryColor2
+                                              : model.backgroundColor,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      date.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 25,
+                                        color: weekStartDate
+                                                .isAfter(DateTime.now())
+                                            ? Colors.white
+                                            : selectedDateTime == weekStartDate
+                                                ? Colors.white
+                                                : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      weekDay,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: weekStartDate
+                                                .isAfter(DateTime.now())
+                                            ? Colors.white
+                                            : selectedDateTime == weekStartDate
+                                                ? Colors.white
+                                                : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.02,
+                ),
+                TabBar(
+                  indicator: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1),
+                    borderRadius: BorderRadius.circular(20),
+                    color: model.primaryColor,
+                  ),
+                  tabs: [
+                    Tab(
+                      text: 'Meditation History',
+                    ),
+                    Tab(
+                      text: 'Fasting History',
+                    )
+                  ],
+                  unselectedLabelColor: Colors.grey,
+                  labelColor: Colors.white,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.02,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      ListView.separated(
+                        itemBuilder: (context, index) {
+                          return meditationItems[index];
+                        },
+                        itemCount: meditationItems.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(
+                          thickness: 0,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                      ListView.separated(
+                        itemBuilder: (context, index) {
+                          return fastingItems[index];
+                        },
+                        itemCount: fastingItems.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(
+                          thickness: 0,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ));
   }

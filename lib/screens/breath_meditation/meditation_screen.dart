@@ -37,28 +37,33 @@ class _MeditationState extends State<Meditation> {
   Widget customRadioButton(String text, int index) {
     ColorsThemeNotifier model =
         Provider.of<ColorsThemeNotifier>(context, listen: true);
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          value = index;
-        });
-      },
-      style: OutlinedButton.styleFrom(
-        backgroundColor: (value == index)
-            ? model.secondaryColor2
-            : Theme.of(context).colorScheme.background,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        side: BorderSide(
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.042,
+      decoration: leftToRightGradient(model, value, index),
+      child: OutlinedButton(
+        onPressed: () {
+          setState(() {
+            value = index;
+          });
+        },
+        style: OutlinedButton.styleFrom(
+          backgroundColor: (value == index)
+              ? null
+              : Theme.of(context).colorScheme.background,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          side: BorderSide(
+              color: (value == index)
+                  ? model.secondaryColor2
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
             color: (value == index)
-                ? model.secondaryColor2
-                : Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: (value == index)
-              ? Colors.white
-              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
       ),
     );
@@ -68,29 +73,33 @@ class _MeditationState extends State<Meditation> {
   Widget customRadioButtonRepeat(String text, int index) {
     ColorsThemeNotifier model =
         Provider.of<ColorsThemeNotifier>(context, listen: true);
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          repeatValue = index;
-        });
-      },
-      style: OutlinedButton.styleFrom(
-          backgroundColor: (repeatValue == index)
-              ? model.secondaryColor2
-              : Theme.of(context).colorScheme.background,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          side: BorderSide(
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.042,
+      decoration: leftToRightGradient(model, repeatValue, index),
+      child: OutlinedButton(
+        onPressed: () {
+          setState(() {
+            repeatValue = index;
+          });
+        },
+        style: OutlinedButton.styleFrom(
+            backgroundColor: (repeatValue == index)
+                ? null
+                : Theme.of(context).colorScheme.background,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            side: BorderSide(
+              color: (repeatValue == index)
+                  ? model.secondaryColor2
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            )),
+        child: Text(
+          text,
+          style: TextStyle(
             color: (repeatValue == index)
-                ? model.secondaryColor2
+                ? Colors.white
                 : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          )),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: (repeatValue == index)
-              ? Colors.white
-              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
       ),
     );
@@ -134,123 +143,123 @@ class _MeditationState extends State<Meditation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Breathing Meditation'),
-      body: Consumer<ColorsThemeNotifier>(
-        builder: (context, themeModel, child) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 15.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Padding(
-                        padding:
-                            EdgeInsets.only(top: 15.0, left: 5.0, bottom: 10.0),
-                        child: Text(
-                          'Select Duration (Per Cycle)',
-                          style: bodyStyle,
-                        ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.history,
-                          color: themeModel.secondaryColor2,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const MeditationHistoryScreen()));
-                        },
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.025,
-                      )
-                    ],
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+    ColorsThemeNotifier model =
+        Provider.of<ColorsThemeNotifier>(context, listen: true);
+    return Container(
+      decoration: topLeftToBottomRightGradient(model),
+      child: Scaffold(
+        appBar: const CustomAppBar(title: 'Breathing Meditation'),
+        body: Consumer<ColorsThemeNotifier>(
+          builder: (context, themeModel, child) => SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 15.0, top: 15.0, right: 15.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        customRadioButton('5 min', 5),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              top: 15.0, left: 5.0, bottom: 15.0),
+                          child: Text(
+                            'Select Duration (Per Cycle)',
+                            style: bodyStyle,
+                          ),
                         ),
-                        customRadioButton('10 min', 10),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButton('15 min', 15),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButton('20 min', 20),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButton('30 min', 30),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            Icons.history,
+                            color: themeModel.secondaryColor2,
+                            size: 35,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const MeditationHistoryScreen()));
+                          },
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
-                    child: Text(
-                      'Select Repeat Cycle',
-                      style: bodyStyle,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          customRadioButton('5 min', 5),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButton('10 min', 10),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButton('15 min', 15),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButton('20 min', 20),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButton('30 min', 30),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        customRadioButtonRepeat('1 time', 1),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButtonRepeat('2 times', 2),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButtonRepeat('3 times', 3),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButtonRepeat('4 times', 4),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        customRadioButtonRepeat('5 times', 5),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        )
-                      ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.04,
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
-                    child: Text(
-                      'Select Breathing Seconds',
-                      style: bodyStyle,
+                    const Padding(
+                      padding: EdgeInsets.only(left: 5.0, bottom: 15.0),
+                      child: Text(
+                        'Select Repeat Cycle',
+                        style: bodyStyle,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: Card(
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          customRadioButtonRepeat('1 time', 1),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButtonRepeat('2 times', 2),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButtonRepeat('3 times', 3),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButtonRepeat('4 times', 4),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          customRadioButtonRepeat('5 times', 5),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.04,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 5.0, bottom: 10.0),
+                      child: Text(
+                        'Select Breathing Seconds',
+                        style: bodyStyle,
+                      ),
+                    ),
+                    Card(
                       color: Theme.of(context).colorScheme.background,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
@@ -381,84 +390,85 @@ class _MeditationState extends State<Meditation> {
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                            activeColor: themeModel.secondaryColor2,
-                            checkColor: themeModel.backgroundColor,
-                            value: addSession,
-                            onChanged: ((value) {
-                              setState(() {
-                                addSession = value!;
-                              });
-                            })),
-                        Text(
-                          'Want to save in sessions?',
-                          style: sliderText,
-                        ),
-                      ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Center(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.06,
-                        child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: themeModel.secondaryColor2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                )),
-                            onPressed: () async {
-                              if (addSession) {
-                                await _showBox(context);
-                                data.set({
-                                  'id': data.id,
-                                  'name': _sessionNameController.text != ""
-                                      ? _sessionNameController.text
-                                      : "My Session",
-                                  'duration': value,
-                                  'repeatTimes': repeatValue,
-                                  'inhaleSeconds': inhaleSeconds,
-                                  'holdSeconds': holdSeconds,
-                                  'exhaleSeconds': exhaleSeconds
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                              activeColor: themeModel.secondaryColor2,
+                              checkColor: themeModel.backgroundColor,
+                              value: addSession,
+                              onChanged: ((value) {
+                                setState(() {
+                                  addSession = value!;
                                 });
-                              }
-                              widget.updateSessionData();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AudioPage(
-                                    duration: value,
-                                    repeatTimes: repeatValue,
-                                    inhaleSeconds: inhaleSeconds,
-                                    holdSeconds: holdSeconds,
-                                    exhaleSeconds: exhaleSeconds),
-                              ));
-                            },
-                            icon: Icon(
-                              Icons.play_arrow,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              'Start',
-                              style: const TextStyle(
-                                  fontSize: 25, color: Colors.white),
-                            )),
+                              })),
+                          Text(
+                            'Want to save in sessions?',
+                            style: sliderText,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (addSession) {
+                            await _showBox(context);
+                            data.set({
+                              'id': data.id,
+                              'name': _sessionNameController.text != ""
+                                  ? _sessionNameController.text
+                                  : "My Session",
+                              'duration': value,
+                              'repeatTimes': repeatValue,
+                              'inhaleSeconds': inhaleSeconds,
+                              'holdSeconds': holdSeconds,
+                              'exhaleSeconds': exhaleSeconds
+                            });
+                          }
+                          widget.updateSessionData();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AudioPage(
+                              duration: value,
+                              repeatTimes: repeatValue,
+                              inhaleSeconds: inhaleSeconds,
+                              holdSeconds: holdSeconds,
+                              exhaleSeconds: exhaleSeconds,
+                            ),
+                          ));
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          decoration: BoxDecoration(
+                            gradient: rightToLeftGradient(model),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                'Start',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

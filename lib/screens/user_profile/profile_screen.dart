@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dhyanin_app/screens/home_screen.dart';
+import 'package:dhyanin_app/utils/styles.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,16 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ColorsThemeNotifier colorsModel =
         Provider.of<ColorsThemeNotifier>(context, listen: false);
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorsModel.backgroundColor,
-            colorsModel.secondaryColor2,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
+      decoration: topLeftToBottomRightGradient(colorsModel),
       child: Scaffold(
           // backgroundColor: Theme.of(context).colorScheme.background,
           appBar: CustomAppBar(title: "Profile"),

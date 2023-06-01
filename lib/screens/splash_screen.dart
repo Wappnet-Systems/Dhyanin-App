@@ -77,8 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
         ),
-        nextScreen:
-            // MobileNumberInput()
-            user != null ? HomeScreen() : MobileNumberInput());
+        nextScreen: user != null ? HomeScreen() : MobileNumberInput());
   }
 }

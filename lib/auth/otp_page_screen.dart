@@ -48,123 +48,126 @@ class _OtpPageState extends State<OtpPage> {
         color: model.secondaryColor1,
       ),
     );
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_rounded,
-              color: Colors.black,
-            )),
-      ),
-      // backgroundColor: backgroundColor,
-      body: Consumer<ColorsThemeNotifier>(
-        builder: (context, themeModel, child) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 22.0),
-                    width: double.infinity,
-                    child: const Text(
-                      'Registration',
-                      textAlign: TextAlign.center,
-                      style: headingStyle,
+    return Container(
+      decoration: topLeftToBottomRightGradient(model),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.black,
+              )),
+        ),
+        // backgroundColor: backgroundColor,
+        body: Consumer<ColorsThemeNotifier>(
+          builder: (context, themeModel, child) => SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 22.0),
+                      width: double.infinity,
+                      child: const Text(
+                        'Registration',
+                        textAlign: TextAlign.center,
+                        style: headingStyle,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Image.asset(
-                    registrationImage,
-                    height: MediaQuery.of(context).size.height * 0.25,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 40.0),
-                    width: double.infinity,
-                    child: const Text(
-                      'Phone Number Verification',
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    width: double.infinity,
-                    child: const Text(
-                      'Enter OTP which we have sent (via SMS text message) to your phone number',
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                    Image.asset(
+                      registrationImage,
+                      height: MediaQuery.of(context).size.height * 0.25,
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Pinput(
-                    defaultPinTheme: defaultPinTheme,
-                    focusedPinTheme: focusedPinTheme,
-                    submittedPinTheme: submittedPinTheme,
-                    length: 6,
-                    showCursor: true,
-                    onChanged: (value) {
-                      code = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  SizedBox(
-                    height: 45,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          loading = true;
-                        });
-                        try {
-                          PhoneAuthCredential credential =
-                              PhoneAuthProvider.credential(
-                                  verificationId: MobileNumberInput.verify,
-                                  smsCode: code);
-
-                          // Sign the user in (or link) with the credential
-                          await auth.signInWithCredential(credential);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileScreen()));
-                        } catch (e) {
-                          CustomSnackbar.functionSnackbar(
-                              context, "Wrong OTP!");
-                          setState(() {
-                            loading = false;
-                          });
-                        }
+                    Container(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      width: double.infinity,
+                      child: const Text(
+                        'Phone Number Verification',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      width: double.infinity,
+                      child: const Text(
+                        'Enter OTP which we have sent (via SMS text message) to your phone number',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    Pinput(
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: focusedPinTheme,
+                      submittedPinTheme: submittedPinTheme,
+                      length: 6,
+                      showCursor: true,
+                      onChanged: (value) {
+                        code = value;
                       },
-                      child: loading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                              color: themeModel.backgroundColor,
-                            ))
-                          : Text(
-                              'Verify phone number',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: themeModel.secondaryColor2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0))),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    SizedBox(
+                      height: 45,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          try {
+                            PhoneAuthCredential credential =
+                                PhoneAuthProvider.credential(
+                                    verificationId: MobileNumberInput.verify,
+                                    smsCode: code);
+
+                            // Sign the user in (or link) with the credential
+                            await auth.signInWithCredential(credential);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileScreen()));
+                          } catch (e) {
+                            CustomSnackbar.functionSnackbar(
+                                context, "Wrong OTP!");
+                            setState(() {
+                              loading = false;
+                            });
+                          }
+                        },
+                        child: loading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                color: themeModel.backgroundColor,
+                              ))
+                            : Text(
+                                'Verify phone number',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: themeModel.secondaryColor2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0))),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

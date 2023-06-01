@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
+import 'package:dhyanin_app/utils/styles.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -47,92 +48,96 @@ class _CustomBackgroundImagesState extends State<CustomBackgroundImages> {
   Widget build(BuildContext context) {
     ColorsThemeNotifier model =
         Provider.of<ColorsThemeNotifier>(context, listen: true);
-    return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-        child: FloatingActionButton(
-          backgroundColor: model.secondaryColor2,
-          child: Icon(Icons.add),
-          onPressed: () {
-            _selectImage(context);
-          },
+    return Container(
+      decoration: topLeftToBottomRightGradient(model),
+      child: Scaffold(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+          child: FloatingActionButton(
+            backgroundColor: model.secondaryColor2,
+            child: Icon(Icons.add),
+            onPressed: () {
+              _selectImage(context);
+            },
+          ),
         ),
-      ),
-      appBar: CustomAppBar(title: "Custom Images"),
-      body: savedImagePaths.length == 0
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset(lottiePath, width: 250),
-                  Text(
-                    'No Images Added yet!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            )
-          : GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              shrinkWrap: true,
-              itemCount: savedImagePaths.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 5.0),
-                  child: Stack(children: [
-                    Center(child: Image.file(File(savedImagePaths[index]))),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Delete Image'),
-                                  content: Text(
-                                      'Are you sure you want to delete this image?'),
-                                  actions: [
-                                    MaterialButton(
-                                      onPressed: () async {
-                                        deleteImage(index);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("Yes"),
-                                    ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("No"),
-                                    ),
-                                  ],
-                                  actionsAlignment: MainAxisAlignment.end,
-                                );
-                              });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red.shade700,
-                          ),
-                          padding: EdgeInsets.all(4.0),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 16.0,
+        appBar: CustomAppBar(title: "Custom Images"),
+        body: savedImagePaths.length == 0
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(lottiePath, width: 250),
+                    Text(
+                      'No Images Added yet!',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              )
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                shrinkWrap: true,
+                itemCount: savedImagePaths.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5.0),
+                    child: Stack(children: [
+                      Center(child: Image.file(File(savedImagePaths[index]))),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Delete Image'),
+                                    content: Text(
+                                        'Are you sure you want to delete this image?'),
+                                    actions: [
+                                      MaterialButton(
+                                        onPressed: () async {
+                                          deleteImage(index);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Yes"),
+                                      ),
+                                      MaterialButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                    ],
+                                    actionsAlignment: MainAxisAlignment.end,
+                                  );
+                                });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red.shade700,
+                            ),
+                            padding: EdgeInsets.all(4.0),
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 16.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-                );
-              },
-            ),
+                    ]),
+                  );
+                },
+              ),
+      ),
     );
   }
 

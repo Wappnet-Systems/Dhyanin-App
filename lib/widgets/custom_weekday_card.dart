@@ -29,7 +29,7 @@ class WeekDayCard extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 DateTime.now().day == date
-                    ? model.primaryColor.withOpacity(0.6)
+                    ? model.primaryColor
                     : model.backgroundColor,
                 DateTime.now().day == date
                     ? model.secondaryColor2

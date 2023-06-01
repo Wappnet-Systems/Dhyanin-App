@@ -14,7 +14,7 @@ class AudioIcon extends StatelessWidget {
         Provider.of<ColorsThemeNotifier>(context, listen: true);
     return CircleAvatar(
       radius: 35,
-      backgroundColor: model.primaryColor.withOpacity(0.6),
+      backgroundColor: model.secondaryColor2.withOpacity(0.6),
       child: IconButton(
           icon: icon,
           iconSize: 40,

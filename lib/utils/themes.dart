@@ -32,13 +32,13 @@ ThemeData getLightThemeFromProvider(ColorsThemeNotifier provider) {
         .copyWith(
             primary: provider.primaryColor,
             onSurface: Colors.black,
-            background: provider.backgroundColor,
+            background: provider.secondaryColor1,
             onPrimary: Colors.black,
             onBackground: Colors.transparent,
             brightness: Brightness.light),
     cardColor: provider.secondaryColor1,
     hintColor: Colors.black38,
-    dialogBackgroundColor: provider.backgroundColor,
+    dialogBackgroundColor: provider.secondaryColor1,
   );
 }
 

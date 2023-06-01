@@ -134,10 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           )),
           child: Scaffold(
-            backgroundColor:
-                Theme.of(context).colorScheme.brightness == Brightness.light
-                    ? Colors.transparent
-                    : Colors.grey.shade900,
             body: Consumer<ThemeManagerProvider>(
               builder: (context, themeModel, child) => SafeArea(
                 child: Padding(
@@ -247,18 +243,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: MediaQuery.of(context).size.height *
                                         0.1,
                                     child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 4, vertical: 8),
                                       child: Container(
                                         decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: colorsModel.primaryColor,
+                                                width: 0.3),
                                             gradient: LinearGradient(
-                                          begin: FractionalOffset.centerRight,
-                                          end: FractionalOffset.center,
-                                          colors: [
-                                            colorsModel.primaryColor,
-                                            colorsModel.secondaryColor1,
-                                          ],
-                                        )),
+                                              begin:
+                                                  FractionalOffset.centerRight,
+                                              end: FractionalOffset.center,
+                                              colors: [
+                                                colorsModel.primaryColor,
+                                                colorsModel.secondaryColor1,
+                                              ],
+                                            )),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8.0),
