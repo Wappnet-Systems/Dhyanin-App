@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/controller/meditation_history_controller.dart';
+import '../../services/functions/select_lottie_file.dart';
 import '../../services/providers/colors_theme_provider.dart';
 import '../../utils/images.dart';
 import '../../widgets/breath_meditation/meditation_history_item.dart';
@@ -27,17 +28,7 @@ class _MeditationHistoryScreenState extends State<MeditationHistoryScreen> {
   @override
   void initState() {
     model = Provider.of<ColorsThemeNotifier>(context, listen: false);
-    if (model.primaryColor == Color(0xFFF06292)) {
-      lottiePath = emptyHistoryListPink;
-    } else if (model.primaryColor == Color(0xFFFF9800)) {
-      lottiePath = emptyHistoryListRed;
-    } else if (model.primaryColor == Color(0xFF43A047)) {
-      lottiePath = emptyHistoryListGreen;
-    } else if (model.primaryColor == Color(0xFF536DFE)) {
-      lottiePath = emptyHistoryListBlue;
-    } else {
-      lottiePath = emptyHistoryListPurple;
-    }
+    lottiePath = selectLottiePath(model);
     super.initState();
     fetchHistoryData();
   }

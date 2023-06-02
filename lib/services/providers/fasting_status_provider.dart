@@ -28,7 +28,7 @@ class FastingStatusProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Timer timer = Timer(const Duration(days: 30), () => print('Timer finished'));
+  Timer timer = Timer(const Duration(days: 30), () {});
 
   //to save fast details when completed
   HistoryController historyController = HistoryController();
@@ -48,9 +48,7 @@ class FastingStatusProvider extends ChangeNotifier {
           isStarted = doc['fasting'];
           startedHours = doc['hours'];
           startedTime = DateTime.parse(doc['startTime']);
-        } catch (e) {
-          print(e);
-        }
+        } catch (e) {}
       }
       notifyListeners();
     });
@@ -64,7 +62,7 @@ class FastingStatusProvider extends ChangeNotifier {
     timer = Timer.periodic(
       oneSec,
       (Timer timer) async {
-        if (value < 2) {
+        if (value == 0) {
           timer.cancel();
           isStarted = false;
           FirebaseFirestore.instance
@@ -87,7 +85,6 @@ class FastingStatusProvider extends ChangeNotifier {
         } else {
           value--;
           notifyListeners();
-          print(value);
         }
       },
     );
@@ -118,8 +115,6 @@ class FastingStatusProvider extends ChangeNotifier {
         'dateTime': startedTime.add(Duration(hours: int.parse(startedHours))),
         "fastingHours": int.parse(startedHours)
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

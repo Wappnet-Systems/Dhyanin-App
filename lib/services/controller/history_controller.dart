@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryController {
   List<String>? list = [];
@@ -27,9 +24,7 @@ class HistoryController {
         );
         historyList.add(history);
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     return historyList;
   }

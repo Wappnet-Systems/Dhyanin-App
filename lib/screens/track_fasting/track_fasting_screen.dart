@@ -43,8 +43,8 @@ class _TrackFastingState extends State<TrackFasting> {
           'startTime': time,
           'hours': hours,
         })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .then((value) => () {})
+        .catchError((error) => () {});
   }
 
   @override
@@ -71,9 +71,7 @@ class _TrackFastingState extends State<TrackFasting> {
               getTimeDifference(model.startedTime));
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     super.initState();
   }
@@ -283,15 +281,11 @@ class _TrackFastingState extends State<TrackFasting> {
                                         fastingStatusModel.fastingHours
                                                 .toDouble() *
                                             3600);
-                                  } catch (e) {
-                                    print(e);
-                                  }
+                                  } catch (e) {}
                                 } else {
                                   _showDialogue();
                                 }
-                              } catch (e) {
-                                print(e);
-                              }
+                              } catch (e) {}
                             });
                           },
                           child: Container(

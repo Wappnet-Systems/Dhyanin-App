@@ -54,22 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (model.isStarted) {
         if ((int.parse(model.startedHours) * 3600) -
                 getTimeDifference(model.startedTime) <
-            0) {
-          // HistoryController.init();
-          // model.addFastInHistory();
-          // model.isStarted = false;
-          // Future.delayed(Duration.zero, () {
-          //   model.completeFast();
-          // });
-        }
-        // else {
-        //   model.startTimer((double.parse(model.startedHours) * 3600) -
-        //       getTimeDifference(model.startedTime));
-        // }
+            0) {}
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
     getSavedImagePaths();
     fetchSessionsData();
     super.initState();
@@ -358,9 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
       querySnapshot.docs.forEach((document) {
         dataList.add(document.data());
       });
-    } catch (e) {
-      print("Error retrieving data: $e");
-    }
+    } catch (e) {}
 
     return dataList;
   }

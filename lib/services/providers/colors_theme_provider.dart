@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ColorsThemeNotifier extends ChangeNotifier {
   Color primaryColor = Color(0xFFF06292);
-  Color backgroundColor = Color(0xFFFFFFFF);
-  Color secondaryColor1 = Color(0xFFFFF6F9);
+  Color backgroundColor = Color(0xFFFFF5F9);
+  Color secondaryColor1 = Color(0xFFFFE3F0);
   Color secondaryColor2 = Color(0xffc5236e);
 
   void selectTheme(int newThemeIndex) {

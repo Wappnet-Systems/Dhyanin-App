@@ -14,7 +14,6 @@ import 'package:dhyanin_app/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../services/controller/meditation_history_controller.dart';
@@ -105,9 +104,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         setState(() {
           isPlaying = state == PlayerState.playing;
         });
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
     });
 
     //Listen to audio duration
@@ -205,7 +202,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Card(
                       shape: RoundedRectangleBorder(
@@ -649,8 +645,6 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         'duration': meditationMinutes,
         'repeatTimes': widget.repeatTimes
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

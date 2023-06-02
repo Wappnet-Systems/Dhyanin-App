@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/services/models/meditation_history_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,9 +25,7 @@ class MeditationHistoryController {
         );
         historyList.add(history);
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     return historyList;
   }

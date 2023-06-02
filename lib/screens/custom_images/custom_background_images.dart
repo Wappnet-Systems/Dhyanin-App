@@ -4,14 +4,13 @@ import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/utils/styles.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/functions/select_lottie_file.dart';
 import '../../utils/images.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/list_drawer.dart';
@@ -30,17 +29,7 @@ class _CustomBackgroundImagesState extends State<CustomBackgroundImages> {
   void initState() {
     ColorsThemeNotifier model =
         Provider.of<ColorsThemeNotifier>(context, listen: false);
-    if (model.primaryColor == Color(0xffDE0CA3)) {
-      lottiePath = emptyHistoryListPink;
-    } else if (model.primaryColor == Color(0xFFF44336)) {
-      lottiePath = emptyHistoryListRed;
-    } else if (model.primaryColor == Color(0xFF4CAF50)) {
-      lottiePath = emptyHistoryListGreen;
-    } else if (model.primaryColor == Color(0xFF2196F3)) {
-      lottiePath = emptyHistoryListBlue;
-    } else {
-      lottiePath = emptyHistoryListPurple;
-    }
+    lottiePath = selectLottiePath(model);
     super.initState();
   }
 

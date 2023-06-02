@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dhyanin_app/screens/home_screen.dart';
 import 'package:dhyanin_app/utils/styles.dart';
 import 'package:dhyanin_app/widgets/custom_app_bar.dart';
@@ -34,7 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       decoration: topLeftToBottomRightGradient(colorsModel),
       child: Scaffold(
-          // backgroundColor: Theme.of(context).colorScheme.background,
           appBar: CustomAppBar(title: "Profile"),
           body: Consumer<ColorsThemeNotifier>(
             builder: (context, themeModel, child) => Center(
@@ -69,7 +66,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(color: Colors.green),
                               ),
-                              // contentPadding: EdgeInsets.all(10.0),
                               prefixIcon: Icon(
                                 Icons.person,
                                 color: themeModel.secondaryColor2,
@@ -95,7 +91,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(color: Colors.green),
                               ),
-                              // contentPadding: EdgeInsets.all(10.0),
                               prefixIcon: Icon(
                                 Icons.email,
                                 color: themeModel.secondaryColor2,

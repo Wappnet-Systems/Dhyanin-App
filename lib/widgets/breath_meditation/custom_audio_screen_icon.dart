@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import '../../services/providers/colors_theme_provider.dart';
 
 class AudioIcon extends StatelessWidget {
-  Icon icon;
-  Function onPress;
-  AudioIcon({super.key, required this.icon, required this.onPress});
+  final Icon icon;
+  final Function onPress;
+  const AudioIcon({super.key, required this.icon, required this.onPress});
 
   @override
   Widget build(BuildContext context) {

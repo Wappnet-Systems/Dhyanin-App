@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:dhyanin_app/screens/custom_images/custom_background_images.dart';
 import 'package:dhyanin_app/screens/past_history/past_history_screen.dart';
 import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';

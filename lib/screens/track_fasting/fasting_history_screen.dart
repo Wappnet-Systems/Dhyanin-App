@@ -1,4 +1,5 @@
 import 'package:dhyanin_app/services/controller/history_controller.dart';
+import 'package:dhyanin_app/services/functions/select_lottie_file.dart';
 import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:dhyanin_app/utils/images.dart';
 import 'package:dhyanin_app/utils/styles.dart';
@@ -27,17 +28,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     model = Provider.of<ColorsThemeNotifier>(context, listen: false);
-    if (model.primaryColor == Color(0xFFF06292)) {
-      lottiePath = emptyHistoryListPink;
-    } else if (model.primaryColor == Color(0xFFFF9800)) {
-      lottiePath = emptyHistoryListRed;
-    } else if (model.primaryColor == Color(0xFF43A047)) {
-      lottiePath = emptyHistoryListGreen;
-    } else if (model.primaryColor == Color(0xFF536DFE)) {
-      lottiePath = emptyHistoryListBlue;
-    } else {
-      lottiePath = emptyHistoryListPurple;
-    }
+    lottiePath = selectLottiePath(model);
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: model.primaryColor));
     super.initState();

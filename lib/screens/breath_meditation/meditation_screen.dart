@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dhyanin_app/screens/breath_meditation/audio_page_screen.dart';
 import 'package:dhyanin_app/screens/breath_meditation/meditation_history_screen.dart';
-import 'package:dhyanin_app/services/controller/meditation_history_controller.dart';
 import 'package:dhyanin_app/services/functions/check_connectivity.dart';
 import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:dhyanin_app/utils/styles.dart';

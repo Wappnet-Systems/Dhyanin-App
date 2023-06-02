@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../services/providers/colors_theme_provider.dart';
 
 class WeekDayCard extends StatelessWidget {
-  int date;
-  String weekDay;
+  final int date;
+  final String weekDay;
   WeekDayCard({super.key, required this.date, required this.weekDay});
 
   @override

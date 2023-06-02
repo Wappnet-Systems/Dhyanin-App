@@ -37,9 +37,6 @@ class _MyAppState extends State<MyApp> {
         builder: (context, themeModel, colorModel, child) => FutureBuilder(
             future: initialization,
             builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                print("object");
-              }
               if (snapshot.connectionState == ConnectionState.done) {
                 return MaterialApp(
                     title: projectTitle,
