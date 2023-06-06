@@ -1,15 +1,16 @@
 import 'dart:io';
 
-import 'package:dhyanin_app/auth/otp_page_screen.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/images.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/services/functions/check_connectivity.dart';
-import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
+
+import '../services/functions/check_connectivity.dart';
+import '../services/providers/colors_theme_provider.dart';
+import '../utils/images.dart';
+import '../utils/styles.dart';
+import '../widgets/custom_snackbar.dart';
+import 'otp_page_screen.dart';
 
 class MobileNumberInput extends StatefulWidget {
   const MobileNumberInput({super.key});

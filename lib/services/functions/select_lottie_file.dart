@@ -1,7 +1,7 @@
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/images.dart';
+import '../providers/colors_theme_provider.dart';
 
 String selectLottiePath(ColorsThemeNotifier provider) {
   if (provider.primaryColor == Color(0xFFF06292)) {

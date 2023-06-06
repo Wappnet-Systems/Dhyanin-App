@@ -1,8 +1,8 @@
-import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/models/history_model.dart';
 import '../../services/providers/colors_theme_provider.dart';
 
 class HistoryItem extends StatefulWidget {

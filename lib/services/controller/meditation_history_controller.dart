@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/services/models/meditation_history_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../models/meditation_history_model.dart';
 
 class MeditationHistoryController {
   List<String>? list = [];

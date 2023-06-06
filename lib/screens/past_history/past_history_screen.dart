@@ -1,16 +1,16 @@
-import 'package:dhyanin_app/services/controller/meditation_history_controller.dart';
-import 'package:dhyanin_app/services/models/meditation_history_model.dart';
-import 'package:dhyanin_app/utils/styles.dart';
 import 'package:intl/intl.dart';
 
-import 'package:dhyanin_app/services/controller/history_controller.dart';
-import 'package:dhyanin_app/services/models/history_model.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/controller/history_controller.dart';
+import '../../services/controller/meditation_history_controller.dart';
+import '../../services/models/history_model.dart';
+import '../../services/models/meditation_history_model.dart';
 import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/styles.dart';
 import '../../widgets/breath_meditation/meditation_history_item.dart';
+import '../../widgets/custom_app_bar.dart';
 import '../../widgets/track_fasting/history_item.dart';
 
 class PastHistoryScreen extends StatefulWidget {
@@ -41,115 +41,6 @@ class _PastHistoryScreenState extends State<PastHistoryScreen> {
     super.initState();
     fetchFastingHistoryData();
     fetchMeditationHistoryData();
-  }
-
-  void fetchMeditationHistoryData() async {
-    meditationHistory = await mHistoryController.read();
-    meditationHistory.sort((a, b) {
-      return b.dateTime.compareTo(a.dateTime);
-    });
-    setState(() {
-      meditationItems = meditationHistory
-          .where((item) {
-            final itemDate = item.dateTime;
-            return itemDate.isAfter(startOfWeek) &&
-                itemDate.isBefore(endOfWeek);
-          })
-          .map((item) => MeditationHistoryItem(
-                history: item,
-                isNewDay:
-                    false, // Assuming you don't need to check for new day in the filtered list
-              ))
-          .toList();
-      filteredMeditationHistoryData();
-    });
-  }
-
-  void fetchFastingHistoryData() async {
-    fastHistory = await historyController.read();
-    fastHistory.sort((a, b) {
-      return b.dateTime.compareTo(a.dateTime);
-    });
-    setState(() {
-      fastingItems = fastHistory
-          .where((item) {
-            final itemDate = item.dateTime;
-            return itemDate.isAfter(startOfWeek) &&
-                itemDate.isBefore(endOfWeek);
-          })
-          .map((item) => HistoryItem(
-                history: item,
-                isNewDay:
-                    false, // Assuming you don't need to check for new day in the filtered list
-              ))
-          .toList();
-      filteredFastingHistoryData();
-    });
-  }
-
-  void _goToPreviousWeek() {
-    setState(() {
-      _selectedDate = _selectedDate.subtract(Duration(days: 7));
-      _updateWeekRange();
-    });
-  }
-
-  void _goToNextWeek() {
-    if (_selectedDate.isBefore(DateTime.now().add(Duration(days: -7)))) {
-      setState(() {
-        _selectedDate = _selectedDate.add(Duration(days: 7));
-        _updateWeekRange();
-      });
-    }
-  }
-
-  String _getFormattedWeekRange() {
-    final formatter = DateFormat('dd MMM');
-    startOfWeek =
-        _selectedDate.subtract(Duration(days: _selectedDate.weekday - 1));
-    endOfWeek = _selectedDate
-        .add(Duration(days: DateTime.daysPerWeek - _selectedDate.weekday));
-    return '${formatter.format(startOfWeek)} - ${formatter.format(endOfWeek)}';
-  }
-
-  void filteredMeditationHistoryData() async {
-    setState(() {
-      // Update the filteredMeditationItems list based on the selected date
-      meditationItems = meditationHistory
-          .where((item) =>
-              item.dateTime.year == selectedDateTime.year &&
-              item.dateTime.month == selectedDateTime.month &&
-              item.dateTime.day == selectedDateTime.day)
-          .map((item) => MeditationHistoryItem(
-                history: item,
-                isNewDay: false,
-              ))
-          .toList();
-    });
-  }
-
-  void filteredFastingHistoryData() async {
-    setState(() {
-      // Update the filteredFastingItems list based on the selected date
-      fastingItems = fastHistory
-          .where((item) =>
-              item.dateTime.year == selectedDateTime.year &&
-              item.dateTime.month == selectedDateTime.month &&
-              item.dateTime.day == selectedDateTime.day)
-          .map((item) => HistoryItem(
-                history: item,
-                isNewDay: false,
-              ))
-          .toList();
-    });
-  }
-
-  // Update the startOfWeek and endOfWeek variables
-  void _updateWeekRange() {
-    startOfWeek =
-        _selectedDate.subtract(Duration(days: _selectedDate.weekday - 1));
-    endOfWeek = _selectedDate
-        .add(Duration(days: DateTime.daysPerWeek - _selectedDate.weekday));
   }
 
   @override
@@ -341,6 +232,115 @@ class _PastHistoryScreenState extends State<PastHistoryScreen> {
             ),
           ),
         ));
+  }
+
+  void fetchMeditationHistoryData() async {
+    meditationHistory = await mHistoryController.read();
+    meditationHistory.sort((a, b) {
+      return b.dateTime.compareTo(a.dateTime);
+    });
+    setState(() {
+      meditationItems = meditationHistory
+          .where((item) {
+            final itemDate = item.dateTime;
+            return itemDate.isAfter(startOfWeek) &&
+                itemDate.isBefore(endOfWeek);
+          })
+          .map((item) => MeditationHistoryItem(
+                history: item,
+                isNewDay:
+                    false, // Assuming you don't need to check for new day in the filtered list
+              ))
+          .toList();
+      filteredMeditationHistoryData();
+    });
+  }
+
+  void fetchFastingHistoryData() async {
+    fastHistory = await historyController.read();
+    fastHistory.sort((a, b) {
+      return b.dateTime.compareTo(a.dateTime);
+    });
+    setState(() {
+      fastingItems = fastHistory
+          .where((item) {
+            final itemDate = item.dateTime;
+            return itemDate.isAfter(startOfWeek) &&
+                itemDate.isBefore(endOfWeek);
+          })
+          .map((item) => HistoryItem(
+                history: item,
+                isNewDay:
+                    false, // Assuming you don't need to check for new day in the filtered list
+              ))
+          .toList();
+      filteredFastingHistoryData();
+    });
+  }
+
+  void _goToPreviousWeek() {
+    setState(() {
+      _selectedDate = _selectedDate.subtract(Duration(days: 7));
+      _updateWeekRange();
+    });
+  }
+
+  void _goToNextWeek() {
+    if (_selectedDate.isBefore(DateTime.now().add(Duration(days: -7)))) {
+      setState(() {
+        _selectedDate = _selectedDate.add(Duration(days: 7));
+        _updateWeekRange();
+      });
+    }
+  }
+
+  String _getFormattedWeekRange() {
+    final formatter = DateFormat('dd MMM');
+    startOfWeek =
+        _selectedDate.subtract(Duration(days: _selectedDate.weekday - 1));
+    endOfWeek = _selectedDate
+        .add(Duration(days: DateTime.daysPerWeek - _selectedDate.weekday));
+    return '${formatter.format(startOfWeek)} - ${formatter.format(endOfWeek)}';
+  }
+
+  void filteredMeditationHistoryData() async {
+    setState(() {
+      // Update the filteredMeditationItems list based on the selected date
+      meditationItems = meditationHistory
+          .where((item) =>
+              item.dateTime.year == selectedDateTime.year &&
+              item.dateTime.month == selectedDateTime.month &&
+              item.dateTime.day == selectedDateTime.day)
+          .map((item) => MeditationHistoryItem(
+                history: item,
+                isNewDay: false,
+              ))
+          .toList();
+    });
+  }
+
+  void filteredFastingHistoryData() async {
+    setState(() {
+      // Update the filteredFastingItems list based on the selected date
+      fastingItems = fastHistory
+          .where((item) =>
+              item.dateTime.year == selectedDateTime.year &&
+              item.dateTime.month == selectedDateTime.month &&
+              item.dateTime.day == selectedDateTime.day)
+          .map((item) => HistoryItem(
+                history: item,
+                isNewDay: false,
+              ))
+          .toList();
+    });
+  }
+
+  // Update the startOfWeek and endOfWeek variables
+  void _updateWeekRange() {
+    startOfWeek =
+        _selectedDate.subtract(Duration(days: _selectedDate.weekday - 1));
+    endOfWeek = _selectedDate
+        .add(Duration(days: DateTime.daysPerWeek - _selectedDate.weekday));
   }
 
   String _getWeekdayName(int weekday) {

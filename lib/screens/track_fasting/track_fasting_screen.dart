@@ -1,20 +1,22 @@
 import 'dart:async';
-import 'package:dhyanin_app/services/functions/check_connectivity.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_snackbar.dart';
-import 'package:dhyanin_app/widgets/track_fasting/custom_fasting_card.dart';
 import 'package:intl/intl.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/services/providers/fasting_status_provider.dart';
-import 'package:dhyanin_app/screens/track_fasting/fasting_history_screen.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/services/functions/get_duration.dart';
-import 'package:dhyanin_app/services/functions/get_time_difference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+
+import '../../services/functions/check_connectivity.dart';
+import '../../services/functions/get_duration.dart';
+import '../../services/functions/get_time_difference.dart';
+import '../../services/providers/colors_theme_provider.dart';
+import '../../services/providers/fasting_status_provider.dart';
+import '../../utils/styles.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../../widgets/custom_snackbar.dart';
+import '../../widgets/track_fasting/custom_fasting_card.dart';
+import 'fasting_history_screen.dart';
 
 class TrackFasting extends StatefulWidget {
   const TrackFasting({super.key});

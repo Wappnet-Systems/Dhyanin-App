@@ -1,16 +1,15 @@
-import 'package:dhyanin_app/services/controller/history_controller.dart';
-import 'package:dhyanin_app/services/functions/select_lottie_file.dart';
-import 'package:dhyanin_app/services/models/history_model.dart';
-import 'package:dhyanin_app/utils/images.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/widgets/track_fasting/history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/controller/history_controller.dart';
+import '../../services/functions/select_lottie_file.dart';
+import '../../services/models/history_model.dart';
 import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/styles.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../../widgets/track_fasting/history_item.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);

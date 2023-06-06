@@ -1,8 +1,5 @@
 import 'dart:io';
 
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
@@ -11,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/functions/select_lottie_file.dart';
-import '../../utils/images.dart';
+import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/styles.dart';
+import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/list_drawer.dart';
 

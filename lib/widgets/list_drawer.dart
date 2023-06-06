@@ -1,13 +1,13 @@
-import 'package:dhyanin_app/screens/custom_images/custom_background_images.dart';
-import 'package:dhyanin_app/screens/past_history/past_history_screen.dart';
-import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';
-import 'package:dhyanin_app/services/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/mobile_number_input_screen.dart';
+import '../screens/custom_images/custom_background_images.dart';
+import '../screens/past_history/past_history_screen.dart';
+import '../screens/user_profile/profile_screen.dart';
+import '../services/providers/theme_provider.dart';
 import 'color_circle.dart';
 
 List<String> savedImagePaths = [];

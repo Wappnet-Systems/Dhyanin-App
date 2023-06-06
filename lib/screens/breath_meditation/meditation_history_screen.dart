@@ -1,13 +1,12 @@
-import 'package:dhyanin_app/services/models/meditation_history_model.dart';
-import 'package:dhyanin_app/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/controller/meditation_history_controller.dart';
 import '../../services/functions/select_lottie_file.dart';
+import '../../services/models/meditation_history_model.dart';
 import '../../services/providers/colors_theme_provider.dart';
-import '../../utils/images.dart';
+import '../../utils/styles.dart';
 import '../../widgets/breath_meditation/meditation_history_item.dart';
 import '../../widgets/custom_app_bar.dart';
 

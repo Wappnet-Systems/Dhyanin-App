@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/services/controller/history_controller.dart';
-import 'package:dhyanin_app/services/models/history_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../controller/history_controller.dart';
+import '../models/history_model.dart';
 
 class FastingStatusProvider extends ChangeNotifier {
   bool isStarted = false; //to check whether fast is started or not

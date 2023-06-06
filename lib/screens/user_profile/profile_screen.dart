@@ -1,11 +1,11 @@
-import 'package:dhyanin_app/screens/home_screen.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/styles.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

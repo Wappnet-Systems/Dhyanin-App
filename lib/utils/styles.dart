@@ -1,5 +1,6 @@
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
 import 'package:flutter/material.dart';
+
+import '../services/providers/colors_theme_provider.dart';
 
 const TextStyle headingStyle =
     TextStyle(fontSize: 35, fontWeight: FontWeight.w500);

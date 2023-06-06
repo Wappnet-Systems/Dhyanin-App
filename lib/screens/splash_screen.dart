@@ -1,15 +1,15 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:dhyanin_app/services/providers/theme_provider.dart';
-import 'package:dhyanin_app/screens/home_screen.dart';
-import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
-import 'package:dhyanin_app/utils/constants.dart';
-import 'package:dhyanin_app/utils/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/mobile_number_input_screen.dart';
 import '../services/providers/colors_theme_provider.dart';
+import '../services/providers/theme_provider.dart';
+import '../utils/constants.dart';
+import '../utils/images.dart';
+import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

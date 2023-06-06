@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/screens/breath_meditation/audio_page_screen.dart';
-import 'package:dhyanin_app/screens/breath_meditation/meditation_history_screen.dart';
-import 'package:dhyanin_app/services/functions/check_connectivity.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../services/functions/check_connectivity.dart';
+import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/styles.dart';
+import '../../widgets/custom_app_bar.dart';
+import 'audio_page_screen.dart';
+import 'meditation_history_screen.dart';
 
 class Meditation extends StatefulWidget {
   final Function updateSessionData;

@@ -3,14 +3,6 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/images.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_app_bar.dart';
-import 'package:dhyanin_app/widgets/breath_meditation/custom_audio_screen_icon.dart';
-import 'package:dhyanin_app/widgets/custom_snackbar.dart';
-import 'package:dhyanin_app/widgets/breath_meditation/default_image_background.dart';
-import 'package:dhyanin_app/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +10,15 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../services/controller/meditation_history_controller.dart';
 import '../../services/models/meditation_history_model.dart';
+import '../../services/providers/colors_theme_provider.dart';
+import '../../utils/constants.dart';
+import '../../utils/images.dart';
+import '../../utils/styles.dart';
+import '../../widgets/breath_meditation/custom_audio_screen_icon.dart';
+import '../../widgets/breath_meditation/default_image_background.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../../widgets/custom_snackbar.dart';
 import '../../widgets/list_drawer.dart';
-
-String fileBackgroundImage = "";
 
 class AudioPage extends StatefulWidget {
   final int? duration;
@@ -68,12 +66,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     duration = (await audioPlayer.getDuration())!;
   }
 
-  @override
-  void initState() {
-    _breathingController = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: widget.inhaleSeconds.toInt()),
-        reverseDuration: Duration(seconds: widget.exhaleSeconds.toInt()));
+  void breathingControllerlistener() {
     _breathingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (widget.holdSeconds > 0) {
@@ -174,6 +167,15 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         }
       }
     });
+  }
+
+  @override
+  void initState() {
+    _breathingController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: widget.inhaleSeconds.toInt()),
+        reverseDuration: Duration(seconds: widget.exhaleSeconds.toInt()));
+    breathingControllerlistener();
     super.initState();
   }
 
@@ -331,21 +333,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                         color: Colors.white,
                                       ),
                                       onPress: () async {
-                                        if ((widget.repeatTimes! -
-                                                timesPlayed) !=
-                                            0) {
-                                          if (isPlaying) {
-                                            _breathingController.stop();
-                                            await audioPlayer.pause();
-                                          } else {
-                                            if (breathMessage == 'Inhale') {
-                                              _breathingController.forward();
-                                            } else {
-                                              _breathingController.reverse();
-                                            }
-                                            await audioPlayer.resume();
-                                          }
-                                        }
+                                        onPressEventPlay();
                                       }),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
@@ -359,131 +347,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                                       onPress: () async {
                                         _breathingController.stop();
                                         audioPlayer.pause();
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) {
-                                              return SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  children: [
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage1,
-                                                      ontap: () {
-                                                        isFileImage = false;
-                                                        backgroundImage =
-                                                            backgroundImage1;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage2,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage2;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage3,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage3;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage4,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage4;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage5,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage5;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage6,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage6;
-                                                        audioPlayer.resume();
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    DefaultImage(
-                                                      imagePath:
-                                                          backgroundImage7,
-                                                      ontap: () {
-                                                        isFileImage = false;
-
-                                                        backgroundImage =
-                                                            backgroundImage7;
-                                                        resume();
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.2,
-                                                      child: ListView.builder(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          shrinkWrap: true,
-                                                          itemCount:
-                                                              savedImagePaths
-                                                                  .length,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return Padding(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      12.0),
-                                                              child: InkWell(
-                                                                onTap: () {
-                                                                  isFileImage =
-                                                                      true;
-                                                                  backgroundImage =
-                                                                      savedImagePaths[
-                                                                          index];
-                                                                  resume();
-                                                                },
-                                                                child: Image.file(File(
-                                                                    savedImagePaths[
-                                                                        index])),
-                                                              ),
-                                                            );
-                                                          }),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            });
+                                        bottomsheetImages();
                                       }),
                                 ],
                               ),
@@ -543,6 +407,119 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> onPressEventPlay() async {
+    if ((widget.repeatTimes! - timesPlayed) != 0) {
+      if (isPlaying) {
+        _breathingController.stop();
+        await audioPlayer.pause();
+      } else {
+        if (breathMessage == 'Inhale') {
+          _breathingController.forward();
+        } else {
+          _breathingController.reverse();
+        }
+        await audioPlayer.resume();
+      }
+    }
+  }
+
+  void bottomsheetImages() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                DefaultImage(
+                  imagePath: backgroundImage1,
+                  ontap: () {
+                    isFileImage = false;
+                    backgroundImage = backgroundImage1;
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage2,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage2;
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage3,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage3;
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage4,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage4;
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage5,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage5;
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage6,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage6;
+                    audioPlayer.resume();
+                    resume();
+                  },
+                ),
+                DefaultImage(
+                  imagePath: backgroundImage7,
+                  ontap: () {
+                    isFileImage = false;
+
+                    backgroundImage = backgroundImage7;
+                    resume();
+                  },
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: savedImagePaths.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: InkWell(
+                            onTap: () {
+                              isFileImage = true;
+                              backgroundImage = savedImagePaths[index];
+                              resume();
+                            },
+                            child: Image.file(File(savedImagePaths[index])),
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void resume() {

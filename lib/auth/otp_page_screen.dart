@@ -1,13 +1,14 @@
-import 'package:dhyanin_app/auth/mobile_number_input_screen.dart';
-import 'package:dhyanin_app/screens/user_profile/profile_screen.dart';
-import 'package:dhyanin_app/services/providers/colors_theme_provider.dart';
-import 'package:dhyanin_app/utils/images.dart';
-import 'package:dhyanin_app/utils/styles.dart';
-import 'package:dhyanin_app/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/user_profile/profile_screen.dart';
+import '../services/providers/colors_theme_provider.dart';
+import '../utils/images.dart';
+import '../utils/styles.dart';
+import '../widgets/custom_snackbar.dart';
+import 'mobile_number_input_screen.dart';
 
 class OtpPage extends StatefulWidget {
   const OtpPage({super.key});
