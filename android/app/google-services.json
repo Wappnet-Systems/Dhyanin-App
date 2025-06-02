@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "880145990798",
+    "project_id": "dhyanin-622d7",
+    "storage_bucket": "dhyanin-622d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880145990798:android:bd0aec029c6a215a7275df",
+        "android_client_info": {
+          "package_name": "com.wappnet.dhyanin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880145990798-3s1mbg2b946pfvp007o7tg9rlt6qevvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_kMRb-Mn8SmnQuyQ7_AEh5SjeQpvWI4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880145990798-3s1mbg2b946pfvp007o7tg9rlt6qevvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
